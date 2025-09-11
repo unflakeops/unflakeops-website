@@ -3,7 +3,7 @@ export const metadata = {
   description:
     "PASS/WARN/FAIL release gates, fewer flaky tests, faster cycles for GitHub Actions & GitLab CI. UK/EU GDPR-friendly.",
 };
-import "./globals.css";
+import "../styles/globals.css";
 export default function RootLayout({
   children,
 }: {
