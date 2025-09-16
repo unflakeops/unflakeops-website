@@ -8,14 +8,7 @@ const BADGE =
 
 export default function Header() {
   return (
-    <header
-      style={{
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "space-between",
-        marginBottom: 16,
-      }}
-    >
+    <header className="main-header">
       {/* brand row */}
       <Link
         href="/"
@@ -35,18 +28,11 @@ export default function Header() {
         <span className="brand-name">UnflakeOps</span>
       </Link>
 
-      {/* top-right pill */}
-      <div
-        style={{
-          fontSize: 12,
-          color: "#cbd5e1",
-          background: "rgba(2,6,23,.6)",
-          border: "1px solid #334155",
-          borderRadius: 999,
-          padding: "4px 8px",
-        }}
-      >
-        {BADGE}
+      {/* top-right badge */}
+      <div className="header-badge">
+        <div className="header-badge__content">
+          <span className="header-badge__text">{BADGE}</span>
+        </div>
       </div>
     </header>
   );
