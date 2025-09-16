@@ -1,0 +1,21 @@
+{
+  "name": "UnflakeOps - Cut Failed Builds by 50%+ in 30 Days",
+  "short_name": "UnflakeOps",
+  "description": "PASS/WARN/FAIL release gates, fewer flaky tests, faster cycles for GitHub Actions & GitLab CI. UK/EU GDPR-friendly.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0b1323",
+  "theme_color": "#38bdf8",
+  "icons": [
+    {
+      "src": "/favicon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/favicon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
