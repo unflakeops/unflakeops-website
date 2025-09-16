@@ -1,4 +1,5 @@
 import "../styles/globals.css";
+import CookiesBanner from "../components/CookiesBanner";
 
 export const metadata = {
   title: "UnflakeOps — Cut Failed Builds by 50%+ in 30 Days. Guaranteed.",
@@ -13,7 +14,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        {children}
+        <CookiesBanner />
+      </body>
     </html>
   );
 }
