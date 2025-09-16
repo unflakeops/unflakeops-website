@@ -7,6 +7,21 @@
   --ok: #10b981;
   --warn: #f59e0b;
   --fail: #ef4444;
+
+  /* Main page theme colors */
+  --bg-primary: #0b1323;
+  --bg-secondary: rgba(2, 6, 23, 0.4);
+  --bg-hero: linear-gradient(
+    180deg,
+    rgba(30, 41, 59, 0.35) 0%,
+    rgba(2, 6, 23, 0.35) 100%
+  );
+  --border: #1f2937;
+  --border-dashed: #273244;
+  --text-muted: #a3b2c2;
+  --text-secondary: #cbd5e1;
+  --text-accent: #93c5fd;
+  --text-brand: #f1f5f9;
 }
 * {
   box-sizing: border-box;
@@ -187,6 +202,356 @@ select {
   font-size: 12px;
   color: var(--muted);
 }
+
+/* Main page theme classes */
+.main-container {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 32px 16px;
+}
+
+.hero-section {
+  border: 1px solid var(--border);
+  background: var(--bg-hero);
+  padding: 24px;
+  border-radius: 16px;
+  margin-bottom: 20px;
+  position: relative;
+}
+
+.hero-pill {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  font-size: 12px;
+  color: #cbd5e1;
+  background: rgba(2, 6, 23, 0.6);
+  border: 1px solid #334155;
+  border-radius: 999px;
+  padding: 4px 8px;
+}
+
+.hero-content {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 18px;
+  align-items: start;
+}
+
+.brand-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+
+.brand-name {
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: 0.2px;
+}
+
+.hero-title {
+  margin: 0;
+  font-size: 36px;
+  line-height: 1.2;
+  font-weight: 800;
+  color: var(--text-brand);
+}
+
+.hero-subtitle {
+  margin-top: 8px;
+  color: var(--text-secondary);
+}
+
+.hero-actions {
+  margin-top: 12px;
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.hero-cta {
+  background: var(--accent);
+  color: #0b1220;
+  font-weight: 700;
+  padding: 10px 14px;
+  border-radius: 10px;
+  text-decoration: none;
+}
+
+.hero-link {
+  color: var(--text-accent);
+  text-decoration: underline;
+}
+
+.hero-cta-secondary {
+  background: #374151;
+  color: #ffffff;
+  font-weight: 700;
+  padding: 10px 14px;
+  border-radius: 10px;
+  text-decoration: none;
+  border: 1px solid #4b5563;
+}
+
+.hero-disclaimer {
+  margin-top: 8px;
+  font-size: 12px;
+  color: #8ea1b5;
+}
+
+.week-deliverables {
+  border: 1px solid var(--border);
+  background: rgba(2, 6, 23, 0.35);
+  border-radius: 12px;
+  padding: 14px;
+}
+
+.week-title {
+  color: var(--text-accent);
+  font-size: 12px;
+  letter-spacing: 0.5px;
+  font-weight: 600;
+}
+
+.week-list {
+  margin: 8px 0 0;
+  padding-left: 18px;
+  color: #d1d5db;
+}
+
+.week-badges {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+}
+
+.week-badge {
+  font-size: 12px;
+  color: #cbd5e1;
+  background: rgba(2, 6, 23, 0.7);
+  border: 1px solid #334155;
+  border-radius: 999px;
+  padding: 4px 8px;
+}
+
+.pricing-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-top: 14px;
+}
+
+.price-card {
+  border: 1px solid var(--border);
+  background: var(--bg-secondary);
+  border-radius: 14px;
+  padding: 16px;
+}
+
+.price-title {
+  margin-top: 0;
+}
+
+.price-amount {
+  font-size: 28px;
+  font-weight: 800;
+}
+
+.price-unit {
+  font-size: 14px;
+  font-weight: 400;
+  margin-left: 8px;
+}
+
+.price-vat {
+  font-size: 14px;
+  font-weight: 400;
+  margin-left: 8px;
+}
+
+.proof-section {
+  border: 1px solid var(--border);
+  background: var(--bg-secondary);
+  border-radius: 14px;
+  padding: 16px;
+  margin-top: 14px;
+}
+
+.plan-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.plan-card {
+  border: 1px solid var(--border);
+  background: var(--bg-secondary);
+  border-radius: 14px;
+  padding: 16px;
+  height: 100%;
+}
+
+.plan-title {
+  display: block;
+  margin-bottom: 8px;
+}
+
+.plan-list {
+  margin: 0;
+  padding-left: 18px;
+}
+
+.calculator-section {
+  margin-top: 16px;
+}
+
+.calculator-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.calculator-inputs {
+  border: 1px solid var(--border);
+  background: var(--bg-secondary);
+  border-radius: 14px;
+  padding: 16px;
+}
+
+.calculator-results {
+  border: 1px solid var(--border);
+  background: var(--bg-secondary);
+  border-radius: 14px;
+  padding: 16px;
+}
+
+.form-field {
+  display: grid;
+  gap: 6px;
+}
+
+.form-label {
+  color: var(--text-muted);
+  font-size: 12px;
+}
+
+.form-input {
+  width: 100%;
+  background: var(--bg-primary);
+  border: 1px solid var(--border);
+  color: var(--text);
+  border-radius: 10px;
+  padding: 10px 12px;
+}
+
+.form-input-group {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.form-suffix {
+  color: #93a6bb;
+  width: 38px;
+}
+
+.form-select {
+  width: 100%;
+  background: var(--bg-primary);
+  border: 1px solid var(--border);
+  color: var(--text);
+  border-radius: 10px;
+  padding: 10px 12px;
+}
+
+.results-grid {
+  display: grid;
+  gap: 8px;
+}
+
+.result-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  border-bottom: 1px dashed var(--border-dashed);
+  padding-bottom: 6px;
+}
+
+.result-label {
+  color: #9fb1c6;
+}
+
+.result-value {
+  color: var(--text);
+  font-weight: 700;
+}
+
+.lead-capture {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px dashed var(--border-dashed);
+  display: grid;
+  gap: 8px;
+}
+
+.lead-inputs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.lead-button {
+  background: var(--accent);
+  color: #0b1220;
+  font-weight: 700;
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  width: fit-content;
+}
+
+.lead-button:disabled {
+  opacity: 0.7;
+}
+
+.booking-section {
+  margin-top: 18px;
+}
+
+.booking-card {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+  background: rgba(2, 6, 23, 0.5);
+}
+
+.booking-button {
+  display: inline-block;
+  background: var(--accent);
+  color: #0b1220;
+  font-weight: 700;
+  padding: 10px 14px;
+  border-radius: 10px;
+  text-decoration: none;
+}
+
+.booking-button:disabled {
+  background: #334155;
+  pointer-events: none;
+}
+
+.main-footer {
+  margin-top: 28px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+  color: #9ca3af;
+  font-size: 14px;
+}
+
 @media (max-width: 920px) {
   .hero {
     grid-template-columns: 1fr;
@@ -195,6 +560,21 @@ select {
     grid-template-columns: 1fr;
   }
   .grid-2 {
+    grid-template-columns: 1fr;
+  }
+  .hero-content {
+    grid-template-columns: 1fr;
+  }
+  .pricing-grid {
+    grid-template-columns: 1fr;
+  }
+  .calculator-grid {
+    grid-template-columns: 1fr;
+  }
+  .plan-grid {
+    grid-template-columns: 1fr;
+  }
+  .lead-inputs {
     grid-template-columns: 1fr;
   }
 }
