@@ -64,27 +64,58 @@ export async function POST(req: Request) {
     // Email to the lead
     const leadHtml = `
       <div style="font-family: ui-sans-serif, system-ui; color:#e5e7eb; background:#0b0b0f; padding:24px;">
-        <h2 style="color:#fff; margin:0 0 8px 0;">Your UnflakeOps Calculator Results</h2>
-        <p style="margin:0 0 16px 0; color:#a1a1aa;">Hi${
-          company ? ` from <b>${company}</b>` : ""
-        }. CI: ${ci || "(not specified)"}. Team size: ${
-      teamSize || "(not specified)"
-    }.</p>
-        <table style="border-collapse:collapse; width:100%;">
-          ${summaryRows
-            .map(
-              ([k, v]) => `
-                <tr>
-                  <td style="border:1px solid #27272a; padding:8px; color:#a1a1aa;">${k}</td>
-                  <td style="border:1px solid #27272a; padding:8px; color:#fff;">${
-                    v ?? "—"
-                  }</td>
-                </tr>`
-            )
-            .join("")}
-        </table>
-        <p style="margin-top:16px; color:#a1a1aa;">We'll reach out within 24 hours to discuss your specific situation and how we can help reduce your flaky failures.</p>
-        <p style="margin-top:24px; color:#a1a1aa;">— UnflakeOps Team</p>
+        <h2 style="color:#fff; margin:0 0 8px 0;">You're losing ~£${Number(
+          results.annualCost || 0
+        ).toLocaleString()}/yr to flakes. Fix plan inside.</h2>
+        <p style="margin:0 0 16px 0; color:#a1a1aa;">Hi ${
+          company || "there"
+        },</p>
+        
+        <p style="margin:0 0 16px 0; color:#a1a1aa;">Here are your ROI Calculator results based on the inputs you shared:</p>
+        
+        <ul style="margin:0 0 16px 0; color:#a1a1aa; padding-left:20px;">
+          <li>Pipelines/week: ${inputs.pipelinesPerWeek}</li>
+          <li>Failure rate: ${inputs.failureRatePct}%</li>
+          <li>% of failures that are flaky: ${inputs.pctFlaky}%</li>
+          <li>Rerun/triage mins per flake: ${
+            inputs.triageMinutes + inputs.rerunMinutes
+          }</li>
+          <li>Engineers per failure: ${inputs.engineersAffected}</li>
+          <li>Engineer hourly cost: £${inputs.loadedHourly}</li>
+          <li>Estimated annual waste: <strong>£${Number(
+            results.annualCost || 0
+          ).toLocaleString()}/year</strong></li>
+          <li>Sprint payback (est.): <strong>~${Number(
+            results.sprintPaybackDays || 0
+          ).toFixed(0)} days</strong></li>
+          <li>Monthly savings @ 50% reduction: <strong>£${Number(
+            results.monthlySavings50 || 0
+          ).toLocaleString()}/month</strong></li>
+        </ul>
+        
+        <p style="margin:16px 0; color:#a1a1aa;"><strong>What this means:</strong><br>
+        Most "red" builds aren't real failures — they're flakes. They drain engineer hours, trust, and release velocity. The fix isn't heroics; it's a system.</p>
+        
+        <p style="margin:16px 0; color:#a1a1aa;"><strong>Recommended next step (free):</strong><br>
+        <strong>Book a 15-minute CI Audit</strong>. We'll baseline your flaky failure rate live, show the top 3 failure fingerprints, and outline your fastest fixes.</p>
+        
+        <p style="margin:16px 0; color:#a1a1aa;">
+        👉 <strong>Book My Free CI Audit</strong> → <a href="https://unflakeops.com/ci-audit" style="color:#3b82f6;">https://unflakeops.com/ci-audit</a></p>
+        
+        <p style="margin:16px 0; color:#a1a1aa;"><strong>What happens after the Audit:</strong><br>
+        If the numbers make sense, many teams run a <strong>7-Day Sprint</strong>:<br>
+        • Gates live on PRs (PASS / WARN / FAIL)<br>
+        • Top-5 fixes prepped as PRs<br>
+        • Dashboard + 30-day plan<br>
+        • Goal: <strong>50% fewer flaky failures in 30 days</strong> (guaranteed)</p>
+        
+        <p style="margin:16px 0; color:#a1a1aa;"><strong>Proof:</strong><br>
+        "<strong>62% fewer flaky failures in 28 days. +220 engineer hours reclaimed per quarter.</strong>" — CTO, EU SaaS</p>
+        
+        <p style="margin:16px 0; color:#a1a1aa;">Questions? Just hit reply or email hello@unflakeops.com.</p>
+        
+        <p style="margin-top:24px; color:#a1a1aa;">— Muhammad Qureshi<br>
+        UnflakeOps — Release Reliability as a Service</p>
       </div>`;
 
     // Internal notification email
@@ -195,7 +226,9 @@ export async function POST(req: Request) {
     await resend.emails.send({
       from: process.env.EMAIL_FROM || "UnflakeOps <hello@unflakeops.com>",
       to: email,
-      subject: `Your calculator results — ${results.plan || "UnflakeOps"}`,
+      subject: `You're losing ~£${Number(
+        results.annualCost || 0
+      ).toLocaleString()}/yr to flakes. Fix plan inside.`,
       html: leadHtml,
       replyTo: "hello@unflakeops.com",
     });
