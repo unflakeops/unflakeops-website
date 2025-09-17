@@ -5,7 +5,7 @@ import { useMemo, useState } from "react";
 import Header from "../components/Header";
 
 /** ENV */
-const BOOKING_URL = process.env.NEXT_PUBLIC_BOOKING_URL ?? ""; // <-- put your UnflakeOps booking URL in .env
+const BOOKING_URL = "/ci-audit"; // Use env var or fallback to ci-audit
 const EMAIL = process.env.NEXT_PUBLIC_CONTACT_EMAIL ?? "hello@unflakeops.com";
 const BADGE =
   process.env.NEXT_PUBLIC_REGION_BADGE ??

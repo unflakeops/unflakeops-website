@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import Image from "next/image";
 import Header from "../../components/Header";
 
-const CALENDAR_URL = "https://calendar.app.google/UUfpdoQ92LEyTUCg6";
+const CALENDAR_URL = process.env.NEXT_PUBLIC_BOOKING_URL ?? "";
 
 export default function CIAuditPage() {
   useEffect(() => {

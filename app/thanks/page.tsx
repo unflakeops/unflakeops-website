@@ -1,5 +1,8 @@
 import Header from "../../components/Header";
 
+/** ENV */
+const BOOKING_URL = "/ci-audit";
+
 export default function Page() {
   return (
     <main className="main-container">
@@ -68,7 +71,7 @@ export default function Page() {
             </p>
             <div style={{ marginTop: "12px" }}>
               <a
-                href="/ci-audit"
+                href={BOOKING_URL}
                 style={{
                   display: "inline-block",
                   textDecoration: "none",
@@ -229,7 +232,7 @@ export default function Page() {
       <section className="card section">
         <div style={{ textAlign: "center" }}>
           <a
-            href="/ci-audit"
+            href={BOOKING_URL}
             style={{
               display: "inline-block",
               textDecoration: "none",
