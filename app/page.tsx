@@ -466,24 +466,22 @@ export default function HomePage() {
             marginTop: "16px",
           }}
         >
-          What I discovered?
+          And what I discovered shocked me:
         </p>
-        <blockquote
-          style={{
-            borderLeft: "4px solid #38bdf8",
-            paddingLeft: "20px",
-            margin: "20px 0",
-            fontStyle: "italic",
-            color: "#e5e7eb",
-            fontSize: "18px",
-          }}
-        >
-          60% of failed builds aren't "real" — they're flaky.
-        </blockquote>
         <p style={{ color: "#cbd5e1", fontSize: "16px", lineHeight: "1.6" }}>
-          I built UnflakeOps so engineering teams could stop firefighting ghost
-          failures and start shipping with confidence. This isn't consulting —
-          it's a system I wish I had years ago.
+          At companies like Sky, HMRC, and Wayfair, a huge share of failed
+          builds — often 60% or more — weren't real regressions at all. They
+          were flaky.
+        </p>
+        <p style={{ color: "#cbd5e1", fontSize: "16px", lineHeight: "1.6" }}>
+          That hidden waste is what eats entire sprints. Engineers rerun tests,
+          triage "ghost" failures, and lose trust in their pipelines.
+        </p>
+        <p style={{ color: "#cbd5e1", fontSize: "16px", lineHeight: "1.6" }}>
+          I built UnflakeOps so teams could stop firefighting flakes and start
+          shipping with confidence. This isn't consulting — it's the system I
+          wish I had years ago, now packaged into a playbook that cuts failures
+          by 50%+ in 30 days.
         </p>
       </section>
 
