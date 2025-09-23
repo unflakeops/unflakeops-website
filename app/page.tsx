@@ -458,30 +458,39 @@ export default function HomePage() {
           I'm Muhammad Qureshi. After 15+ years in QA and DevOps, I've seen
           every way builds can fail.
         </p>
+        <p style={{ color: "#cbd5e1", fontSize: "16px", lineHeight: "1.6" }}>
+          And one pattern showed up everywhere I worked — at Sky, HMRC, Wayfair,
+          and beyond:
+        </p>
         <p
           style={{
             color: "#cbd5e1",
             fontSize: "16px",
             lineHeight: "1.6",
+            fontStyle: "italic",
+            fontWeight: "bold",
+            borderLeft: "3px solid #cbd5e1",
+            paddingLeft: "16px",
+            marginLeft: "0",
             marginTop: "16px",
+            marginBottom: "16px",
           }}
         >
-          And what I discovered shocked me:
+          The majority of failed builds — often 60% or more — weren't real
+          regressions at all. They were flaky.
         </p>
         <p style={{ color: "#cbd5e1", fontSize: "16px", lineHeight: "1.6" }}>
-          At companies like Sky, HMRC, and Wayfair, a huge share of failed
-          builds — often 60% or more — weren't real regressions at all. They
-          were flaky.
+          Before I could tackle the "meaty" engineering problems, I always had
+          to solve this hidden one first. Teams were burning entire sprints
+          rerunning ghost failures, losing trust in their pipelines, and
+          delaying releases.
         </p>
         <p style={{ color: "#cbd5e1", fontSize: "16px", lineHeight: "1.6" }}>
-          That hidden waste is what eats entire sprints. Engineers rerun tests,
-          triage "ghost" failures, and lose trust in their pipelines.
-        </p>
-        <p style={{ color: "#cbd5e1", fontSize: "16px", lineHeight: "1.6" }}>
-          I built UnflakeOps so teams could stop firefighting flakes and start
-          shipping with confidence. This isn't consulting — it's the system I
-          wish I had years ago, now packaged into a playbook that cuts failures
-          by 50%+ in 30 days.
+          That frustration is why I built UnflakeOps — a system designed to kill
+          flakes fast, so engineers can stop firefighting and start shipping
+          with confidence. This isn't just consulting; it's the proven playbook
+          I've used across multiple enterprise teams, now productised to cut
+          failures by 50%+ in 30 days.
         </p>
       </section>
 
