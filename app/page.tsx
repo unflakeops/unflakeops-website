@@ -421,9 +421,39 @@ export default function HomePage() {
         </p>
       </section>
 
-      {/* WHO WE ARE */}
+      {/* HOW WE SOLVE IT */}
       <section className="section">
-        <h2 className="card-title">Who We Are</h2>
+        <h2 className="card-title">How We Solve It</h2>
+        <p style={{ color: "#cbd5e1", fontSize: "18px", marginBottom: "20px" }}>
+          Most people just rerun tests or add more engineers. That doesn't solve
+          the problem.
+        </p>
+        <p style={{ color: "#cbd5e1", fontSize: "16px", marginBottom: "20px" }}>
+          At UnflakeOps, we use our Flake Fingerprint Framework™:
+        </p>
+        <ol
+          style={{
+            color: "#cbd5e1",
+            fontSize: "16px",
+            lineHeight: "1.6",
+            paddingLeft: "20px",
+            marginBottom: "20px",
+          }}
+        >
+          <li>Baseline your flaky failure rate.</li>
+          <li>Fingerprint the top recurring patterns.</li>
+          <li>Enforce PASS/WARN/FAIL merge gates.</li>
+          <li>Quarantine ghost failures automatically.</li>
+        </ol>
+        <p style={{ color: "#cbd5e1", fontSize: "16px" }}>
+          It's not theory — it's a repeatable system proven to cut failures by
+          50%+ in 30 days.
+        </p>
+      </section>
+
+      {/* WHY WE EXIST */}
+      <section className="section">
+        <h2 className="card-title">Why We Exist</h2>
         <p style={{ color: "#cbd5e1", fontSize: "16px", lineHeight: "1.6" }}>
           I'm Muhammad Qureshi. After 15+ years in QA and DevOps, I've seen
           every way builds can fail.
@@ -448,12 +478,12 @@ export default function HomePage() {
             fontSize: "18px",
           }}
         >
-          60%+ of failed builds aren't "real" — they're flaky.
+          60% of failed builds aren't "real" — they're flaky.
         </blockquote>
         <p style={{ color: "#cbd5e1", fontSize: "16px", lineHeight: "1.6" }}>
-          That's why I built UnflakeOps: a system to fingerprint failures,
-          enforce PASS/WARN/FAIL merge gates, and quarantine flakes
-          automatically.
+          I built UnflakeOps so engineering teams could stop firefighting ghost
+          failures and start shipping with confidence. This isn't consulting —
+          it's a system I wish I had years ago.
         </p>
       </section>
 
