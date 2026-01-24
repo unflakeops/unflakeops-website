@@ -39,13 +39,13 @@ type Inputs = {
 };
 
 const DEFAULTS: Inputs = {
-  pipelinesPerWeek: 150,
-  failureRatePct: 20,
-  pctFlaky: 35,
-  triageMinutes: 15,
-  rerunMinutes: 20,
+  pipelinesPerWeek: 200,
+  failureRatePct: 15,
+  pctFlaky: 60,
+  triageMinutes: 10,
+  rerunMinutes: 15,
   engineersAffected: 2,
-  loadedHourly: 100,
+  loadedHourly: 75,
   currency: "GBP",
   sprintPrice: 4000,
   coreMonthly: 8000,
@@ -178,6 +178,15 @@ function Calculator() {
           <p style={{ color: "#cbd5e1", marginBottom: 16, fontSize: 12 }}>
             How much is flakiness costing you? Enter a few numbers, see
             estimated waste &amp; payback. ex VAT
+          </p>
+          <p style={{ 
+            color: "#94a3b8", 
+            marginBottom: 16, 
+            fontSize: 11,
+            fontStyle: "italic"
+          }}>
+            Pre-filled with typical values for B2B SaaS teams (50-100 engineers). 
+            Adjust to match your setup.
           </p>
           <div className="card-grid-2">
             <NumberField
@@ -653,16 +662,23 @@ export default function HomePage() {
             <ul className="week-list">
               <li>
                 <strong>Baseline &amp; Readiness Index</strong> — your
-                flake-rate &amp; CI health score.
+                flake-rate &amp; CI health score
               </li>
               <li>
-                <strong>Gates live</strong> — PASS/WARN/FAIL on PRs.
+                <strong>PASS/WARN/FAIL merge gates</strong> — live on PRs, 
+                enforced and configured
               </li>
               <li>
-                <strong>Top-5 fixes prepared</strong> — PRs shipped.
+                <strong>Top-5 fixes as PRs</strong> — ready to merge, 
+                targeting your worst flakes
               </li>
               <li>
-                <strong>Telemetry dashboard</strong> — 30/90-day plan.
+                <strong>Telemetry dashboard</strong> — track FFR trends, 
+                savings, and ROI over time
+              </li>
+              <li>
+                <strong>30/90-day improvement plan</strong> — roadmap for 
+                continued reliability gains
               </li>
             </ul>
             <div className="week-badges">
@@ -678,6 +694,25 @@ export default function HomePage() {
             </div>
           </div>
         </div>
+      </section>
+
+      {/* ICP FILTER */}
+      <section className="section" style={{ 
+        background: "rgba(59, 130, 246, 0.05)", 
+        border: "1px solid rgba(59, 130, 246, 0.2)",
+        borderRadius: "12px",
+        padding: "16px 20px",
+        marginTop: "24px"
+      }}>
+        <p style={{ 
+          margin: 0, 
+          color: "#93c5fd", 
+          fontSize: "14px",
+          textAlign: "center"
+        }}>
+          <strong>Built for B2B SaaS engineering teams with 15-150 engineers across UK/EU.</strong>
+          {" "}Outside this scope? We can recommend alternatives.
+        </p>
       </section>
 
       {/* PRICING */}
@@ -697,536 +732,4 @@ export default function HomePage() {
           price={6500}
           unit="/mo"
           bullets={[
-            "Rules & fingerprint updates.",
-            "Weekly fixes & coaching.",
-            "Telemetry + compounding savings.",
-          ]}
-        />
-      </section>
-
-      <section id="pricing-ranges" style={{ marginTop: 10 }}>
-        <details
-          style={{
-            border: "1px solid #1f2937",
-            background: "rgba(2,6,23,.4)",
-            borderRadius: 14,
-            padding: 16,
-          }}
-        >
-          <summary
-            style={{
-              cursor: "pointer",
-              color: "#e5e7eb",
-              fontWeight: 700,
-              listStyle: "none",
-              outline: "none",
-            }}
-          >
-            See full pricing ranges (ex VAT)
-          </summary>
-
-          <div style={{ marginTop: 10, color: "#cbd5e1" }}>
-            <ul style={{ margin: 0, paddingLeft: 18, lineHeight: 1.6 }}>
-              <li>
-                <strong>Sprint:</strong> £3k–£5k / €3.5k–€5.8k / $4k–$6.5k —
-                7-day audit, gates, Top-5 fixes, roadmap.
-              </li>
-              <li>
-                <strong>RRaaS Core:</strong> £6k–£12k/mo / €7k–€14k/mo /
-                $8k–$15k/mo — telemetry, weekly fixes, coaching.
-              </li>
-              <li>
-                <strong>RRaaS Plus:</strong> £15k–£25k/mo / €17.5k–€29k/mo /
-                $19.5k–$33k/mo — perf/incident gates, SLO advisory.
-              </li>
-            </ul>
-
-            <p style={{ marginTop: 10, color: "#94a3b8" }}>
-              Typical payback: <strong>weeks, not months</strong>, at
-              moderate–high release volume.
-            </p>
-          </div>
-        </details>
-      </section>
-
-      {/* Pricing ranges drawer (if you use it) */}
-      {/* ...your existing ranges <details>... */}
-
-      {/* Explanations */}
-      <PricingExplainers />
-
-      {/* PROOF */}
-      <section className="proof-section">
-        <h3 style={{ marginTop: 0 }}>Proof</h3>
-        <p style={{ margin: 0 }}>
-          “<strong>62%</strong> fewer flaky failures in 28 days; ~220 engineer
-          hours/quarter reclaimed.”
-          <span style={{ color: "#94a3b8" }}> — CTO, EU SaaS</span>
-        </p>
-        <p style={{ marginTop: 8 }}>
-          <a href="/case-study" style={{ textDecoration: "underline" }}>
-            See the case study
-          </a>
-          {" · "}
-          <a href="/guarantee" style={{ textDecoration: "underline" }}>
-            Read the guarantee
-          </a>
-        </p>
-      </section>
-
-      {/* Process (at a glance) */}
-      <section className="card section">
-        <h2
-          className="card-title"
-          style={{ fontSize: "20px", fontWeight: "600" }}
-        >
-          Process (at a glance)
-        </h2>
-        <div style={{ marginTop: "16px" }}>
-          {/* Gate Score flow (inline SVG) */}
-          <svg
-            viewBox="0 0 760 160"
-            style={{ width: "100%", height: "auto", marginTop: "16px" }}
-            role="img"
-            aria-label="Gate Score on PRs"
-          >
-            <rect x="0" y="0" width="760" height="160" rx="12" fill="none" />
-            <rect
-              x="20"
-              y="50"
-              width="110"
-              height="60"
-              rx="10"
-              fill="#0b0b0f"
-              stroke="#27272a"
-            />
-            <text
-              x="75"
-              y="85"
-              textAnchor="middle"
-              fill="#e5e7eb"
-              fontSize="14"
-            >
-              Dev
-            </text>
-            <path d="M130 80 H190" stroke="#71717a" strokeWidth="2" />
-            <polygon points="190,80 182,76 182,84" fill="#71717a" />
-            <rect
-              x="190"
-              y="40"
-              width="140"
-              height="80"
-              rx="10"
-              fill="#0b0b0f"
-              stroke="#27272a"
-            />
-            <text
-              x="260"
-              y="75"
-              textAnchor="middle"
-              fill="#e5e7eb"
-              fontSize="14"
-            >
-              Pull Request
-            </text>
-            <path d="M330 80 H400" stroke="#71717a" strokeWidth="2" />
-            <polygon points="400,80 392,76 392,84" fill="#71717a" />
-            <rect
-              x="400"
-              y="20"
-              width="160"
-              height="120"
-              rx="12"
-              fill="#0b0b0f"
-              stroke="#10b981"
-            />
-            <text
-              x="480"
-              y="55"
-              textAnchor="middle"
-              fill="#a7f3d0"
-              fontSize="14"
-              fontWeight="600"
-            >
-              Gate Score
-            </text>
-            <text
-              x="480"
-              y="75"
-              textAnchor="middle"
-              fill="#d1d5db"
-              fontSize="12"
-            >
-              PASS · WARN · FAIL
-            </text>
-            <path d="M560 60 H620" stroke="#71717a" strokeWidth="2" />
-            <polygon points="620,60 612,56 612,64" fill="#71717a" />
-            <rect
-              x="620"
-              y="45"
-              width="120"
-              height="30"
-              rx="8"
-              fill="#052e1a"
-              stroke="#10b981"
-            />
-            <text
-              x="680"
-              y="64"
-              textAnchor="middle"
-              fill="#a7f3d0"
-              fontSize="12"
-            >
-              Merge
-            </text>
-            <path d="M560 100 H620" stroke="#71717a" strokeWidth="2" />
-            <polygon points="620,100 612,96 612,104" fill="#71717a" />
-            <rect
-              x="620"
-              y="85"
-              width="120"
-              height="30"
-              rx="8"
-              fill="#3f2d00"
-              stroke="#f59e0b"
-            />
-            <text
-              x="680"
-              y="104"
-              textAnchor="middle"
-              fill="#fde68a"
-              fontSize="12"
-            >
-              Quarantine/Coach
-            </text>
-          </svg>
-
-          {/* 30‑day timeline (inline SVG) */}
-          <svg
-            viewBox="0 0 760 120"
-            style={{ width: "100%", height: "auto" }}
-            role="img"
-            aria-label="30‑day sprint timeline"
-          >
-            <rect x="0" y="0" width="760" height="120" rx="12" fill="none" />
-            <rect
-              x="20"
-              y="40"
-              width="170"
-              height="40"
-              rx="8"
-              fill="#052e1a"
-              stroke="#10b981"
-            />
-            <text
-              x="105"
-              y="60"
-              textAnchor="middle"
-              fill="#a7f3d0"
-              fontSize="12"
-            >
-              Week‑1
-            </text>
-            <text
-              x="105"
-              y="74"
-              textAnchor="middle"
-              fill="#d1d5db"
-              fontSize="11"
-            >
-              Baseline + Gates
-            </text>
-            <rect
-              x="200"
-              y="40"
-              width="170"
-              height="40"
-              rx="8"
-              fill="#0b1022"
-              stroke="#60a5fa"
-            />
-            <text
-              x="285"
-              y="60"
-              textAnchor="middle"
-              fill="#dbeafe"
-              fontSize="12"
-            >
-              Week‑2
-            </text>
-            <text
-              x="285"
-              y="74"
-              textAnchor="middle"
-              fill="#d1d5db"
-              fontSize="11"
-            >
-              Fingerprints + Quarantine
-            </text>
-            <rect
-              x="380"
-              y="40"
-              width="170"
-              height="40"
-              rx="8"
-              fill="#1f0a21"
-              stroke="#e879f9"
-            />
-            <text
-              x="465"
-              y="60"
-              textAnchor="middle"
-              fill="#f5d0fe"
-              fontSize="12"
-            >
-              Week‑3
-            </text>
-            <text
-              x="465"
-              y="74"
-              textAnchor="middle"
-              fill="#d1d5db"
-              fontSize="11"
-            >
-              Fixes + Adoption
-            </text>
-            <rect
-              x="560"
-              y="40"
-              width="170"
-              height="40"
-              rx="8"
-              fill="#2a1900"
-              stroke="#f59e0b"
-            />
-            <text
-              x="645"
-              y="60"
-              textAnchor="middle"
-              fill="#fde68a"
-              fontSize="12"
-            >
-              Week‑4
-            </text>
-            <text
-              x="645"
-              y="74"
-              textAnchor="middle"
-              fill="#d1d5db"
-              fontSize="11"
-            >
-              Enforce + Handover
-            </text>
-          </svg>
-        </div>
-      </section>
-
-      {/* 30-DAY PLAN */}
-      <ThirtyDayPlan />
-
-      {/* CALCULATOR */}
-      <Calculator />
-
-      {/* How we measure */}
-      <section className="card section">
-        <h2
-          className="card-title"
-          style={{ fontSize: "20px", fontWeight: "600" }}
-        >
-          How we measure
-        </h2>
-        <div
-          style={{
-            marginTop: "12px",
-            background: "#0b1323",
-            padding: "16px",
-            borderRadius: "12px",
-            color: "#cbd5e1",
-          }}
-        >
-          <div
-            style={{
-              fontSize: "12px",
-              textTransform: "uppercase",
-              letterSpacing: "0.1em",
-              color: "#9ca3af",
-            }}
-          >
-            Formula
-          </div>
-          <div
-            style={{
-              marginTop: "4px",
-              fontSize: "18px",
-              fontWeight: "600",
-              color: "var(--text)",
-            }}
-          >
-            FFR = FFEs ÷ total pipelines
-          </div>
-          <ul
-            style={{
-              marginTop: "12px",
-              paddingLeft: "24px",
-              color: "#cbd5e1",
-              fontSize: "14px",
-            }}
-          >
-            <li>
-              <span style={{ fontWeight: "500", color: "var(--text)" }}>
-                FFEs
-              </span>
-              : confirmed by rerun/pass or fingerprint
-            </li>
-            <li>
-              Baseline = last 28 days or 500 pipelines (whichever is longer)
-            </li>
-            <li>
-              Success = any 7‑day window ≤ 50% baseline, or Day1–30 average ≤
-              50%
-            </li>
-          </ul>
-        </div>
-      </section>
-
-      {/* BOOKING (no Google iframe; opens new tab) */}
-      <section id="book" className="booking-section">
-        <h2>Book a 15-min CI Audit</h2>
-        <p style={{ color: "#cbd5e1" }}>
-          Pick a slot that suits you. We'll baseline your flake-rate and show
-          the 3 fastest wins.
-        </p>
-        <div className="booking-card">
-          <p style={{ marginTop: 0, color: "#94a3b8" }}>
-            We use Google Calendar for scheduling. Google doesn’t allow
-            embedding their booking page, so it opens in a new tab.
-          </p>
-          <a
-            href={BOOKING_URL || "#"}
-            target="_blank"
-            rel="noreferrer"
-            className={BOOKING_URL ? "booking-button" : "booking-button"}
-            style={{
-              background: BOOKING_URL ? "#38bdf8" : "#334155",
-              pointerEvents: BOOKING_URL ? "auto" : "none",
-            }}
-          >
-            {BOOKING_URL ? "Open booking page" : "Set NEXT_PUBLIC_BOOKING_URL"}
-          </a>
-        </div>
-        <p style={{ marginTop: 8 }}>
-          Or email{" "}
-          <a href={`mailto:${EMAIL}`} style={{ textDecoration: "underline" }}>
-            {EMAIL}
-          </a>
-          .
-        </p>
-      </section>
-
-      {/* FOOTER */}
-      <footer className="main-footer">
-        <div>
-          © {new Date().getFullYear()} UnflakeOps.{" "}
-          <a href="/privacy" style={{ textDecoration: "underline" }}>
-            Privacy
-          </a>{" "}
-          ·{" "}
-          <a href="/terms" style={{ textDecoration: "underline" }}>
-            Terms
-          </a>{" "}
-          ·{" "}
-          <a href="/guarantee" style={{ textDecoration: "underline" }}>
-            Guarantee
-          </a>
-        </div>
-      </footer>
-    </main>
-  );
-}
-function ThirtyDayPlan() {
-  const weeks = [
-    {
-      title: "Week 1 — Baseline & Gates",
-      bullets: [
-        "Read-only agent installed; Baseline & Readiness Index",
-        "PASS/WARN/FAIL merge gates stood up on PRs",
-        "Quarantine the worst flakes; auto-rerun policy for known flakies",
-        "Top-5 fixes prepared as PRs; telemetry dashboard online",
-      ],
-    },
-    {
-      title: "Week 2 — Fingerprints & Quarantines",
-      bullets: [
-        "Fingerprint recurring failures across suites/jobs",
-        "Expand quarantines; stabilise critical paths",
-        "Ship PRs for Top-5 + quick wins; start team coaching",
-        "Repo templates & SOPs introduced (rerun, quarantine, triage)",
-      ],
-    },
-    {
-      title: "Week 3 — Fix Sprint & Adoption",
-      bullets: [
-        "Close 10–20 targeted fixes; remove flaky patterns",
-        "Tighten WARN gates on protected branches",
-        "Update signatures and rules from fresh telemetry",
-        "Weekly coaching + pairing to bake habits in",
-      ],
-    },
-    {
-      title: "Week 4 — Enforce & Handover",
-      bullets: [
-        "Move to PASS/FAIL gating on main (where safe)",
-        "Handover playbooks, scripts, dashboards — you keep everything",
-        "Confirm ≥50% FFR reduction on 7-day rolling window",
-        "Agree next 90-day plan (or continue Core for compounding gains)",
-      ],
-    },
-  ];
-
-  return (
-    <section className="section">
-      <h3 style={{ marginTop: 0 }}>30-Day Plan</h3>
-      <div className="plan-grid">
-        {weeks.map((w) => (
-          <div key={w.title} className="plan-card">
-            <strong className="plan-title">{w.title}</strong>
-            <ul className="plan-list">
-              {w.bullets.map((b) => (
-                <li key={b}>{b}</li>
-              ))}
-            </ul>
-          </div>
-        ))}
-      </div>
-    </section>
-  );
-}
-
-/** price card */
-function PriceCard({
-  title,
-  price,
-  unit,
-  bullets,
-}: {
-  title: string;
-  price: number;
-  unit: "/mo" | "one-off";
-  bullets: string[];
-}) {
-  return (
-    <div className="price-card">
-      <h3 className="price-title">{title}</h3>
-      <div className="price-amount">
-        £{price.toLocaleString()}
-        <span className="price-unit">{unit}</span>
-        <span className="price-vat">ex VAT</span>
-      </div>
-      <ul style={{ marginTop: 8, paddingLeft: 18 }}>
-        {bullets.map((b) => (
-          <li key={b}>{b}</li>
-        ))}
-      </ul>
-    </div>
-  );
-}
+            "Rules & fingerprint
