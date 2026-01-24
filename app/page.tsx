@@ -39,13 +39,13 @@ type Inputs = {
 };
 
 const DEFAULTS: Inputs = {
-  pipelinesPerWeek: 150,
-  failureRatePct: 20,
-  pctFlaky: 35,
-  triageMinutes: 15,
-  rerunMinutes: 20,
+  pipelinesPerWeek: 200,
+  failureRatePct: 15,
+  pctFlaky: 60,
+  triageMinutes: 10,
+  rerunMinutes: 15,
   engineersAffected: 2,
-  loadedHourly: 100,
+  loadedHourly: 75,
   currency: "GBP",
   sprintPrice: 4000,
   coreMonthly: 8000,
@@ -178,6 +178,9 @@ function Calculator() {
           <p style={{ color: "#cbd5e1", marginBottom: 16, fontSize: 12 }}>
             How much is flakiness costing you? Enter a few numbers, see
             estimated waste &amp; payback. ex VAT
+          </p>
+          <p style={{ color: "#94a3b8", marginBottom: 16, fontSize: 11, fontStyle: "italic" }}>
+            Pre-filled with typical values for B2B SaaS teams (50-100 engineers). Adjust to match your setup.
           </p>
           <div className="card-grid-2">
             <NumberField
@@ -652,17 +655,19 @@ export default function HomePage() {
             <strong className="week-title">WEEK-1 · DELIVERABLES</strong>
             <ul className="week-list">
               <li>
-                <strong>Baseline &amp; Readiness Index</strong> — your
-                flake-rate &amp; CI health score.
+                <strong>Baseline &amp; Readiness Index</strong> — your flake-rate &amp; CI health score
               </li>
               <li>
-                <strong>Gates live</strong> — PASS/WARN/FAIL on PRs.
+                <strong>PASS/WARN/FAIL merge gates</strong> — live on PRs, enforced and configured
               </li>
               <li>
-                <strong>Top-5 fixes prepared</strong> — PRs shipped.
+                <strong>Top-5 fixes as PRs</strong> — ready to merge, targeting your worst flakes
               </li>
               <li>
-                <strong>Telemetry dashboard</strong> — 30/90-day plan.
+                <strong>Telemetry dashboard</strong> — track FFR trends, savings, and ROI over time
+              </li>
+              <li>
+                <strong>30/90-day improvement plan</strong> — roadmap for continued reliability gains
               </li>
             </ul>
             <div className="week-badges">
@@ -678,6 +683,13 @@ export default function HomePage() {
             </div>
           </div>
         </div>
+      </section>
+
+      {/* ICP FILTER */}
+      <section className="section" style={{ background: "rgba(59, 130, 246, 0.05)", border: "1px solid rgba(59, 130, 246, 0.2)", borderRadius: "12px", padding: "16px 20px", marginTop: "24px" }}>
+        <p style={{ margin: 0, color: "#93c5fd", fontSize: "14px", textAlign: "center" }}>
+          <strong>Built for B2B SaaS engineering teams with 15-150 engineers across UK/EU.</strong> Outside this scope? We can recommend alternatives.
+        </p>
       </section>
 
       {/* PRICING */}
@@ -754,6 +766,26 @@ export default function HomePage() {
 
       {/* Explanations */}
       <PricingExplainers />
+
+      {/* GUARANTEE */}
+      <section className="card section" style={{ background: "linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(59, 130, 246, 0.05) 100%)", border: "1px solid rgba(16, 185, 129, 0.3)" }}>
+        <h2 className="card-title" style={{ fontSize: "20px", fontWeight: "600", color: "#10b981" }}>
+          Our 30-Day Guarantee
+        </h2>
+        <div style={{ marginTop: "16px", color: "#cbd5e1" }}>
+          <p style={{ fontSize: "16px", lineHeight: "1.6", margin: 0 }}>
+            We cut your flaky failure rate by <strong style={{ color: "#10b981" }}>50%+ in 30 days</strong>, or we keep working at <strong>no additional fee</strong> (up to 60 days total).
+          </p>
+          <p style={{ fontSize: "14px", lineHeight: "1.6", marginTop: "12px", color: "#94a3b8" }}>
+            If we don&apos;t hit 50% reduction, you don&apos;t pay more. Simple as that.
+          </p>
+          <p style={{ marginTop: "12px" }}>
+            <a href="/guarantee" style={{ textDecoration: "underline", color: "#10b981", fontWeight: "500" }}>
+              Read full guarantee terms →
+            </a>
+          </p>
+        </div>
+      </section>
 
       {/* PROOF */}
       <section className="proof-section">
