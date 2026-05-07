@@ -1,7 +1,7 @@
 {
-  "name": "UnflakeOps - CI Reliability, Web, Data & Integration Delivery",
+  "name": "UnflakeOps - AI Reliability, RAG Evaluation & Data Maturity",
   "short_name": "UnflakeOps",
-  "description": "Senior delivery services for CI reliability, flaky-test reduction, web platforms, data engineering, integrations, and quality-led launches.",
+  "description": "AI reliability and data maturity services for RAG systems, hallucination control, deterministic LLM outputs, LLM-ready data, and data pipelines.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#0b1323",

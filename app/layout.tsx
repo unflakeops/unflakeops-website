@@ -2,12 +2,11 @@ import "../styles/globals.css";
 import CookiesBanner from "../components/CookiesBanner";
 
 export const metadata = {
-  title:
-    "UnflakeOps — CI Reliability, Web Platforms, Data & Integration Delivery",
+  title: "UnflakeOps — AI Reliability, RAG Evaluation & Data Maturity",
   description:
-    "Senior delivery services for CI reliability, flaky-test reduction, web platforms, data engineering, integrations, automation, and quality-led launches.",
+    "AI reliability and data maturity services for RAG systems, hallucination control, deterministic LLM outputs, LLM-ready data, and data pipelines.",
   keywords:
-    "CI/CD, flaky tests, GitHub Actions, GitLab CI, web development, data engineering, integrations, QA, delivery leadership",
+    "AI reliability, RAG evaluation, hallucination control, deterministic LLM outputs, data maturity, LLM-ready data, data pipelines, retrieval quality",
   authors: [{ name: "UnflakeOps" }],
   creator: "UnflakeOps",
   publisher: "UnflakeOps",
@@ -27,25 +26,23 @@ export const metadata = {
     locale: "en_US",
     url: "https://www.unflakeops.com",
     siteName: "UnflakeOps",
-    title:
-      "UnflakeOps — CI Reliability, Web Platforms, Data & Integration Delivery",
+    title: "UnflakeOps — AI Reliability, RAG Evaluation & Data Maturity",
     description:
-      "Senior delivery services for CI reliability, web platforms, data engineering, integrations, automation, and quality-led launches.",
+      "AI reliability and data maturity services for RAG systems, hallucination control, deterministic LLM outputs, LLM-ready data, and data pipelines.",
     images: [
       {
         url: "https://www.unflakeops.com/brand/unflakeops_icon_dots_dark_400.png",
         width: 400,
         height: 400,
-        alt: "UnflakeOps - CI reliability, web, data, and integration delivery",
+        alt: "UnflakeOps - AI reliability, RAG evaluation, and data maturity",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title:
-      "UnflakeOps — CI Reliability, Web Platforms, Data & Integration Delivery",
+    title: "UnflakeOps — AI Reliability, RAG Evaluation & Data Maturity",
     description:
-      "Senior delivery services for CI reliability, web platforms, data engineering, integrations, automation, and quality-led launches.",
+      "AI reliability and data maturity services for RAG systems, hallucination control, deterministic LLM outputs, LLM-ready data, and data pipelines.",
     images: [
       "https://www.unflakeops.com/brand/unflakeops_icon_dots_dark_400.png",
     ],

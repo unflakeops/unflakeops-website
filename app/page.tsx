@@ -49,78 +49,78 @@ const DEFAULTS: Inputs = {
 
 const SERVICE_TRACKS = [
   {
-    kicker: "Muhammad / UnflakeOps",
-    title: "CI Reliability & Release Assurance",
+    kicker: "Muhammad / AI reliability",
+    title: "RAG, Evaluation & Output Control",
     description:
-      "Reduce flaky failures, stabilise GitHub Actions and GitLab CI, and add practical release gates your team can keep using after handover.",
+      "Make AI systems answer from the right evidence, fail safely, and produce repeatable outputs your team can trust in real workflows.",
     bullets: [
-      "Flake-rate baselines, PASS/WARN/FAIL gates, and pipeline telemetry",
-      "Top failing suites fingerprinted, quarantined, fixed, or routed",
-      "Developer workflow coaching, repo templates, and handover playbooks",
+      "RAG evaluation, retrieval quality checks, and answer-grounding tests",
+      "Hallucination detection, deterministic output rules, and regression suites",
+      "Prompt, tool, and workflow instrumentation so failures are measurable",
     ],
-    metric: "30-day reliability sprint",
+    metric: "AI reliability sprint",
   },
   {
-    kicker: "Abbad / Numetix",
-    title: "Web, Data & Integration Delivery",
+    kicker: "Abbad / Data maturity",
+    title: "LLM-Ready Data & Pipelines",
     description:
-      "Ship customer-facing platforms, data pipelines, dashboards, and integrations with delivery discipline from discovery through launch.",
+      "Assess whether the data is good enough for AI decisions, then build the pipelines, models, and governance needed to improve it.",
     bullets: [
-      "React/Next.js platforms, internal tools, portals, and web products",
-      "Data engineering, analytics, system integration, and workflow automation",
-      "Quality engineering, release planning, stakeholder coordination, and delivery leadership",
+      "Data maturity audits across sources, lineage, quality, and ownership",
+      "Pipelines, transformations, analytics layers, and decision-ready datasets",
+      "Data contracts and monitoring so AI workflows do not rely on guesswork",
     ],
-    metric: "Scoped delivery engagement",
+    metric: "Data maturity engagement",
   },
 ];
 
 const CAPABILITIES = [
   {
-    title: "Reliability Engineering",
-    body: "CI/CD audits, flaky-test reduction, merge gates, observability, release readiness, and engineering coaching.",
+    title: "RAG Readiness",
+    body: "Check whether retrieval is finding the right facts, ranking them correctly, and exposing enough context for useful answers.",
   },
   {
-    title: "Web Platforms",
-    body: "Responsive applications, dashboards, SaaS workflows, marketing sites, internal tools, and production support.",
+    title: "AI Evaluations",
+    body: "Create test sets, scoring rules, regression checks, and evidence-based pass/fail gates for AI answers and workflows.",
   },
   {
-    title: "Data & Analytics",
-    body: "Pipelines, warehouse modelling, reporting, KPI instrumentation, migration assurance, and operational dashboards.",
+    title: "Hallucination Control",
+    body: "Design grounding, refusal, citation, and escalation behaviour so the system knows when it should not answer.",
   },
   {
-    title: "Integration & Automation",
-    body: "API integrations, healthcare and enterprise interoperability, workflow automation, test data, and monitoring.",
+    title: "Deterministic Outputs",
+    body: "Turn vague prompt behaviour into schemas, constraints, validation, tool calls, and repeatable business outputs.",
   },
   {
-    title: "Quality & Testing",
-    body: "Functional, regression, integration, performance, UAT, and release validation across product and data stacks.",
+    title: "Data Maturity",
+    body: "Assess data quality, completeness, lineage, access, ownership, and freshness before building AI on top of it.",
   },
   {
-    title: "Delivery Leadership",
-    body: "Discovery, scope framing, programme governance, stakeholder alignment, delivery cadence, and launch planning.",
+    title: "Data Pipelines",
+    body: "Build the ingestion, transformation, validation, and monitoring layers that make AI systems operationally useful.",
   },
 ];
 
 const APPROACH = [
   {
     step: "01",
-    title: "Discover & Frame",
-    body: "Understand the business goal, current stack, constraints, stakeholders, and the few metrics that prove progress.",
+    title: "Find the Decision",
+    body: "Start with the business decision or workflow the AI system is meant to improve, not with a model or tool choice.",
   },
   {
     step: "02",
-    title: "Baseline & Architect",
-    body: "Map risks, define the delivery path, instrument the right signals, and create a plan your team can actually execute.",
+    title: "Audit Data & Retrieval",
+    body: "Inspect source quality, retrieval behaviour, answer evidence, edge cases, and where hallucination or ambiguity appears.",
   },
   {
     step: "03",
-    title: "Build, Fix & Assure",
-    body: "Ship in short cycles with PR-based changes, automation, test coverage, quality checks, and visible weekly progress.",
+    title: "Instrument & Improve",
+    body: "Add pipelines, evaluation sets, scoring, structured output checks, and feedback loops so progress is visible.",
   },
   {
     step: "04",
-    title: "Launch, Handover & Improve",
-    body: "Move the work into production, hand over playbooks and dashboards, then iterate from real adoption and reliability data.",
+    title: "Operationalise",
+    body: "Move the workflow into production with monitoring, ownership, documentation, and clear handover for the team.",
   },
 ];
 
@@ -661,14 +661,15 @@ export default function HomePage() {
       <section className="hero-section consulting-hero">
         <div className="site-shell hero-content consulting-hero__content">
           <div className="hero-copy">
-            <p className="eyebrow">UnflakeOps + Numetix delivery services</p>
+            <p className="eyebrow">AI reliability + data maturity</p>
             <h1 className="hero-title">
-              Delivery precision for teams that need software to ship.
+              Make AI useful by fixing the data and the answers.
             </h1>
             <p className="hero-subtitle">
-              CI reliability, web platforms, data pipelines, integrations, and
-              QA-led delivery from two senior operators. Less theatre, more
-              shipped work, cleaner handover.
+              UnflakeOps is the front door for Muhammad and Abbad's combined
+              work: reliable RAG systems, hallucination control, deterministic
+              AI outputs, data maturity, and the pipelines that make LLMs worth
+              trusting.
             </p>
             <div className="hero-actions">
               <a
@@ -685,9 +686,9 @@ export default function HomePage() {
               </a>
             </div>
             <div className="hero-proof-strip" aria-label="Delivery principles">
-              <span>PR-based delivery</span>
-              <span>Measured outcomes</span>
-              <span>Clean handover</span>
+              <span>RAG grounded in evidence</span>
+              <span>Data ready for decisions</span>
+              <span>Outputs you can regression test</span>
             </div>
           </div>
 
@@ -702,41 +703,41 @@ export default function HomePage() {
                   priority
                 />
                 <div>
-                  <strong>Delivery cockpit</strong>
-                  <span>Reliability, build, and launch signals</span>
+                  <strong>AI readiness cockpit</strong>
+                  <span>Data, retrieval, and output signals</span>
                 </div>
               </div>
-              <span className="status-pill">Live</span>
+              <span className="status-pill">Measured</span>
             </div>
             <div className="signal-grid">
               <div className="signal-card signal-card--green">
-                <span>CI gates</span>
-                <strong>PASS</strong>
-                <p>Known flakies routed, merge confidence restored.</p>
+                <span>Retrieval</span>
+                <strong>Grounded</strong>
+                <p>Answers trace back to the right sources and context.</p>
               </div>
               <div className="signal-card signal-card--blue">
-                <span>Product build</span>
-                <strong>Scoped</strong>
-                <p>Platform, dashboard, or integration mapped to launch.</p>
+                <span>Data maturity</span>
+                <strong>Ready</strong>
+                <p>Freshness, ownership, lineage, and quality are visible.</p>
               </div>
               <div className="signal-card signal-card--amber">
-                <span>Delivery risk</span>
-                <strong>Visible</strong>
-                <p>Dependencies, quality, and handover tracked weekly.</p>
+                <span>Outputs</span>
+                <strong>Stable</strong>
+                <p>Structured responses are validated before they reach users.</p>
               </div>
             </div>
             <div className="visual-metrics">
               <div>
-                <span>30 days</span>
-                <p>CI reliability sprint</p>
+                <span>RAG</span>
+                <p>Eval and grounding</p>
               </div>
               <div>
                 <span>2 tracks</span>
-                <p>Reliability + delivery</p>
+                <p>AI + data</p>
               </div>
               <div>
-                <span>0 lock-in</span>
-                <p>You own the work</p>
+                <span>Pipelines</span>
+                <p>Decision-ready data</p>
               </div>
             </div>
           </aside>
@@ -747,11 +748,10 @@ export default function HomePage() {
         <div className="site-shell">
           <div className="section-heading">
           <p className="eyebrow">Services</p>
-          <h2>Two tracks. One clean delivery story.</h2>
+          <h2>Two tracks that need each other.</h2>
           <p>
-            Choose the lane that matches the problem in front of you, then
-            bring both skill sets together when reliability, product, data, and
-            delivery overlap.
+            AI reliability fails when the data is weak. Data work fails when it
+            is not tied to a real decision. This offer joins both sides.
           </p>
           </div>
           <div className="service-track-grid">
@@ -776,11 +776,11 @@ export default function HomePage() {
         <div className="site-shell">
           <div className="section-heading section-heading--dark">
           <p className="eyebrow">Capability map</p>
-          <h2>Start with the business problem, not the buzzwords.</h2>
+          <h2>Start with the AI decision, then work backwards.</h2>
           <p>
-            Start with a concrete pain: blocked releases, a platform that needs
-            shipping, a data workflow that keeps breaking, or a delivery plan
-            that needs senior hands-on execution.
+            The question is not "which LLM should we use?" It is whether the
+            system has the right data, retrieves the right evidence, and gives a
+            dependable answer when it matters.
           </p>
           </div>
           <div className="capability-grid">
@@ -798,11 +798,10 @@ export default function HomePage() {
         <div className="site-shell">
           <div className="section-heading">
           <p className="eyebrow">Approach</p>
-          <h2>A simple delivery rhythm.</h2>
+          <h2>A practical AI-readiness rhythm.</h2>
           <p>
-            The same rhythm works for fixed reliability sprints and broader
-            delivery projects: frame the outcome, instrument the work, ship in
-            short cycles, then hand over cleanly.
+            We audit the decision, the data, the retrieval, and the output
+            behaviour before building more automation on shaky foundations.
           </p>
           </div>
           <div className="approach-grid">
@@ -821,10 +820,11 @@ export default function HomePage() {
         <div className="site-shell">
           <div className="section-heading section-heading--dark">
           <p className="eyebrow">Who you work with</p>
-          <h2>Senior operators, not a faceless agency layer.</h2>
+          <h2>AI output reliability and data maturity under one roof.</h2>
           <p>
-            You work directly with people who can diagnose, build, coordinate,
-            test, and launch. That keeps scope honest and delivery moving.
+            Muhammad leads the reliability, evaluation, and output-control side.
+            Abbad leads the data maturity, modelling, and pipeline side. Both
+            learn enough of the other's lane to deliver joined-up work.
           </p>
           </div>
           <div className="team-grid">
@@ -833,9 +833,9 @@ export default function HomePage() {
             <div>
               <h3>Muhammad</h3>
               <p>
-                CI reliability, release engineering, flaky-test reduction,
-                developer workflow automation, and measurable delivery
-                improvement.
+                RAG evaluation, hallucination checks, deterministic output
+                design, AI workflow instrumentation, and reliability-minded
+                implementation.
               </p>
             </div>
           </article>
@@ -844,8 +844,8 @@ export default function HomePage() {
             <div>
               <h3>Abbad</h3>
               <p>
-                Web platforms, data engineering, integrations, quality
-                assurance, delivery governance, and complex programme execution.
+                Data maturity, data engineering, analytics models, pipelines,
+                quality checks, and preparing business data for LLM use cases.
               </p>
             </div>
           </article>
@@ -857,57 +857,41 @@ export default function HomePage() {
         <div className="site-shell">
           <div className="section-heading section-heading--dark">
           <p className="eyebrow">Engagements</p>
-          <h2>Start narrow. Expand only where it earns trust.</h2>
+          <h2>Lead with a problem, not a generic AI promise.</h2>
           <p>
-            CI work can start with a measurable cost baseline. Broader web,
-            data, and integration delivery starts with a scoped discovery call.
+            The lead-generation motion can open doors around concrete pains:
+            hallucinating assistants, unreliable RAG answers, poor data quality,
+            and pipelines that are not ready for AI decisions.
           </p>
           </div>
-          <div id="pricing" className="pricing-grid">
-            <PriceCard
-              title="CI Reliability Sprint"
-              price={3500}
-              unit="one-off"
-              bullets={[
-                "Baseline & Readiness Index.",
-                "Gates live + Top-5 fixes prepped.",
-                "Dashboard + 30/90-day plan.",
-              ]}
-            />
-            <PriceCard
-              title="Reliability Core"
-              price={6500}
-              unit="/mo"
-              bullets={[
-                "Rules & fingerprint updates.",
-                "Weekly fixes & coaching.",
-                "Telemetry + compounding savings.",
-              ]}
-            />
-            <div className="price-card price-card--quote">
-              <h3 className="price-title">Web, Data & Integration Delivery</h3>
-              <div className="quote-price">Scoped after discovery</div>
-              <ul style={{ marginTop: 8, paddingLeft: 18 }}>
-                <li>Platform builds, dashboards, and internal tools.</li>
-                <li>Data pipelines, integrations, and automation.</li>
-                <li>Delivery leadership, QA, and launch support.</li>
-              </ul>
+          <div id="offers" className="offer-grid">
+            <div className="offer-card">
+              <span>01</span>
+              <h3>AI / RAG Reliability Audit</h3>
+              <p>
+                Review retrieval quality, hallucination risk, prompts, tools,
+                citations, and output determinism. Leave with a scored gap list
+                and a delivery plan.
+              </p>
+            </div>
+            <div className="offer-card">
+              <span>02</span>
+              <h3>Data Maturity for LLMs</h3>
+              <p>
+                Assess whether the organisation's data is complete, fresh,
+                governed, traceable, and structured enough for AI workflows to
+                make the right decisions.
+              </p>
+            </div>
+            <div className="offer-card">
+              <span>03</span>
+              <h3>Build & Operationalise</h3>
+              <p>
+                Improve the pipelines, add eval harnesses, wire monitoring, and
+                turn the use case into a workflow that can survive real users.
+              </p>
             </div>
           </div>
-        </div>
-      </section>
-
-      <section className="landing-section calculator-wrap">
-        <div className="site-shell">
-          <div className="section-heading section-heading--dark">
-            <p className="eyebrow">CI cost calculator</p>
-            <h2>Make flaky delivery visible in pounds and hours.</h2>
-            <p>
-              The calculator stays as a focused conversion tool for teams with
-              an immediate CI reliability problem.
-            </p>
-          </div>
-          <Calculator />
         </div>
       </section>
 
@@ -915,11 +899,11 @@ export default function HomePage() {
         <div className="site-shell contact-grid">
           <div>
             <p className="eyebrow">Get started</p>
-            <h2>Bring the problem. We will shape the first useful step.</h2>
+            <h2>Bring us the AI workflow that cannot be trusted yet.</h2>
             <p>
-              CI reliability, web build, data pipeline, integration, QA, or
-              delivery leadership. We will tell you where we can help and where
-              we should not.
+              We will look at the decision, the data behind it, how retrieval
+              works, where the answer can go wrong, and what needs to change
+              before the system is safe to scale.
             </p>
           </div>
           <div className="contact-card">
@@ -935,8 +919,8 @@ export default function HomePage() {
               {EMAIL}
             </a>
             <p>
-              Send a short version of the problem, the stack, and what outcome
-              would make the next 30 days worthwhile.
+              Send the use case, the data sources, what the AI system currently
+              gets wrong, and what a reliable answer would unlock.
             </p>
           </div>
         </div>

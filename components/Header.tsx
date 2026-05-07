@@ -32,7 +32,7 @@ export default function Header() {
           <a href="#services">Services</a>
           <a href="#approach">Approach</a>
           <a href="#team">Team</a>
-          <a href="#calc">Calculator</a>
+          <a href="#offers">Offers</a>
           <a href="#book">Contact</a>
         </nav>
 

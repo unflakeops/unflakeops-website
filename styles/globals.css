@@ -1537,6 +1537,39 @@ a {
   gap: 16px;
 }
 
+.offer-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.offer-card {
+  min-height: 260px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.045);
+  padding: 24px;
+}
+
+.offer-card span {
+  color: var(--green);
+  font-weight: 900;
+  font-size: 12px;
+}
+
+.offer-card h3 {
+  margin: 18px 0 12px;
+  color: #ffffff;
+  font-size: 22px;
+  line-height: 1.2;
+}
+
+.offer-card p {
+  margin: 0;
+  color: var(--ink-soft);
+  line-height: 1.7;
+}
+
 .price-card {
   box-shadow: none;
 }
@@ -1705,6 +1738,7 @@ select {
   .approach-grid,
   .team-grid,
   .pricing-grid,
+  .offer-grid,
   .calculator-grid,
   .contact-grid {
     grid-template-columns: 1fr;
