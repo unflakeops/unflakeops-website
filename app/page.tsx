@@ -1,15 +1,12 @@
 "use client";
 
+import Image from "next/image";
 import { useMemo, useState } from "react";
 import Header from "../components/Header";
 
 /** ENV */
 const BOOKING_URL = process.env.NEXT_PUBLIC_BOOKING_URL ?? ""; // <-- put your UnflakeOps booking URL in .env
 const EMAIL = process.env.NEXT_PUBLIC_CONTACT_EMAIL ?? "hello@unflakeops.com";
-const BADGE =
-  process.env.NEXT_PUBLIC_REGION_BADGE ??
-  "Read-only access • PR-based changes • You own everything";
-const HERO_ASSURANCE = process.env.NEXT_PUBLIC_HERO_ASSURANCE ?? "line"; // "line" | "bullets"
 
 /** -------------------------------
  *  Currency helpers
@@ -658,21 +655,20 @@ function PricingExplainers() {
  *  ------------------------------- */
 export default function HomePage() {
   return (
-    <main className="main-container">
+    <main className="main-container landing-page">
       <Header />
 
       <section className="hero-section consulting-hero">
-        <div className="hero-content consulting-hero__content">
-          <div>
+        <div className="site-shell hero-content consulting-hero__content">
+          <div className="hero-copy">
             <p className="eyebrow">UnflakeOps + Numetix delivery services</p>
             <h1 className="hero-title">
-              Reliable releases, web platforms, and data systems that ship.
+              Delivery precision for teams that need software to ship.
             </h1>
             <p className="hero-subtitle">
-              We combine Muhammad's UnflakeOps CI reliability work with
-              Abbad's web, data, integration, and delivery expertise. One place
-              for teams that need fewer blocked releases and more dependable
-              software delivery.
+              CI reliability, web platforms, data pipelines, integrations, and
+              QA-led delivery from two senior operators. Less theatre, more
+              shipped work, cleaner handover.
             </p>
             <div className="hero-actions">
               <a
@@ -688,77 +684,77 @@ export default function HomePage() {
                 View services
               </a>
             </div>
-            {HERO_ASSURANCE === "bullets" ? (
-              <ul
-                style={{
-                  marginTop: 10,
-                  paddingLeft: 18,
-                  color: "#cbd5e1",
-                  fontSize: 14,
-                  display: "grid",
-                  gap: 4,
-                }}
-              >
-                <li>
-                  <strong>Flexible</strong> — pick what you need
-                </li>
-                <li>
-                  <strong>Secure</strong> — least-privilege access (read-only by
-                  default)
-                </li>
-                <li>
-                  <strong>Yours</strong> — you own all scripts &amp; dashboards
-                </li>
-              </ul>
-            ) : (
-              <p className="hero-disclaimer">
-                PR-based changes, clear scope, measurable outcomes, and
-                practical handover. You own the scripts, dashboards, code, and
-                playbooks we build.
-              </p>
-            )}
+            <div className="hero-proof-strip" aria-label="Delivery principles">
+              <span>PR-based delivery</span>
+              <span>Measured outcomes</span>
+              <span>Clean handover</span>
+            </div>
           </div>
 
-          <aside className="hero-aside-panel" aria-label="Service focus">
-            <strong className="week-title">WHAT WE HELP WITH</strong>
-            <div className="hero-focus-list">
-              <div>
-                <span>01</span>
-                <p>Stabilise CI, flaky tests, release gates, and build times.</p>
+          <aside className="hero-visual" aria-label="Delivery signal preview">
+            <div className="visual-topline">
+              <div className="visual-brand">
+                <Image
+                  src="/brand/unflakeops_icon_dots_dark_400.png"
+                  alt="UnflakeOps"
+                  width={38}
+                  height={38}
+                  priority
+                />
+                <div>
+                  <strong>Delivery cockpit</strong>
+                  <span>Reliability, build, and launch signals</span>
+                </div>
               </div>
-              <div>
-                <span>02</span>
-                <p>
-                  Build web platforms, dashboards, data flows, and automations.
-                </p>
+              <span className="status-pill">Live</span>
+            </div>
+            <div className="signal-grid">
+              <div className="signal-card signal-card--green">
+                <span>CI gates</span>
+                <strong>PASS</strong>
+                <p>Known flakies routed, merge confidence restored.</p>
               </div>
-              <div>
-                <span>03</span>
-                <p>
-                  Lead delivery when scope, quality, or integration risk is high.
-                </p>
+              <div className="signal-card signal-card--blue">
+                <span>Product build</span>
+                <strong>Scoped</strong>
+                <p>Platform, dashboard, or integration mapped to launch.</p>
+              </div>
+              <div className="signal-card signal-card--amber">
+                <span>Delivery risk</span>
+                <strong>Visible</strong>
+                <p>Dependencies, quality, and handover tracked weekly.</p>
               </div>
             </div>
-            <div className="week-badges">
-              <span className="week-badge">UK/EU-friendly</span>
-              <span className="week-badge">Senior delivery</span>
-              <span className="week-badge">Outcome-led</span>
+            <div className="visual-metrics">
+              <div>
+                <span>30 days</span>
+                <p>CI reliability sprint</p>
+              </div>
+              <div>
+                <span>2 tracks</span>
+                <p>Reliability + delivery</p>
+              </div>
+              <div>
+                <span>0 lock-in</span>
+                <p>You own the work</p>
+              </div>
             </div>
           </aside>
         </div>
       </section>
 
-      <section id="services" className="section-panel">
-        <div className="section-heading">
+      <section id="services" className="landing-section section-panel">
+        <div className="site-shell">
+          <div className="section-heading">
           <p className="eyebrow">Services</p>
-          <h2>Two senior service tracks, one delivery partner.</h2>
+          <h2>Two tracks. One clean delivery story.</h2>
           <p>
             Choose the lane that matches the problem in front of you, then
             bring both skill sets together when reliability, product, data, and
             delivery overlap.
           </p>
-        </div>
-        <div className="service-track-grid">
+          </div>
+          <div className="service-track-grid">
           {SERVICE_TRACKS.map((track) => (
             <article className="service-track-card" key={track.title}>
               <div className="service-track-meta">{track.kicker}</div>
@@ -772,40 +768,44 @@ export default function HomePage() {
               <span className="service-track-chip">{track.metric}</span>
             </article>
           ))}
+          </div>
         </div>
       </section>
 
-      <section className="section capability-section">
-        <div className="section-heading section-heading--dark">
+      <section className="landing-section capability-section">
+        <div className="site-shell">
+          <div className="section-heading section-heading--dark">
           <p className="eyebrow">Capability map</p>
-          <h2>Pick a problem. We bring the delivery shape.</h2>
+          <h2>Start with the business problem, not the buzzwords.</h2>
           <p>
             Start with a concrete pain: blocked releases, a platform that needs
             shipping, a data workflow that keeps breaking, or a delivery plan
             that needs senior hands-on execution.
           </p>
-        </div>
-        <div className="capability-grid">
+          </div>
+          <div className="capability-grid">
           {CAPABILITIES.map((item) => (
             <article className="capability-card" key={item.title}>
               <h3>{item.title}</h3>
               <p>{item.body}</p>
             </article>
           ))}
+          </div>
         </div>
       </section>
 
-      <section id="approach" className="section-panel section-panel--muted">
-        <div className="section-heading">
+      <section id="approach" className="landing-section section-panel section-panel--muted">
+        <div className="site-shell">
+          <div className="section-heading">
           <p className="eyebrow">Approach</p>
-          <h2>How we work.</h2>
+          <h2>A simple delivery rhythm.</h2>
           <p>
             The same rhythm works for fixed reliability sprints and broader
             delivery projects: frame the outcome, instrument the work, ship in
             short cycles, then hand over cleanly.
           </p>
-        </div>
-        <div className="approach-grid">
+          </div>
+          <div className="approach-grid">
           {APPROACH.map((item) => (
             <article className="approach-card" key={item.step}>
               <span>{item.step}</span>
@@ -813,19 +813,21 @@ export default function HomePage() {
               <p>{item.body}</p>
             </article>
           ))}
+          </div>
         </div>
       </section>
 
-      <section id="team" className="section team-section">
-        <div className="section-heading section-heading--dark">
+      <section id="team" className="landing-section team-section">
+        <div className="site-shell">
+          <div className="section-heading section-heading--dark">
           <p className="eyebrow">Who you work with</p>
           <h2>Senior operators, not a faceless agency layer.</h2>
           <p>
             You work directly with people who can diagnose, build, coordinate,
             test, and launch. That keeps scope honest and delivery moving.
           </p>
-        </div>
-        <div className="team-grid">
+          </div>
+          <div className="team-grid">
           <article className="team-card">
             <div className="team-initial">M</div>
             <div>
@@ -847,473 +849,101 @@ export default function HomePage() {
               </p>
             </div>
           </article>
+          </div>
         </div>
       </section>
 
-      <section id="engagements" className="section">
-        <div className="section-heading section-heading--dark">
+      <section id="engagements" className="landing-section engagement-section">
+        <div className="site-shell">
+          <div className="section-heading section-heading--dark">
           <p className="eyebrow">Engagements</p>
-          <h2>Start narrow, then expand where the work proves value.</h2>
+          <h2>Start narrow. Expand only where it earns trust.</h2>
           <p>
             CI work can start with a measurable cost baseline. Broader web,
             data, and integration delivery starts with a scoped discovery call.
           </p>
-        </div>
-        <div id="pricing" className="pricing-grid">
-        <PriceCard
-          title="CI Reliability Sprint"
-          price={3500}
-          unit="one-off"
-          bullets={[
-            "Baseline & Readiness Index.",
-            "Gates live + Top-5 fixes prepped.",
-            "Dashboard + 30/90-day plan.",
-          ]}
-        />
-        <PriceCard
-          title="Reliability Core"
-          price={6500}
-          unit="/mo"
-          bullets={[
-            "Rules & fingerprint updates.",
-            "Weekly fixes & coaching.",
-            "Telemetry + compounding savings.",
-          ]}
-        />
-        <div className="price-card price-card--quote">
-          <h3 className="price-title">Web, Data & Integration Delivery</h3>
-          <div className="quote-price">Scoped after discovery</div>
-          <ul style={{ marginTop: 8, paddingLeft: 18 }}>
-            <li>Platform builds, dashboards, and internal tools.</li>
-            <li>Data pipelines, integrations, and automation.</li>
-            <li>Delivery leadership, QA, and launch support.</li>
-          </ul>
-        </div>
+          </div>
+          <div id="pricing" className="pricing-grid">
+            <PriceCard
+              title="CI Reliability Sprint"
+              price={3500}
+              unit="one-off"
+              bullets={[
+                "Baseline & Readiness Index.",
+                "Gates live + Top-5 fixes prepped.",
+                "Dashboard + 30/90-day plan.",
+              ]}
+            />
+            <PriceCard
+              title="Reliability Core"
+              price={6500}
+              unit="/mo"
+              bullets={[
+                "Rules & fingerprint updates.",
+                "Weekly fixes & coaching.",
+                "Telemetry + compounding savings.",
+              ]}
+            />
+            <div className="price-card price-card--quote">
+              <h3 className="price-title">Web, Data & Integration Delivery</h3>
+              <div className="quote-price">Scoped after discovery</div>
+              <ul style={{ marginTop: 8, paddingLeft: 18 }}>
+                <li>Platform builds, dashboards, and internal tools.</li>
+                <li>Data pipelines, integrations, and automation.</li>
+                <li>Delivery leadership, QA, and launch support.</li>
+              </ul>
+            </div>
+          </div>
         </div>
       </section>
 
-      <section id="pricing-ranges" style={{ marginTop: 10 }}>
-        <details
-          style={{
-            border: "1px solid #1f2937",
-            background: "rgba(2,6,23,.4)",
-            borderRadius: 14,
-            padding: 16,
-          }}
-        >
-          <summary
-            style={{
-              cursor: "pointer",
-              color: "#e5e7eb",
-              fontWeight: 700,
-              listStyle: "none",
-              outline: "none",
-            }}
-          >
-            See CI reliability pricing ranges (ex VAT)
-          </summary>
-
-          <div style={{ marginTop: 10, color: "#cbd5e1" }}>
-            <ul style={{ margin: 0, paddingLeft: 18, lineHeight: 1.6 }}>
-              <li>
-                <strong>Sprint:</strong> £3k–£5k / €3.5k–€5.8k / $4k–$6.5k —
-                7-day audit, gates, Top-5 fixes, roadmap.
-              </li>
-              <li>
-                <strong>RRaaS Core:</strong> £6k–£12k/mo / €7k–€14k/mo /
-                $8k–$15k/mo — telemetry, weekly fixes, coaching.
-              </li>
-              <li>
-                <strong>RRaaS Plus:</strong> £15k–£25k/mo / €17.5k–€29k/mo /
-                $19.5k–$33k/mo — perf/incident gates, SLO advisory.
-              </li>
-            </ul>
-
-            <p style={{ marginTop: 10, color: "#94a3b8" }}>
-              Typical payback: <strong>weeks, not months</strong>, at
-              moderate–high release volume.
+      <section className="landing-section calculator-wrap">
+        <div className="site-shell">
+          <div className="section-heading section-heading--dark">
+            <p className="eyebrow">CI cost calculator</p>
+            <h2>Make flaky delivery visible in pounds and hours.</h2>
+            <p>
+              The calculator stays as a focused conversion tool for teams with
+              an immediate CI reliability problem.
             </p>
           </div>
-        </details>
-      </section>
-
-      {/* Pricing ranges drawer (if you use it) */}
-      {/* ...your existing ranges <details>... */}
-
-      {/* Explanations */}
-      <PricingExplainers />
-
-      <section className="proof-section">
-        <h3 style={{ marginTop: 0 }}>Good fit</h3>
-        <div className="fit-grid">
-          <p>
-            <strong>Engineering teams</strong> with unreliable CI, slow release
-            cycles, flaky suites, or missing release gates.
-          </p>
-          <p>
-            <strong>Founders and operators</strong> who need a platform,
-            dashboard, data pipeline, integration, or automation shipped
-            properly.
-          </p>
-          <p>
-            <strong>Delivery leaders</strong> who need senior hands-on support
-            across QA, governance, measurement, and launch.
-          </p>
+          <Calculator />
         </div>
       </section>
 
-      {/* Process (at a glance) */}
-      <section className="card section">
-        <h2
-          className="card-title"
-          style={{ fontSize: "20px", fontWeight: "600" }}
-        >
-          Process (at a glance)
-        </h2>
-        <div style={{ marginTop: "16px" }}>
-          {/* Gate Score flow (inline SVG) */}
-          <svg
-            viewBox="0 0 760 160"
-            style={{ width: "100%", height: "auto", marginTop: "16px" }}
-            role="img"
-            aria-label="Gate Score on PRs"
-          >
-            <rect x="0" y="0" width="760" height="160" rx="12" fill="none" />
-            <rect
-              x="20"
-              y="50"
-              width="110"
-              height="60"
-              rx="10"
-              fill="#0b0b0f"
-              stroke="#27272a"
-            />
-            <text
-              x="75"
-              y="85"
-              textAnchor="middle"
-              fill="#e5e7eb"
-              fontSize="14"
-            >
-              Dev
-            </text>
-            <path d="M130 80 H190" stroke="#71717a" strokeWidth="2" />
-            <polygon points="190,80 182,76 182,84" fill="#71717a" />
-            <rect
-              x="190"
-              y="40"
-              width="140"
-              height="80"
-              rx="10"
-              fill="#0b0b0f"
-              stroke="#27272a"
-            />
-            <text
-              x="260"
-              y="75"
-              textAnchor="middle"
-              fill="#e5e7eb"
-              fontSize="14"
-            >
-              Pull Request
-            </text>
-            <path d="M330 80 H400" stroke="#71717a" strokeWidth="2" />
-            <polygon points="400,80 392,76 392,84" fill="#71717a" />
-            <rect
-              x="400"
-              y="20"
-              width="160"
-              height="120"
-              rx="12"
-              fill="#0b0b0f"
-              stroke="#10b981"
-            />
-            <text
-              x="480"
-              y="55"
-              textAnchor="middle"
-              fill="#a7f3d0"
-              fontSize="14"
-              fontWeight="600"
-            >
-              Gate Score
-            </text>
-            <text
-              x="480"
-              y="75"
-              textAnchor="middle"
-              fill="#d1d5db"
-              fontSize="12"
-            >
-              PASS · WARN · FAIL
-            </text>
-            <path d="M560 60 H620" stroke="#71717a" strokeWidth="2" />
-            <polygon points="620,60 612,56 612,64" fill="#71717a" />
-            <rect
-              x="620"
-              y="45"
-              width="120"
-              height="30"
-              rx="8"
-              fill="#052e1a"
-              stroke="#10b981"
-            />
-            <text
-              x="680"
-              y="64"
-              textAnchor="middle"
-              fill="#a7f3d0"
-              fontSize="12"
-            >
-              Merge
-            </text>
-            <path d="M560 100 H620" stroke="#71717a" strokeWidth="2" />
-            <polygon points="620,100 612,96 612,104" fill="#71717a" />
-            <rect
-              x="620"
-              y="85"
-              width="120"
-              height="30"
-              rx="8"
-              fill="#3f2d00"
-              stroke="#f59e0b"
-            />
-            <text
-              x="680"
-              y="104"
-              textAnchor="middle"
-              fill="#fde68a"
-              fontSize="12"
-            >
-              Quarantine/Coach
-            </text>
-          </svg>
-
-          {/* 30‑day timeline (inline SVG) */}
-          <svg
-            viewBox="0 0 760 120"
-            style={{ width: "100%", height: "auto" }}
-            role="img"
-            aria-label="30‑day sprint timeline"
-          >
-            <rect x="0" y="0" width="760" height="120" rx="12" fill="none" />
-            <rect
-              x="20"
-              y="40"
-              width="170"
-              height="40"
-              rx="8"
-              fill="#052e1a"
-              stroke="#10b981"
-            />
-            <text
-              x="105"
-              y="60"
-              textAnchor="middle"
-              fill="#a7f3d0"
-              fontSize="12"
-            >
-              Week‑1
-            </text>
-            <text
-              x="105"
-              y="74"
-              textAnchor="middle"
-              fill="#d1d5db"
-              fontSize="11"
-            >
-              Baseline + Gates
-            </text>
-            <rect
-              x="200"
-              y="40"
-              width="170"
-              height="40"
-              rx="8"
-              fill="#0b1022"
-              stroke="#60a5fa"
-            />
-            <text
-              x="285"
-              y="60"
-              textAnchor="middle"
-              fill="#dbeafe"
-              fontSize="12"
-            >
-              Week‑2
-            </text>
-            <text
-              x="285"
-              y="74"
-              textAnchor="middle"
-              fill="#d1d5db"
-              fontSize="11"
-            >
-              Fingerprints + Quarantine
-            </text>
-            <rect
-              x="380"
-              y="40"
-              width="170"
-              height="40"
-              rx="8"
-              fill="#1f0a21"
-              stroke="#e879f9"
-            />
-            <text
-              x="465"
-              y="60"
-              textAnchor="middle"
-              fill="#f5d0fe"
-              fontSize="12"
-            >
-              Week‑3
-            </text>
-            <text
-              x="465"
-              y="74"
-              textAnchor="middle"
-              fill="#d1d5db"
-              fontSize="11"
-            >
-              Fixes + Adoption
-            </text>
-            <rect
-              x="560"
-              y="40"
-              width="170"
-              height="40"
-              rx="8"
-              fill="#2a1900"
-              stroke="#f59e0b"
-            />
-            <text
-              x="645"
-              y="60"
-              textAnchor="middle"
-              fill="#fde68a"
-              fontSize="12"
-            >
-              Week‑4
-            </text>
-            <text
-              x="645"
-              y="74"
-              textAnchor="middle"
-              fill="#d1d5db"
-              fontSize="11"
-            >
-              Enforce + Handover
-            </text>
-          </svg>
-        </div>
-      </section>
-
-      {/* 30-DAY PLAN */}
-      <ThirtyDayPlan />
-
-      {/* CALCULATOR */}
-      <Calculator />
-
-      {/* How we measure */}
-      <section className="card section">
-        <h2
-          className="card-title"
-          style={{ fontSize: "20px", fontWeight: "600" }}
-        >
-          How we measure
-        </h2>
-        <div
-          style={{
-            marginTop: "12px",
-            background: "#0b1323",
-            padding: "16px",
-            borderRadius: "12px",
-            color: "#cbd5e1",
-          }}
-        >
-          <div
-            style={{
-              fontSize: "12px",
-              textTransform: "uppercase",
-              letterSpacing: "0.1em",
-              color: "#9ca3af",
-            }}
-          >
-            Formula
+      <section id="book" className="landing-section contact-section">
+        <div className="site-shell contact-grid">
+          <div>
+            <p className="eyebrow">Get started</p>
+            <h2>Bring the problem. We will shape the first useful step.</h2>
+            <p>
+              CI reliability, web build, data pipeline, integration, QA, or
+              delivery leadership. We will tell you where we can help and where
+              we should not.
+            </p>
           </div>
-          <div
-            style={{
-              marginTop: "4px",
-              fontSize: "18px",
-              fontWeight: "600",
-              color: "var(--text)",
-            }}
-          >
-            FFR = FFEs ÷ total pipelines
+          <div className="contact-card">
+            <a
+              href={BOOKING_URL || `mailto:${EMAIL}`}
+              target={BOOKING_URL ? "_blank" : undefined}
+              rel={BOOKING_URL ? "noreferrer" : undefined}
+              className="hero-cta contact-button"
+            >
+              {BOOKING_URL ? "Book a discovery call" : "Email the team"}
+            </a>
+            <a href={`mailto:${EMAIL}`} className="contact-email">
+              {EMAIL}
+            </a>
+            <p>
+              Send a short version of the problem, the stack, and what outcome
+              would make the next 30 days worthwhile.
+            </p>
           </div>
-          <ul
-            style={{
-              marginTop: "12px",
-              paddingLeft: "24px",
-              color: "#cbd5e1",
-              fontSize: "14px",
-            }}
-          >
-            <li>
-              <span style={{ fontWeight: "500", color: "var(--text)" }}>
-                FFEs
-              </span>
-              : confirmed by rerun/pass or fingerprint
-            </li>
-            <li>
-              Baseline = last 28 days or 500 pipelines (whichever is longer)
-            </li>
-            <li>
-              Success = any 7‑day window ≤ 50% baseline, or Day1–30 average ≤
-              50%
-            </li>
-          </ul>
         </div>
       </section>
 
-      <section id="book" className="booking-section">
-        <h2>Book a discovery call</h2>
-        <p style={{ color: "#cbd5e1" }}>
-          Tell us whether your priority is CI reliability, a web or data build,
-          an integration challenge, or delivery leadership. We'll recommend the
-          fastest useful next step.
-        </p>
-        <div className="booking-card">
-          <p style={{ marginTop: 0, color: "#94a3b8" }}>
-            We use Google Calendar for scheduling. Google doesn’t allow
-            embedding their booking page, so it opens in a new tab.
-          </p>
-          <a
-            href={BOOKING_URL || "#"}
-            target="_blank"
-            rel="noreferrer"
-            className={BOOKING_URL ? "booking-button" : "booking-button"}
-            style={{
-              background: BOOKING_URL ? "#38bdf8" : "#334155",
-              pointerEvents: BOOKING_URL ? "auto" : "none",
-            }}
-          >
-            {BOOKING_URL ? "Open booking page" : "Set NEXT_PUBLIC_BOOKING_URL"}
-          </a>
-        </div>
-        <p style={{ marginTop: 8 }}>
-          Or email{" "}
-          <a href={`mailto:${EMAIL}`} style={{ textDecoration: "underline" }}>
-            {EMAIL}
-          </a>
-          .
-        </p>
-      </section>
-
-      {/* FOOTER */}
       <footer className="main-footer">
-        <div>
+        <div className="site-shell footer-inner">
           © {new Date().getFullYear()} UnflakeOps.{" "}
           <a href="/privacy" style={{ textDecoration: "underline" }}>
             Privacy
