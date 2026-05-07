@@ -9,7 +9,6 @@ const BADGE =
 export default function Header() {
   return (
     <header className="main-header">
-      {/* brand row */}
       <Link
         href="/"
         className="brand-row"
@@ -28,7 +27,14 @@ export default function Header() {
         <span className="brand-name">UnflakeOps</span>
       </Link>
 
-      {/* top-right badge */}
+      <nav className="header-nav" aria-label="Primary navigation">
+        <a href="#services">Services</a>
+        <a href="#approach">Approach</a>
+        <a href="#team">Team</a>
+        <a href="#calc">Calculator</a>
+        <a href="#book">Contact</a>
+      </nav>
+
       <div className="header-badge">
         <div className="header-badge__content">
           <span className="header-badge__text">{BADGE}</span>

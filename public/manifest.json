@@ -1,7 +1,7 @@
 {
-  "name": "UnflakeOps - Cut Failed Builds by 50%+ in 30 Days",
+  "name": "UnflakeOps - CI Reliability, Web, Data & Integration Delivery",
   "short_name": "UnflakeOps",
-  "description": "PASS/WARN/FAIL release gates, fewer flaky tests, faster cycles for GitHub Actions & GitLab CI. UK/EU GDPR-friendly.",
+  "description": "Senior delivery services for CI reliability, flaky-test reduction, web platforms, data engineering, integrations, and quality-led launches.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#0b1323",

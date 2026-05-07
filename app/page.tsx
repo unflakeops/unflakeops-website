@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import { useMemo, useState } from "react";
 import Header from "../components/Header";
 
@@ -50,6 +49,83 @@ const DEFAULTS: Inputs = {
   sprintPrice: 4000,
   coreMonthly: 8000,
 };
+
+const SERVICE_TRACKS = [
+  {
+    kicker: "Muhammad / UnflakeOps",
+    title: "CI Reliability & Release Assurance",
+    description:
+      "Reduce flaky failures, stabilise GitHub Actions and GitLab CI, and add practical release gates your team can keep using after handover.",
+    bullets: [
+      "Flake-rate baselines, PASS/WARN/FAIL gates, and pipeline telemetry",
+      "Top failing suites fingerprinted, quarantined, fixed, or routed",
+      "Developer workflow coaching, repo templates, and handover playbooks",
+    ],
+    metric: "30-day reliability sprint",
+  },
+  {
+    kicker: "Abbad / Numetix",
+    title: "Web, Data & Integration Delivery",
+    description:
+      "Ship customer-facing platforms, data pipelines, dashboards, and integrations with delivery discipline from discovery through launch.",
+    bullets: [
+      "React/Next.js platforms, internal tools, portals, and web products",
+      "Data engineering, analytics, system integration, and workflow automation",
+      "Quality engineering, release planning, stakeholder coordination, and delivery leadership",
+    ],
+    metric: "Scoped delivery engagement",
+  },
+];
+
+const CAPABILITIES = [
+  {
+    title: "Reliability Engineering",
+    body: "CI/CD audits, flaky-test reduction, merge gates, observability, release readiness, and engineering coaching.",
+  },
+  {
+    title: "Web Platforms",
+    body: "Responsive applications, dashboards, SaaS workflows, marketing sites, internal tools, and production support.",
+  },
+  {
+    title: "Data & Analytics",
+    body: "Pipelines, warehouse modelling, reporting, KPI instrumentation, migration assurance, and operational dashboards.",
+  },
+  {
+    title: "Integration & Automation",
+    body: "API integrations, healthcare and enterprise interoperability, workflow automation, test data, and monitoring.",
+  },
+  {
+    title: "Quality & Testing",
+    body: "Functional, regression, integration, performance, UAT, and release validation across product and data stacks.",
+  },
+  {
+    title: "Delivery Leadership",
+    body: "Discovery, scope framing, programme governance, stakeholder alignment, delivery cadence, and launch planning.",
+  },
+];
+
+const APPROACH = [
+  {
+    step: "01",
+    title: "Discover & Frame",
+    body: "Understand the business goal, current stack, constraints, stakeholders, and the few metrics that prove progress.",
+  },
+  {
+    step: "02",
+    title: "Baseline & Architect",
+    body: "Map risks, define the delivery path, instrument the right signals, and create a plan your team can actually execute.",
+  },
+  {
+    step: "03",
+    title: "Build, Fix & Assure",
+    body: "Ship in short cycles with PR-based changes, automation, test coverage, quality checks, and visible weekly progress.",
+  },
+  {
+    step: "04",
+    title: "Launch, Handover & Improve",
+    body: "Move the work into production, hand over playbooks and dashboards, then iterate from real adoption and reliability data.",
+  },
+];
 
 /** -------------------------------
  *  Calculator core
@@ -585,32 +661,31 @@ export default function HomePage() {
     <main className="main-container">
       <Header />
 
-      {/* HERO (original vibe) */}
-      <section className="hero-section">
-        <div className="hero-content">
-          {/* LEFT */}
+      <section className="hero-section consulting-hero">
+        <div className="hero-content consulting-hero__content">
           <div>
+            <p className="eyebrow">UnflakeOps + Numetix delivery services</p>
             <h1 className="hero-title">
-              Cut Failed Builds by{" "}
-              <span style={{ color: "#38bdf8" }}>50%+</span> in 30 Days.
-              Guaranteed.
+              Reliable releases, web platforms, and data systems that ship.
             </h1>
             <p className="hero-subtitle">
-              Ship with confidence: PASS/WARN/FAIL merge gates, fewer flaky
-              tests, faster cycles for GitHub Actions &amp; GitLab CI.
+              We combine Muhammad's UnflakeOps CI reliability work with
+              Abbad's web, data, integration, and delivery expertise. One place
+              for teams that need fewer blocked releases and more dependable
+              software delivery.
             </p>
             <div className="hero-actions">
               <a
                 href={BOOKING_URL || "#book"}
-                target="_blank"
-                rel="noreferrer"
+                target={BOOKING_URL ? "_blank" : undefined}
+                rel={BOOKING_URL ? "noreferrer" : undefined}
                 className="hero-cta"
-                aria-label="Book a 15-minute rapid CI audit of your build pipeline"
+                aria-label="Book a discovery call"
               >
-                Book a 15-min CI Audit
+                Book a discovery call
               </a>
-              <a href="#calc" className="hero-cta-secondary">
-                Estimate Your Waste → Calculator
+              <a href="#services" className="hero-cta-secondary">
+                View services
               </a>
             </div>
             {HERO_ASSURANCE === "bullets" ? (
@@ -636,54 +711,157 @@ export default function HomePage() {
                 </li>
               </ul>
             ) : (
-              <p style={{ marginTop: 10, fontSize: 14, color: "#cbd5e1" }}>
-                Flexible scope, backed by our{" "}
-                <a href="/guarantee" style={{ textDecoration: "underline" }}>
-                  guarantee
-                </a>
-                . We use minimum-access permissions, and everything we build
-                (scripts, rules, dashboards) stays yours.
+              <p className="hero-disclaimer">
+                PR-based changes, clear scope, measurable outcomes, and
+                practical handover. You own the scripts, dashboards, code, and
+                playbooks we build.
               </p>
             )}
           </div>
 
-          {/* RIGHT — Week-1 */}
-          <div className="week-deliverables">
-            <strong className="week-title">WEEK-1 · DELIVERABLES</strong>
-            <ul className="week-list">
-              <li>
-                <strong>Baseline &amp; Readiness Index</strong> — your
-                flake-rate &amp; CI health score.
-              </li>
-              <li>
-                <strong>Gates live</strong> — PASS/WARN/FAIL on PRs.
-              </li>
-              <li>
-                <strong>Top-5 fixes prepared</strong> — PRs shipped.
-              </li>
-              <li>
-                <strong>Telemetry dashboard</strong> — 30/90-day plan.
-              </li>
-            </ul>
-            <div className="week-badges">
-              {[
-                "Outcome-based",
-                "No day-rates",
-                "Works with your repo via PRs",
-              ].map((t) => (
-                <span key={t} className="week-badge">
-                  {t}
-                </span>
-              ))}
+          <aside className="hero-aside-panel" aria-label="Service focus">
+            <strong className="week-title">WHAT WE HELP WITH</strong>
+            <div className="hero-focus-list">
+              <div>
+                <span>01</span>
+                <p>Stabilise CI, flaky tests, release gates, and build times.</p>
+              </div>
+              <div>
+                <span>02</span>
+                <p>
+                  Build web platforms, dashboards, data flows, and automations.
+                </p>
+              </div>
+              <div>
+                <span>03</span>
+                <p>
+                  Lead delivery when scope, quality, or integration risk is high.
+                </p>
+              </div>
             </div>
-          </div>
+            <div className="week-badges">
+              <span className="week-badge">UK/EU-friendly</span>
+              <span className="week-badge">Senior delivery</span>
+              <span className="week-badge">Outcome-led</span>
+            </div>
+          </aside>
         </div>
       </section>
 
-      {/* PRICING */}
-      <section id="pricing" className="pricing-grid">
+      <section id="services" className="section-panel">
+        <div className="section-heading">
+          <p className="eyebrow">Services</p>
+          <h2>Two senior service tracks, one delivery partner.</h2>
+          <p>
+            Choose the lane that matches the problem in front of you, then
+            bring both skill sets together when reliability, product, data, and
+            delivery overlap.
+          </p>
+        </div>
+        <div className="service-track-grid">
+          {SERVICE_TRACKS.map((track) => (
+            <article className="service-track-card" key={track.title}>
+              <div className="service-track-meta">{track.kicker}</div>
+              <h3>{track.title}</h3>
+              <p>{track.description}</p>
+              <ul>
+                {track.bullets.map((bullet) => (
+                  <li key={bullet}>{bullet}</li>
+                ))}
+              </ul>
+              <span className="service-track-chip">{track.metric}</span>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section className="section capability-section">
+        <div className="section-heading section-heading--dark">
+          <p className="eyebrow">Capability map</p>
+          <h2>Pick a problem. We bring the delivery shape.</h2>
+          <p>
+            Start with a concrete pain: blocked releases, a platform that needs
+            shipping, a data workflow that keeps breaking, or a delivery plan
+            that needs senior hands-on execution.
+          </p>
+        </div>
+        <div className="capability-grid">
+          {CAPABILITIES.map((item) => (
+            <article className="capability-card" key={item.title}>
+              <h3>{item.title}</h3>
+              <p>{item.body}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section id="approach" className="section-panel section-panel--muted">
+        <div className="section-heading">
+          <p className="eyebrow">Approach</p>
+          <h2>How we work.</h2>
+          <p>
+            The same rhythm works for fixed reliability sprints and broader
+            delivery projects: frame the outcome, instrument the work, ship in
+            short cycles, then hand over cleanly.
+          </p>
+        </div>
+        <div className="approach-grid">
+          {APPROACH.map((item) => (
+            <article className="approach-card" key={item.step}>
+              <span>{item.step}</span>
+              <h3>{item.title}</h3>
+              <p>{item.body}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section id="team" className="section team-section">
+        <div className="section-heading section-heading--dark">
+          <p className="eyebrow">Who you work with</p>
+          <h2>Senior operators, not a faceless agency layer.</h2>
+          <p>
+            You work directly with people who can diagnose, build, coordinate,
+            test, and launch. That keeps scope honest and delivery moving.
+          </p>
+        </div>
+        <div className="team-grid">
+          <article className="team-card">
+            <div className="team-initial">M</div>
+            <div>
+              <h3>Muhammad</h3>
+              <p>
+                CI reliability, release engineering, flaky-test reduction,
+                developer workflow automation, and measurable delivery
+                improvement.
+              </p>
+            </div>
+          </article>
+          <article className="team-card">
+            <div className="team-initial team-initial--green">A</div>
+            <div>
+              <h3>Abbad</h3>
+              <p>
+                Web platforms, data engineering, integrations, quality
+                assurance, delivery governance, and complex programme execution.
+              </p>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section id="engagements" className="section">
+        <div className="section-heading section-heading--dark">
+          <p className="eyebrow">Engagements</p>
+          <h2>Start narrow, then expand where the work proves value.</h2>
+          <p>
+            CI work can start with a measurable cost baseline. Broader web,
+            data, and integration delivery starts with a scoped discovery call.
+          </p>
+        </div>
+        <div id="pricing" className="pricing-grid">
         <PriceCard
-          title="Sprint (Setup)"
+          title="CI Reliability Sprint"
           price={3500}
           unit="one-off"
           bullets={[
@@ -693,7 +871,7 @@ export default function HomePage() {
           ]}
         />
         <PriceCard
-          title="Core (Monthly)"
+          title="Reliability Core"
           price={6500}
           unit="/mo"
           bullets={[
@@ -702,6 +880,16 @@ export default function HomePage() {
             "Telemetry + compounding savings.",
           ]}
         />
+        <div className="price-card price-card--quote">
+          <h3 className="price-title">Web, Data & Integration Delivery</h3>
+          <div className="quote-price">Scoped after discovery</div>
+          <ul style={{ marginTop: 8, paddingLeft: 18 }}>
+            <li>Platform builds, dashboards, and internal tools.</li>
+            <li>Data pipelines, integrations, and automation.</li>
+            <li>Delivery leadership, QA, and launch support.</li>
+          </ul>
+        </div>
+        </div>
       </section>
 
       <section id="pricing-ranges" style={{ marginTop: 10 }}>
@@ -722,7 +910,7 @@ export default function HomePage() {
               outline: "none",
             }}
           >
-            See full pricing ranges (ex VAT)
+            See CI reliability pricing ranges (ex VAT)
           </summary>
 
           <div style={{ marginTop: 10, color: "#cbd5e1" }}>
@@ -755,23 +943,23 @@ export default function HomePage() {
       {/* Explanations */}
       <PricingExplainers />
 
-      {/* PROOF */}
       <section className="proof-section">
-        <h3 style={{ marginTop: 0 }}>Proof</h3>
-        <p style={{ margin: 0 }}>
-          “<strong>62%</strong> fewer flaky failures in 28 days; ~220 engineer
-          hours/quarter reclaimed.”
-          <span style={{ color: "#94a3b8" }}> — CTO, EU SaaS</span>
-        </p>
-        <p style={{ marginTop: 8 }}>
-          <a href="/case-study" style={{ textDecoration: "underline" }}>
-            See the case study
-          </a>
-          {" · "}
-          <a href="/guarantee" style={{ textDecoration: "underline" }}>
-            Read the guarantee
-          </a>
-        </p>
+        <h3 style={{ marginTop: 0 }}>Good fit</h3>
+        <div className="fit-grid">
+          <p>
+            <strong>Engineering teams</strong> with unreliable CI, slow release
+            cycles, flaky suites, or missing release gates.
+          </p>
+          <p>
+            <strong>Founders and operators</strong> who need a platform,
+            dashboard, data pipeline, integration, or automation shipped
+            properly.
+          </p>
+          <p>
+            <strong>Delivery leaders</strong> who need senior hands-on support
+            across QA, governance, measurement, and launch.
+          </p>
+        </div>
       </section>
 
       {/* Process (at a glance) */}
@@ -1089,12 +1277,12 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* BOOKING (no Google iframe; opens new tab) */}
       <section id="book" className="booking-section">
-        <h2>Book a 15-min CI Audit</h2>
+        <h2>Book a discovery call</h2>
         <p style={{ color: "#cbd5e1" }}>
-          Pick a slot that suits you. We'll baseline your flake-rate and show
-          the 3 fastest wins.
+          Tell us whether your priority is CI reliability, a web or data build,
+          an integration challenge, or delivery leadership. We'll recommend the
+          fastest useful next step.
         </p>
         <div className="booking-card">
           <p style={{ marginTop: 0, color: "#94a3b8" }}>

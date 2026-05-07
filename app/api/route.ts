@@ -3,10 +3,9 @@ export const runtime = "nodejs"; // ensure Node runtime (not edge)
 import { NextResponse } from "next/server";
 import { Resend } from "resend";
 
-const resend = new Resend(process.env.RESEND_API_KEY || "");
-
 export async function POST(req: Request) {
   try {
+    const resendApiKey = process.env.RESEND_API_KEY;
     const body = await req.json();
 
     // Basic shape (kept simple on purpose)
@@ -77,12 +76,14 @@ export async function POST(req: Request) {
         <p style="margin-top:24px; color:#a1a1aa;">— UnflakeOps</p>
       </div>`;
 
-    if (!process.env.RESEND_API_KEY) {
+    if (!resendApiKey) {
       console.warn(
         "RESEND_API_KEY not set — skipping email send. Returning payload for debugging."
       );
       return NextResponse.json({ ok: true, skippedEmail: true });
     }
+
+    const resend = new Resend(resendApiKey);
 
     await resend.emails.send({
       from: process.env.EMAIL_FROM || "UnflakeOps <hello@unflakeops.com>",

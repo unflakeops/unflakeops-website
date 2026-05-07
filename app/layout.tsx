@@ -2,11 +2,12 @@ import "../styles/globals.css";
 import CookiesBanner from "../components/CookiesBanner";
 
 export const metadata = {
-  title: "UnflakeOps — Cut Failed Builds by 50%+ in 30 Days. Guaranteed.",
+  title:
+    "UnflakeOps — CI Reliability, Web Platforms, Data & Integration Delivery",
   description:
-    "PASS/WARN/FAIL release gates, fewer flaky tests, faster cycles for GitHub Actions & GitLab CI. UK/EU GDPR-friendly.",
+    "Senior delivery services for CI reliability, flaky-test reduction, web platforms, data engineering, integrations, automation, and quality-led launches.",
   keywords:
-    "CI/CD, flaky tests, GitHub Actions, GitLab CI, test automation, DevOps, build reliability",
+    "CI/CD, flaky tests, GitHub Actions, GitLab CI, web development, data engineering, integrations, QA, delivery leadership",
   authors: [{ name: "UnflakeOps" }],
   creator: "UnflakeOps",
   publisher: "UnflakeOps",
@@ -26,23 +27,25 @@ export const metadata = {
     locale: "en_US",
     url: "https://www.unflakeops.com",
     siteName: "UnflakeOps",
-    title: "UnflakeOps — Cut Failed Builds by 50%+ in 30 Days. Guaranteed.",
+    title:
+      "UnflakeOps — CI Reliability, Web Platforms, Data & Integration Delivery",
     description:
-      "PASS/WARN/FAIL release gates, fewer flaky tests, faster cycles for GitHub Actions & GitLab CI. UK/EU GDPR-friendly.",
+      "Senior delivery services for CI reliability, web platforms, data engineering, integrations, automation, and quality-led launches.",
     images: [
       {
         url: "https://www.unflakeops.com/brand/unflakeops_icon_dots_dark_400.png",
         width: 400,
         height: 400,
-        alt: "UnflakeOps - Cut Failed Builds by 50%+ in 30 Days",
+        alt: "UnflakeOps - CI reliability, web, data, and integration delivery",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "UnflakeOps — Cut Failed Builds by 50%+ in 30 Days. Guaranteed.",
+    title:
+      "UnflakeOps — CI Reliability, Web Platforms, Data & Integration Delivery",
     description:
-      "PASS/WARN/FAIL release gates, fewer flaky tests, faster cycles for GitHub Actions & GitLab CI. UK/EU GDPR-friendly.",
+      "Senior delivery services for CI reliability, web platforms, data engineering, integrations, automation, and quality-led launches.",
     images: [
       "https://www.unflakeops.com/brand/unflakeops_icon_dots_dark_400.png",
     ],
@@ -60,7 +63,6 @@ export const metadata = {
   },
   manifest: "/manifest.json",
 };
-const LOGO_URL = "/brand/unflakeops_icon_dots_dark_400.png"; // already fine
 export default function RootLayout({
   children,
 }: {
