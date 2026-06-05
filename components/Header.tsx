@@ -4,7 +4,7 @@ import Link from "next/link";
 /** ENV */
 const BADGE =
   process.env.NEXT_PUBLIC_REGION_BADGE ??
-  "Read-only access • PR-based changes • You own everything";
+  "Senior-led delivery • Fixed scope • You own every deliverable";
 
 export default function Header() {
   return (

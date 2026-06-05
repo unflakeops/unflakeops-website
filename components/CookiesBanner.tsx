@@ -32,13 +32,6 @@ export default function CookiesBanner() {
 
   return (
     <>
-      {/* Page blur overlay */}
-      <div
-        className={`cookies-overlay ${
-          isVisible ? "cookies-overlay--visible" : ""
-        }`}
-      />
-
       {/* Cookies banner */}
       <div
         className={`cookies-banner ${

@@ -113,3 +113,6 @@ dist
 tmp/
 temp/
 
+
+# Claude Code installed skills (local tooling, not app code)
+.claude/
