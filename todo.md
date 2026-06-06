@@ -4,17 +4,28 @@
 Three independent improvements, planned for **parallel Spin Jit Su execution**:
 README, code-generated icons/shareables, and HubSpot contact capture.
 
-## Active Plans (Spin Jit Su streams — independent, merge-safe)
-- [ ] **Stream A — README + .env.example** → `workflows/build-plan-readme.md`
-  - Owns `README.md` + `.env.example` (incl. HubSpot vars). Docs only.
-- [ ] **Stream B — Icons & shareables** → `workflows/build-plan-icons-and-shareables.md`
-  - Code-generated brand mark, favicon, apple-icon, OG/Twitter cards via Next.js
-    metadata conventions + `next/og`. Edits `layout.tsx`, `Header.tsx`, `manifest.json`;
-    deletes 6 placeholder assets.
-- [ ] **Stream C — HubSpot lead capture** → `workflows/build-plan-hubspot-lead-capture.md`
-  - New contact form + `/api/contact` route upserting to HubSpot (REST/fetch), with
-    Resend/Telegram notify. Edits `app/page.tsx` `#book` only. Ships behind
-    `HUBSPOT_PRIVATE_APP_TOKEN` (no-ops cleanly until the token is set).
+## Active Plans (Spin Jit Su streams — ALL SHIPPED 2026-06-06, build green)
+Ran via parallel worktree agents (Sonnet build / Opus orchestrate). All three merged onto
+`preview-numetix-style-services`; `npm run build` passes (17/17 pages).
+- [x] **Stream A — README + .env.example** → `workflows/build-plan-readme.md`
+  - `385f7d6` .env.example (11 env vars + HubSpot), `b192e93` README.md.
+- [x] **Stream B — Icons & shareables** → `workflows/build-plan-icons-and-shareables.md`
+  - `a0f31e8` brand assets (icon.svg/apple-icon/og/twitter/Logo), `3ba1f60` wire + drop 6
+    placeholders, `c0b06e7` TS/runtime fix. Also patched a dangling brand-png ref in
+    `app/ci-audit/page.tsx`.
+- [x] **Stream C — HubSpot lead capture** → `workflows/build-plan-hubspot-lead-capture.md`
+  - `0e23af7` /api/contact route (HubSpot upsert + Resend/Telegram notify, no-ops without
+    token), `8ce37dd` ContactForm wired into `#book`. Cherry-picked from its isolated
+    branch (now deleted).
+
+## Follow-ups
+- [ ] **HubSpot go-live:** create a HubSpot Private App (scope `crm.objects.contacts.write`),
+  set `HUBSPOT_PRIVATE_APP_TOKEN` (+ optional `HUBSPOT_PORTAL_ID`) in env. Until then the
+  contact form works and notifies but skips CRM sync.
+- [ ] Cosmetic: commit `a0f31e8` carries Stream B's icon files under a "docs(env)" message
+  (parallel-staging artifact). Content is correct; nothing is pushed yet, so it can be
+  reworded on a future rebase if desired. Harmless.
+- [ ] Nothing is pushed — branch is ahead of `origin/preview-numetix-style-services` by 8.
 
 ### Parallel-safety matrix (no two streams touch the same file)
 | File | A | B | C |
