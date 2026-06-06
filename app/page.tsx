@@ -2,6 +2,7 @@
 
 import { useEffect, type CSSProperties } from "react";
 import Header from "../components/Header";
+import ContactForm from "../components/ContactForm";
 
 const BOOKING_URL = process.env.NEXT_PUBLIC_BOOKING_URL ?? "/call";
 const EMAIL = process.env.NEXT_PUBLIC_CONTACT_EMAIL ?? "hello@unflakeops.com";
@@ -416,6 +417,9 @@ export default function HomePage() {
             <h3>Contact</h3>
             <p className="contact-email">{EMAIL}</p>
             <p>Response window: usually same business day.</p>
+            <div style={{ marginTop: "24px", borderTop: "1px solid var(--line)", paddingTop: "20px" }}>
+              <ContactForm />
+            </div>
           </aside>
         </div>
       </section>
