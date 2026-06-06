@@ -3,10 +3,9 @@ export const runtime = "nodejs"; // ensure Node runtime (not edge)
 import { NextResponse } from "next/server";
 import { Resend } from "resend";
 
-const resend = new Resend(process.env.RESEND_API_KEY || "");
-
 export async function POST(req: Request) {
   try {
+    const resendApiKey = process.env.RESEND_API_KEY;
     const body = await req.json();
 
     // Extract data from the request
@@ -124,7 +123,7 @@ export async function POST(req: Request) {
         <p style="margin-top:16px; color:#a1a1aa;">Please follow up within 24 hours.</p>
       </div>`;
 
-    if (!process.env.RESEND_API_KEY) {
+    if (!resendApiKey) {
       console.warn(
         "RESEND_API_KEY not set — skipping email send. Returning payload for debugging."
       );
@@ -190,6 +189,8 @@ export async function POST(req: Request) {
           "Email skipped - RESEND_API_KEY not configured. Check server logs for lead data.",
       });
     }
+
+    const resend = new Resend(resendApiKey);
 
     // Send email to the lead
     await resend.emails.send({

@@ -1,7 +1,7 @@
 {
-  "name": "UnflakeOps - Cut Failed Builds by 50%+ in 30 Days",
+  "name": "UnflakeOps - AI Reliability, RAG Evaluation & Data Maturity",
   "short_name": "UnflakeOps",
-  "description": "PASS/WARN/FAIL release gates, fewer flaky tests, faster cycles for GitHub Actions & GitLab CI. UK/EU GDPR-friendly.",
+  "description": "AI reliability and data maturity services for RAG systems, hallucination control, deterministic LLM outputs, LLM-ready data, and data pipelines.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#0b1323",

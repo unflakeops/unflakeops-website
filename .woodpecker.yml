@@ -1,0 +1,193 @@
+when:
+  - event: [push, manual]
+
+steps:
+  - name: deploy-preview
+    image: docker:cli
+    environment:
+      CF_API_TOKEN:
+        from_secret: cf_api_token
+      GH_TOKEN:
+        from_secret: gh_token
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    commands:
+      - apk add --no-cache curl jq
+      - |
+        set -e
+        BRANCH_SLUG=$$(echo "$CI_COMMIT_BRANCH" | sed 's/[^a-zA-Z0-9]/-/g' | tr '[:upper:]' '[:lower:]')
+        CONTAINER="preview-unflakeops-website-$${BRANCH_SLUG}"
+        HOSTNAME="preview-$${BRANCH_SLUG}.unflakeops.com"
+        APP_URL="https://$${HOSTNAME}"
+        ACCOUNT_ID="33aa8b7450c651b9259dfe279a5e1f67"
+        ZONE_NAME="unflakeops.com"
+        DEPLOY_STATUS="failed"
+
+        # Post or update the preview comment on the open PR for this branch.
+        post_pr_comment() {
+          if [ -z "$${GH_TOKEN}" ]; then return; fi
+          GH_API="https://api.github.com/repos/$CI_REPO"
+          GH_AUTH="Authorization: token $${GH_TOKEN}"
+          COMMENT_MARKER="<!-- woodpecker-preview -->"
+          DEPLOY_TIME=$$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+
+          if [ "$${DEPLOY_STATUS}" = "success" ]; then
+            STATUS_ICON="✅ Done"
+            PREVIEW_COL="[Preview URL]($${APP_URL})"
+          else
+            STATUS_ICON="❌ Failed"
+            PREVIEW_COL="—"
+          fi
+
+          COMMENT_BODY="$${COMMENT_MARKER}\n### Woodpecker Preview Deployment\n\n| Name | Status | Preview | Updated (UTC) |\n|------|--------|---------|---------------|\n| unflakeops-website | $${STATUS_ICON} | $${PREVIEW_COL} | $${DEPLOY_TIME} |"
+
+          PR_RESP=$$(curl -sH "$${GH_AUTH}" \
+            "$${GH_API}/pulls?head=$CI_REPO_OWNER:$${CI_COMMIT_BRANCH}&state=open")
+          PR_NUMBER=$$(echo "$${PR_RESP}" | jq -r 'if type == "array" then .[0].number // empty else empty end')
+
+          if [ -z "$${PR_NUMBER}" ]; then
+            echo "No open PR for branch $${CI_COMMIT_BRANCH} — skipping PR comment"
+            return
+          fi
+
+          COMMENTS_RESP=$$(curl -sH "$${GH_AUTH}" \
+            "$${GH_API}/issues/$${PR_NUMBER}/comments?per_page=100")
+          EXISTING_COMMENT_ID=$$(echo "$${COMMENTS_RESP}" | jq -r \
+            'if type == "array" then [.[] | select(.body | contains("<!-- woodpecker-preview -->"))] | .[0].id // empty else empty end')
+
+          if [ -n "$${EXISTING_COMMENT_ID}" ]; then
+            curl -sH "$${GH_AUTH}" -X PATCH \
+              -d "{\"body\": \"$${COMMENT_BODY}\"}" \
+              "$${GH_API}/issues/comments/$${EXISTING_COMMENT_ID}" > /dev/null \
+              && echo "Updated PR comment (status: $${DEPLOY_STATUS})" \
+              || echo "WARNING: Failed to update PR comment"
+          else
+            curl -sH "$${GH_AUTH}" -X POST \
+              -d "{\"body\": \"$${COMMENT_BODY}\"}" \
+              "$${GH_API}/issues/$${PR_NUMBER}/comments" > /dev/null \
+              && echo "Created PR comment (status: $${DEPLOY_STATUS})" \
+              || echo "WARNING: Failed to create PR comment"
+          fi
+        }
+
+        # On any exit (success or failure), post the PR comment.
+        trap 'set +e; post_pr_comment' EXIT
+
+        echo "Branch slug: $${BRANCH_SLUG}"
+        echo "Container:   $${CONTAINER}"
+        echo "Hostname:    $${HOSTNAME}"
+
+        # Resolve the live Penfold tunnel ID by name (drift-proof — no hardcoded UUID).
+        TUNNEL_ID=$$(curl -sH "Authorization: Bearer $${CF_API_TOKEN}" \
+          "https://api.cloudflare.com/client/v4/accounts/$${ACCOUNT_ID}/cfd_tunnel?name=penfold&is_deleted=false" \
+          | jq -r '.result[0].id // empty')
+        if [ -z "$${TUNNEL_ID}" ]; then
+          echo "ERROR: Cloudflare tunnel 'penfold' not found in account $${ACCOUNT_ID}"
+          exit 1
+        fi
+        echo "Resolved tunnel ID: $${TUNNEL_ID}"
+
+        # Resolve the unflakeops.com zone ID (must live in the same CF account).
+        ZONE_ID=$$(curl -sH "Authorization: Bearer $${CF_API_TOKEN}" \
+          "https://api.cloudflare.com/client/v4/zones?name=$${ZONE_NAME}&status=active" \
+          | jq -r '.result[0].id // empty')
+        if [ -z "$${ZONE_ID}" ]; then
+          echo "ERROR: zone $${ZONE_NAME} not found in account $${ACCOUNT_ID} (token scope?)"
+          exit 1
+        fi
+        echo "Resolved zone ID: $${ZONE_ID}"
+
+        # Ensure a proxied CNAME for this preview host points at the tunnel.
+        TUNNEL_CNAME="$${TUNNEL_ID}.cfargotunnel.com"
+        EXISTING_DNS=$$(curl -sH "Authorization: Bearer $${CF_API_TOKEN}" \
+          "https://api.cloudflare.com/client/v4/zones/$${ZONE_ID}/dns_records?name=$${HOSTNAME}" \
+          | jq -r '.result[0].id // empty')
+        DNS_PAYLOAD="{\"type\":\"CNAME\",\"name\":\"$${HOSTNAME}\",\"content\":\"$${TUNNEL_CNAME}\",\"proxied\":true}"
+        if [ -n "$${EXISTING_DNS}" ]; then
+          curl -s -X PUT -H "Authorization: Bearer $${CF_API_TOKEN}" -H "Content-Type: application/json" \
+            -d "$${DNS_PAYLOAD}" \
+            "https://api.cloudflare.com/client/v4/zones/$${ZONE_ID}/dns_records/$${EXISTING_DNS}" > /dev/null \
+            && echo "DNS record updated: $${HOSTNAME} -> $${TUNNEL_CNAME}"
+        else
+          curl -s -X POST -H "Authorization: Bearer $${CF_API_TOKEN}" -H "Content-Type: application/json" \
+            -d "$${DNS_PAYLOAD}" \
+            "https://api.cloudflare.com/client/v4/zones/$${ZONE_ID}/dns_records" > /dev/null \
+            && echo "DNS record created: $${HOSTNAME} -> $${TUNNEL_CNAME}"
+        fi
+
+        # Build and (re)start the preview container.
+        docker build -t "$${CONTAINER}" .
+        docker stop "$${CONTAINER}" 2>/dev/null || true
+        docker rm "$${CONTAINER}" 2>/dev/null || true
+
+        PORT=9200
+        while docker ps --format '{{.Ports}}' | grep -q ":$${PORT}->" 2>/dev/null; do
+          PORT=$$((PORT + 1))
+        done
+        echo "Using host port: $${PORT}"
+
+        docker run -d \
+          --name "$${CONTAINER}" \
+          --network deployed-apps-network \
+          -p "$${PORT}:80" \
+          --restart unless-stopped \
+          "$${CONTAINER}"
+
+        # Point the cloudflared tunnel ingress at the new container port.
+        echo "Updating Cloudflare tunnel route: $${HOSTNAME} -> http://localhost:$${PORT}"
+        CURRENT_CONFIG=$$(curl -sH "Authorization: Bearer $${CF_API_TOKEN}" \
+          "https://api.cloudflare.com/client/v4/accounts/$${ACCOUNT_ID}/cfd_tunnel/$${TUNNEL_ID}/configurations")
+
+        if [ "$$(echo "$${CURRENT_CONFIG}" | jq -r '.result.config // "null"')" = "null" ]; then
+          echo "ERROR: tunnel $${TUNNEL_ID} returned null remote config"
+          echo "Response: $${CURRENT_CONFIG}"
+          exit 1
+        fi
+
+        NEW_INGRESS=$$(echo "$${CURRENT_CONFIG}" | jq \
+          --arg host "$${HOSTNAME}" \
+          --arg svc "http://localhost:$${PORT}" \
+          '.result.config.ingress as $$i
+           | ($$i | map(select(.hostname != null and .hostname != $$host))) as $$named_others
+           | ($$i | map(select(.hostname == null))) as $$catchall
+           | $$named_others + [{hostname: $$host, service: $$svc, originRequest: {}}] + $$catchall')
+
+        NEW_CONFIG=$$(echo "$${CURRENT_CONFIG}" | jq --argjson ingress "$${NEW_INGRESS}" '.result.config | .ingress = $$ingress')
+
+        PUT_RESP=$$(curl -sw "\n%{http_code}" -X PUT \
+          -H "Authorization: Bearer $${CF_API_TOKEN}" \
+          -H "Content-Type: application/json" \
+          -d "{\"config\": $${NEW_CONFIG}}" \
+          "https://api.cloudflare.com/client/v4/accounts/$${ACCOUNT_ID}/cfd_tunnel/$${TUNNEL_ID}/configurations")
+        PUT_HTTP=$$(echo "$${PUT_RESP}" | tail -1)
+        PUT_BODY=$$(echo "$${PUT_RESP}" | sed '$$d')
+        if [ "$${PUT_HTTP}" != "200" ] || [ "$$(echo "$${PUT_BODY}" | jq -r .success)" != "true" ]; then
+          echo "ERROR: tunnel config PUT failed (HTTP $${PUT_HTTP})"
+          echo "$${PUT_BODY}" | jq .
+          exit 1
+        fi
+        echo "Tunnel route updated: $${HOSTNAME} -> http://localhost:$${PORT}"
+
+        # Smoke test: cloudflared remote config propagates quickly; 6 × 5s = 30s budget.
+        echo "Smoke test against https://$${HOSTNAME}/ (up to 30s)..."
+        SMOKE_OK=0
+        for i in 1 2 3 4 5 6; do
+          if curl -sfL -m 10 "https://$${HOSTNAME}/" -o /dev/null; then
+            echo "  attempt $${i}: ✓ reachable"
+            SMOKE_OK=1
+            break
+          fi
+          echo "  attempt $${i}: not ready yet"
+          [ "$${i}" -lt 6 ] && sleep 5
+        done
+        if [ "$${SMOKE_OK}" != "1" ]; then
+          echo "ERROR: preview not reachable after 30s — failing build"
+          exit 1
+        fi
+
+        DEPLOY_STATUS="success"
+
+        echo ""
+        echo "============================================"
+        echo "  Preview: $${APP_URL}"
+        echo "============================================"

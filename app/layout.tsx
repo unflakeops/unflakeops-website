@@ -1,12 +1,27 @@
 import "../styles/globals.css";
+import { Hanken_Grotesk, JetBrains_Mono } from "next/font/google";
 import CookiesBanner from "../components/CookiesBanner";
 
+const sans = Hanken_Grotesk({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700", "800"],
+  variable: "--font-sans",
+  display: "swap",
+});
+
+const mono = JetBrains_Mono({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-mono",
+  display: "swap",
+});
+
 export const metadata = {
-  title: "UnflakeOps — Cut Failed Builds by 50%+ in 30 Days. Guaranteed.",
+  title: "UnflakeOps · AI Reliability, RAG Evaluation & Data Maturity",
   description:
-    "PASS/WARN/FAIL release gates, fewer flaky tests, faster cycles for GitHub Actions & GitLab CI. UK/EU GDPR-friendly.",
+    "AI reliability and data maturity services for RAG systems, hallucination control, deterministic LLM outputs, LLM-ready data, and data pipelines.",
   keywords:
-    "CI/CD, flaky tests, GitHub Actions, GitLab CI, test automation, DevOps, build reliability",
+    "AI reliability, RAG evaluation, hallucination control, deterministic LLM outputs, data maturity, LLM-ready data, data pipelines, retrieval quality",
   authors: [{ name: "UnflakeOps" }],
   creator: "UnflakeOps",
   publisher: "UnflakeOps",
@@ -26,23 +41,23 @@ export const metadata = {
     locale: "en_US",
     url: "https://www.unflakeops.com",
     siteName: "UnflakeOps",
-    title: "UnflakeOps — Cut Failed Builds by 50%+ in 30 Days. Guaranteed.",
+    title: "UnflakeOps · AI Reliability, RAG Evaluation & Data Maturity",
     description:
-      "PASS/WARN/FAIL release gates, fewer flaky tests, faster cycles for GitHub Actions & GitLab CI. UK/EU GDPR-friendly.",
+      "AI reliability and data maturity services for RAG systems, hallucination control, deterministic LLM outputs, LLM-ready data, and data pipelines.",
     images: [
       {
         url: "https://www.unflakeops.com/brand/unflakeops_icon_dots_dark_400.png",
         width: 400,
         height: 400,
-        alt: "UnflakeOps - Cut Failed Builds by 50%+ in 30 Days",
+        alt: "UnflakeOps - AI reliability, RAG evaluation, and data maturity",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "UnflakeOps — Cut Failed Builds by 50%+ in 30 Days. Guaranteed.",
+    title: "UnflakeOps · AI Reliability, RAG Evaluation & Data Maturity",
     description:
-      "PASS/WARN/FAIL release gates, fewer flaky tests, faster cycles for GitHub Actions & GitLab CI. UK/EU GDPR-friendly.",
+      "AI reliability and data maturity services for RAG systems, hallucination control, deterministic LLM outputs, LLM-ready data, and data pipelines.",
     images: [
       "https://www.unflakeops.com/brand/unflakeops_icon_dots_dark_400.png",
     ],
@@ -60,14 +75,13 @@ export const metadata = {
   },
   manifest: "/manifest.json",
 };
-const LOGO_URL = "/brand/unflakeops_icon_dots_dark_400.png"; // already fine
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="en" className={`${sans.variable} ${mono.variable}`}>
       <body>
         {children}
         <CookiesBanner />
