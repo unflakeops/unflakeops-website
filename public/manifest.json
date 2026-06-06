@@ -4,18 +4,13 @@
   "description": "AI reliability and data maturity services for RAG systems, hallucination control, deterministic LLM outputs, LLM-ready data, and data pipelines.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#0b1323",
-  "theme_color": "#38bdf8",
+  "background_color": "#06080c",
+  "theme_color": "#34e2ad",
   "icons": [
     {
-      "src": "/favicon-192x192.png",
-      "sizes": "192x192",
-      "type": "image/png"
-    },
-    {
-      "src": "/favicon-512x512.png",
-      "sizes": "512x512",
-      "type": "image/png"
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
     }
   ]
 }

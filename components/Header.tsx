@@ -1,5 +1,5 @@
-import Image from "next/image";
 import Link from "next/link";
+import Logo from "./Logo";
 
 /** ENV */
 const BADGE =
@@ -18,14 +18,7 @@ export default function Header() {
             color: "inherit",
           }}
         >
-          <Image
-            src="/brand/unflakeops_icon_dots_dark_400.png"
-            alt="UnflakeOps"
-            width={32}
-            height={32}
-            priority
-          />
-          <span className="brand-name">UnflakeOps</span>
+          <Logo size={32} />
         </Link>
 
         <nav className="header-nav" aria-label="Primary navigation">

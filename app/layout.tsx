@@ -44,35 +44,17 @@ export const metadata = {
     title: "UnflakeOps · AI Reliability, RAG Evaluation & Data Maturity",
     description:
       "AI reliability and data maturity services for RAG systems, hallucination control, deterministic LLM outputs, LLM-ready data, and data pipelines.",
-    images: [
-      {
-        url: "https://www.unflakeops.com/brand/unflakeops_icon_dots_dark_400.png",
-        width: 400,
-        height: 400,
-        alt: "UnflakeOps - AI reliability, RAG evaluation, and data maturity",
-      },
-    ],
+    // images injected automatically by Next.js file convention (app/opengraph-image.tsx)
   },
   twitter: {
     card: "summary_large_image",
     title: "UnflakeOps · AI Reliability, RAG Evaluation & Data Maturity",
     description:
       "AI reliability and data maturity services for RAG systems, hallucination control, deterministic LLM outputs, LLM-ready data, and data pipelines.",
-    images: [
-      "https://www.unflakeops.com/brand/unflakeops_icon_dots_dark_400.png",
-    ],
+    // images injected automatically by Next.js file convention (app/twitter-image.tsx)
     creator: "@unflakeops",
   },
-  icons: {
-    icon: [
-      { url: "/favicon.ico", sizes: "any" },
-      { url: "/favicon-192x192.png", sizes: "192x192", type: "image/png" },
-      { url: "/favicon-512x512.png", sizes: "512x512", type: "image/png" },
-    ],
-    apple: [
-      { url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
-    ],
-  },
+  // icons injected automatically by Next.js file conventions (app/icon.svg, app/apple-icon.tsx)
   manifest: "/manifest.json",
 };
 export default function RootLayout({

@@ -35,7 +35,7 @@ export default function CIAuditPage() {
         >
           <div style={{ marginBottom: "2rem" }}>
             <Image
-              src="/brand/unflakeops_icon_dots_dark_400.png"
+              src="/icon.svg"
               alt="UnflakeOps"
               width={80}
               height={80}
