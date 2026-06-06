@@ -20,11 +20,6 @@ export default async function OgImage() {
     // Network failure — use default font
   }
 
-  const fonts: ConstructorParameters<typeof ImageResponse>[1]["fonts"] =
-    fontData
-      ? [{ name: "Hanken", data: fontData, weight: 700 as const }]
-      : [];
-
   const fontFamily = fontData ? "Hanken" : "sans-serif";
 
   return new ImageResponse(
@@ -163,7 +158,9 @@ export default async function OgImage() {
     ),
     {
       ...size,
-      fonts,
+      ...(fontData
+        ? { fonts: [{ name: "Hanken", data: fontData, weight: 700 as const }] }
+        : {}),
     }
   );
 }
