@@ -1,8 +1,10 @@
 "use client";
 
-import { useEffect, type CSSProperties } from "react";
-import Header from "../components/Header";
+import { useEffect, useRef, type CSSProperties } from "react";
+import Lenis from "lenis";
 import ContactForm from "../components/ContactForm";
+import ShaderField from "../components/ShaderField";
+import Cursor from "../components/Cursor";
 
 const BOOKING_URL = process.env.NEXT_PUBLIC_BOOKING_URL ?? "/call";
 const EMAIL = process.env.NEXT_PUBLIC_CONTACT_EMAIL ?? "hello@unflakeops.com";
@@ -87,7 +89,9 @@ function sparkPath(series: number[], w: number, h: number) {
     const y = h - ((v - min) / span) * h;
     return [x, y] as const;
   });
-  const line = pts.map(([x, y], i) => `${i === 0 ? "M" : "L"}${x.toFixed(1)},${y.toFixed(1)}`).join(" ");
+  const line = pts
+    .map(([x, y], i) => `${i === 0 ? "M" : "L"}${x.toFixed(1)},${y.toFixed(1)}`)
+    .join(" ");
   const area = `${line} L${w},${h} L0,${h} Z`;
   return { line, area };
 }
@@ -133,67 +137,155 @@ const OFFERS = [
 
 export default function HomePage() {
   useEffect(() => {
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    // Scroll reveal. The hidden start-state is scoped to `.ux-js`, which only
+    // exists once this runs — so no-JS / crawler renders stay fully visible.
+    document.documentElement.classList.add("ux-js");
+    const reveals = Array.from(document.querySelectorAll<HTMLElement>(".ux-reveal"));
+    let io: IntersectionObserver | undefined;
+    if (reduced || typeof IntersectionObserver === "undefined") {
+      reveals.forEach((el) => el.classList.add("in"));
+    } else {
+      io = new IntersectionObserver(
+        (entries, obs) => {
+          entries.forEach((e) => {
+            if (e.isIntersecting) {
+              e.target.classList.add("in");
+              obs.unobserve(e.target);
+            }
+          });
+        },
+        { rootMargin: "0px 0px -8% 0px", threshold: 0.12 }
+      );
+      reveals.forEach((el) => io!.observe(el));
+    }
+
     // Count-up for console metrics. Markup already shows the final value, so
     // crawlers and no-JS renders are correct; JS only animates from 0 up.
-    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (reduced) return;
-    const nums = Array.from(document.querySelectorAll<HTMLElement>("[data-count]"));
     const rafs: number[] = [];
-    nums.forEach((el) => {
-      const target = parseFloat(el.dataset.count ?? "0");
-      const suffix = el.dataset.suffix ?? "";
-      const decimals = (el.dataset.count ?? "").split(".")[1]?.length ?? 0;
-      const duration = 1500;
-      const start = performance.now();
-      const tick = (now: number) => {
-        const p = Math.min(1, (now - start) / duration);
-        const eased = 1 - Math.pow(1 - p, 4);
-        el.textContent = (target * eased).toFixed(decimals) + suffix;
-        if (p < 1) rafs.push(requestAnimationFrame(tick));
+    if (!reduced) {
+      const nums = Array.from(document.querySelectorAll<HTMLElement>("[data-count]"));
+      nums.forEach((el) => {
+        const target = parseFloat(el.dataset.count ?? "0");
+        const suffix = el.dataset.suffix ?? "";
+        const decimals = (el.dataset.count ?? "").split(".")[1]?.length ?? 0;
+        const duration = 1500;
+        const start = performance.now();
+        const tick = (now: number) => {
+          const p = Math.min(1, (now - start) / duration);
+          const eased = 1 - Math.pow(1 - p, 4);
+          el.textContent = (target * eased).toFixed(decimals) + suffix;
+          if (p < 1) rafs.push(requestAnimationFrame(tick));
+        };
+        rafs.push(requestAnimationFrame(tick));
+      });
+    }
+
+    // Hero reveal is CSS-driven (.sf-line / ux-rise animations with
+    // animation-fill-mode: backwards) so the start state applies on first
+    // paint — no flash of visible-then-hidden, and never left blank.
+
+    // Lenis smooth scroll
+    let lenis: Lenis | undefined;
+    let lenisRaf = 0;
+    if (!reduced) {
+      lenis = new Lenis({ duration: 1.1, smoothWheel: true });
+      const lraf = (time: number) => {
+        lenis!.raf(time);
+        lenisRaf = requestAnimationFrame(lraf);
       };
-      rafs.push(requestAnimationFrame(tick));
-    });
-    return () => rafs.forEach((id) => cancelAnimationFrame(id));
+      lenisRaf = requestAnimationFrame(lraf);
+    }
+
+    return () => {
+      io?.disconnect();
+      rafs.forEach((id) => cancelAnimationFrame(id));
+      cancelAnimationFrame(lenisRaf);
+      lenis?.destroy();
+    };
   }, []);
 
   const spark = sparkPath(RELIABILITY_SERIES, 132, 44);
 
   return (
-    <main className="landing-page">
-      <Header />
+    <main className="landing-page ux-light">
+      <Cursor />
+      <section className="sf-hero" aria-label="UnflakeOps overview">
+        <ShaderField />
+        <div className="sf-orb sf-orb--a" aria-hidden="true" />
+        <div className="sf-orb sf-orb--b" aria-hidden="true" />
+        <header className="sf-nav">
+          <a className="sf-lock" href="/">
+            <svg width="30" height="30" viewBox="0 0 40 40" aria-hidden="true" focusable="false">
+              <path
+                className="sf-mark__trace"
+                d="M5 30 C 10 30, 11 9, 17 9 C 22 9, 22 23, 26 23 C 30 23, 30 18, 35 18"
+                fill="none"
+                stroke="#7c6cf0"
+                strokeWidth="3.2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                pathLength={1}
+              />
+              <circle cx="35" cy="18" r="2.7" fill="#9e92ff" />
+            </svg>
+            <span>
+              Unflake<i>Ops</i>
+            </span>
+          </a>
+          <nav className="sf-navlinks" aria-label="Primary navigation">
+            <a href="#services">Services</a>
+            <a href="#approach">Approach</a>
+            <a href="#team">Team</a>
+            <a href="#offers">Pricing</a>
+            <a className="sf-book" href={BOOKING_URL} data-magnetic>
+              Book a call
+            </a>
+          </nav>
+        </header>
 
-      <section className="hero-section consulting-hero">
-        <div className="site-shell consulting-hero__content">
-          <div className="hero-copy" data-reveal>
-            <p className="eyebrow">AI reliability &amp; data maturity</p>
-            <h1 className="hero-title">
-              Make AI decisions you can <span className="accent-word">trust</span> in production.
+        <div className="sf-hero__inner">
+          <div className="sf-copy">
+            <h1 className="sf-h1">
+              <span className="sf-line-wrap">
+                <span className="sf-line">Make AI decisions</span>
+              </span>
+              <span className="sf-line-wrap">
+                <span className="sf-line">
+                  you can <span className="hl">trust</span>
+                </span>
+              </span>
+              <span className="sf-line-wrap">
+                <span className="sf-line">in production.</span>
+              </span>
             </h1>
-            <p className="hero-subtitle">
-              We pair LLM reliability engineering with data maturity and pipeline execution,
-              so your AI systems stay grounded, repeatable, and defensible under real load.
+            <p className="sf-sub">
+              RAG reliability, hallucination control, and data maturity, engineered
+              and measured under real production load, not in a demo.
             </p>
-            <div className="hero-actions">
-              <a className="hero-cta" href={BOOKING_URL}>
-                Book discovery call
+            <div className="sf-cta">
+              <a className="sf-btn" href={BOOKING_URL} data-magnetic>
+                Book a discovery call
               </a>
-              <a className="hero-cta-secondary" href="#services">
-                View service tracks
+              <a className="sf-btn2" href="#approach">
+                See the eval method →
               </a>
             </div>
-            <div className="hero-proof-strip">
-              <span>RAG &amp; QA reliability</span>
-              <span>Data maturity &amp; pipelines</span>
-              <span>One delivery team</span>
+            <div className="sf-proof">
+              <span>
+                <b>98.7%</b> grounded answers
+              </span>
+              <span>
+                <b>0</b> non-deterministic outputs
+              </span>
+              <span>
+                <b>30d</b> to baseline
+              </span>
             </div>
           </div>
 
-          <aside
-            className="hero-visual reliability-console"
-            aria-label="Reliability eval console"
-            data-reveal
-            data-reveal-delay="1"
-          >
+          <aside className="reliability-console" aria-label="Live reliability eval console">
             <div className="console-top">
               <div className="console-id">
                 <span className="console-live" />
@@ -205,7 +297,9 @@ export default function HomePage() {
             <div className="console-metric">
               <div className="console-metric__figure">
                 <span className="console-metric__label">Grounded answer rate</span>
-                <strong data-count="98.7" data-suffix="%">98.7%</strong>
+                <strong data-count="98.7" data-suffix="%">
+                  98.7%
+                </strong>
                 <span className="console-metric__delta">▲ 2.3 pts vs last release</span>
               </div>
               <svg
@@ -218,8 +312,8 @@ export default function HomePage() {
               >
                 <defs>
                   <linearGradient id="sparkFill" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="rgba(52,226,173,0.35)" />
-                    <stop offset="100%" stopColor="rgba(52,226,173,0)" />
+                    <stop offset="0%" stopColor="rgba(124,108,240,0.35)" />
+                    <stop offset="100%" stopColor="rgba(124,108,240,0)" />
                   </linearGradient>
                 </defs>
                 <path className="console-spark__area" d={spark.area} fill="url(#sparkFill)" />
@@ -264,129 +358,146 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section id="services" className="landing-section section-panel">
-        <div className="site-shell">
-          <div className="section-heading" data-reveal>
-            <p className="eyebrow">Service tracks</p>
-            <h2>Two specialist tracks, one coordinated delivery model.</h2>
-          </div>
-          <div className="grid-2 service-track-grid">
-            {SERVICE_TRACKS.map((track, i) => (
-              <article
-                className="service-track-card"
-                key={track.title}
-                data-reveal
-                data-reveal-delay={i + 1}
-              >
-                <span className="service-track-meta">{track.kicker}</span>
-                <h3>{track.title}</h3>
-                <p>{track.description}</p>
-                <ul className="list">
-                  {track.bullets.map((item) => (
-                    <li key={item}>{item}</li>
-                  ))}
-                </ul>
-              </article>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="landing-section capability-section">
-        <div className="site-shell">
-          <div className="section-heading section-heading--dark" data-reveal>
-            <h2>Full skills coverage across reliability and data foundations.</h2>
-            <p>
-              One engagement spans the entire path, from retrieval quality to the
+      {/* SERVICES — two editorial tracks, not cards */}
+      <section id="services" className="ux-sec">
+        <div className="ux-wrap">
+          <div className="ux-sechead ux-reveal">
+            <h2 className="ux-h2">
+              Two specialist tracks, one delivery team.
+            </h2>
+            <p className="ux-lead">
+              One engagement spans the whole path, from retrieval quality to the
               data contracts your models depend on.
             </p>
           </div>
-          <div className="grid-3 capability-grid" data-reveal data-reveal-delay="1">
-            {CAPABILITIES.map((item) => (
-              <article className="capability-card" key={item}>
-                <h3>{item}</h3>
-              </article>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section id="approach" className="landing-section section-panel section-panel--muted">
-        <div className="site-shell">
-          <div className="section-heading" data-reveal>
-            <h2>How we execute, from first audit to production adoption.</h2>
-          </div>
-          <div className="grid-4 approach-grid">
-            {APPROACH.map((step, i) => (
-              <article
-                className="approach-card"
-                key={step.step}
-                data-reveal
-                data-reveal-delay={(i % 3) + 1}
-              >
-                <span>{step.step}</span>
-                <h3>{step.title}</h3>
-                <p>{step.body}</p>
-              </article>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section id="team" className="landing-section team-section">
-        <div className="site-shell">
-          <div className="section-heading section-heading--dark" data-reveal>
-            <h2>One front, two core disciplines.</h2>
-          </div>
-          <div className="grid-2 team-grid">
-            <article className="card team-card" data-reveal data-reveal-delay="1">
-              <div className="team-initial">R</div>
-              <div>
-                <h3>Reliability engineering</h3>
-                <p>LLM reliability, RAG evaluation, output controls, and QA-driven production hardening.</p>
-              </div>
-            </article>
-            <article className="card team-card" data-reveal data-reveal-delay="2">
-              <div className="team-initial team-initial--green">D</div>
-              <div>
-                <h3>Data engineering</h3>
-                <p>Data maturity, data pipeline design, quality governance, and AI-ready data architecture.</p>
-              </div>
-            </article>
-          </div>
-        </div>
-      </section>
-
-      <section id="offers" className="landing-section offers-section">
-        <div className="site-shell">
-          <div className="section-heading" data-reveal>
-            <p className="eyebrow">Ways to work with us</p>
-            <h2>Engagements that fit where your AI stands today.</h2>
-            <p>
-              Start with a scoped audit, move into a build sprint, or embed us for the long run.
-              Every engagement ends with documented ownership on your side.
-            </p>
-          </div>
-          <div className="offer-grid">
-            {OFFERS.map((offer, i) => (
-              <article
-                className={`offer-card${offer.featured ? " offer-card--featured" : ""}`}
-                key={offer.title}
-                data-reveal
-                data-reveal-delay={i + 1}
-              >
-                {offer.featured && <span className="offer-badge">Most common</span>}
-                <span className="offer-card__label">{offer.label}</span>
-                <h3>{offer.title}</h3>
-                <p className="offer-card__desc">{offer.desc}</p>
-                <ul className="offer-card__list">
-                  {offer.items.map((item) => (
-                    <li key={item}>{item}</li>
+          <div className="ux-tracks">
+            {SERVICE_TRACKS.map((track) => (
+              <div className="ux-track ux-reveal" key={track.title}>
+                <span className="ux-tag">{track.kicker}</span>
+                <div className="ux-track__body">
+                  <h3 className="ux-h3">{track.title}</h3>
+                  <p className="ux-muted-p">{track.description}</p>
+                </div>
+                <ul className="ux-ticklist">
+                  {track.bullets.map((item) => (
+                    <li key={item}>
+                      <span className="ux-tick" aria-hidden="true" />
+                      {item}
+                    </li>
                   ))}
                 </ul>
-                <div className="offer-card__foot">
-                  <span className="offer-card__meta">{offer.meta}</span>
-                  <a className="offer-card__cta" href={BOOKING_URL}>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* CAPABILITIES — instrument spec sheet */}
+      <section id="capabilities" className="ux-sec ux-sec--tint">
+        <div className="ux-wrap">
+          <div className="ux-sechead ux-reveal">
+            <h2 className="ux-h2">
+              Full coverage, retrieval to data contract.
+            </h2>
+          </div>
+          <ol className="ux-spec ux-reveal">
+            {CAPABILITIES.map((item, i) => (
+              <li key={item}>
+                <span className="ux-spec__n">
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+                <span>{item}</span>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </section>
+
+      {/* APPROACH — stepped sequence (numbers earned) */}
+      <section id="approach" className="ux-sec">
+        <div className="ux-wrap">
+          <div className="ux-sechead ux-reveal">
+            <h2 className="ux-h2">How we execute, audit to adoption.</h2>
+          </div>
+          <div className="ux-steps">
+            {APPROACH.map((step) => (
+              <div className="ux-step ux-reveal" key={step.step}>
+                <span className="ux-step__n">{step.step}</span>
+                <h3 className="ux-step__t">{step.title}</h3>
+                <p className="ux-step__b">{step.body}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* TEAM — two disciplines */}
+      <section id="team" className="ux-sec ux-sec--tint">
+        <div className="ux-wrap">
+          <div className="ux-sechead ux-reveal">
+            <h2 className="ux-h2">One front, two disciplines.</h2>
+          </div>
+          <div className="ux-disc">
+            <div className="ux-disc__col ux-reveal">
+              <svg className="ux-disc__mark" width="34" height="34" viewBox="0 0 40 40" aria-hidden="true">
+                <path d="M5 30 C 10 30, 11 9, 17 9 C 22 9, 22 23, 26 23 C 30 23, 30 18, 35 18" fill="none" stroke="#5142d4" strokeWidth="3.2" strokeLinecap="round" strokeLinejoin="round" />
+                <circle cx="35" cy="18" r="2.7" fill="#5142d4" />
+              </svg>
+              <h3 className="ux-h3">Reliability engineering</h3>
+              <p className="ux-muted-p">
+                LLM reliability, RAG evaluation, output controls, and QA-driven
+                production hardening.
+              </p>
+            </div>
+            <div className="ux-disc__col ux-reveal">
+              <svg className="ux-disc__mark" width="34" height="34" viewBox="0 0 40 40" aria-hidden="true">
+                <path d="M5 30 C 10 30, 11 9, 17 9 C 22 9, 22 23, 26 23 C 30 23, 30 18, 35 18" fill="none" stroke="#5142d4" strokeWidth="3.2" strokeLinecap="round" strokeLinejoin="round" />
+                <circle cx="35" cy="18" r="2.7" fill="#5142d4" />
+              </svg>
+              <h3 className="ux-h3">Data engineering</h3>
+              <p className="ux-muted-p">
+                Data maturity, pipeline design, quality governance, and AI-ready
+                data architecture.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* OFFERS — pricing, featured drenched */}
+      <section id="offers" className="ux-sec">
+        <div className="ux-wrap">
+          <div className="ux-sechead ux-reveal">
+            <h2 className="ux-h2">
+              Engagements that fit where your AI stands.
+            </h2>
+            <p className="ux-lead">
+              Start with a scoped audit, move into a build sprint, or embed us for
+              the long run. Every engagement ends with documented ownership on your
+              side.
+            </p>
+          </div>
+          <div className="ux-plans">
+            {OFFERS.map((offer) => (
+              <article
+                className={`ux-plan ux-reveal${offer.featured ? " ux-plan--feat" : ""}`}
+                key={offer.title}
+              >
+                {offer.featured && <span className="ux-plan__badge">Most common</span>}
+                <span className="ux-plan__label">{offer.label}</span>
+                <h3 className="ux-plan__t">{offer.title}</h3>
+                <p className="ux-plan__d">{offer.desc}</p>
+                <ul className="ux-ticklist">
+                  {offer.items.map((item) => (
+                    <li key={item}>
+                      <span className="ux-tick" aria-hidden="true" />
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+                <div className="ux-plan__foot">
+                  <span className="ux-plan__meta">{offer.meta}</span>
+                  <a className="ux-plan__cta" href={BOOKING_URL}>
                     Discuss this →
                   </a>
                 </div>
@@ -396,30 +507,28 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section id="book" className="landing-section contact-section">
-        <div className="site-shell contact-grid">
-          <div data-reveal>
-            <h2>Bring us one workflow. We will show you what blocks reliable AI decisions.</h2>
-            <p>
-              We run a focused discovery, expose reliability and data gaps, and return a clear
-              implementation path with ownership and delivery options.
+      {/* CONTACT — cobalt drench bookend */}
+      <section id="book" className="ux-contact">
+        <div className="ux-wrap ux-contact__grid">
+          <div className="ux-reveal">
+            <h2 className="ux-contact__h">
+              Bring us one workflow. We will show you what blocks reliable AI.
+            </h2>
+            <p className="ux-contact__p">
+              A focused discovery exposes the reliability and data gaps, then hands
+              back a clear implementation path with ownership and delivery options.
             </p>
-            <div className="hero-actions">
-              <a className="contact-button" href={BOOKING_URL}>
-                Book discovery call
+            <div className="ux-contact__cta">
+              <a className="ux-contact__btn" href={BOOKING_URL}>
+                Book a discovery call
               </a>
-              <a className="hero-cta-secondary" href={`mailto:${EMAIL}`}>
-                Email us
+              <a className="ux-contact__mail" href={`mailto:${EMAIL}`}>
+                {EMAIL}
               </a>
             </div>
           </div>
-          <aside className="contact-card" data-reveal data-reveal-delay="1">
-            <h3>Contact</h3>
-            <p className="contact-email">{EMAIL}</p>
-            <p>Response window: usually same business day.</p>
-            <div style={{ marginTop: "24px", borderTop: "1px solid var(--line)", paddingTop: "20px" }}>
-              <ContactForm />
-            </div>
+          <aside className="ux-contact__card ux-reveal">
+            <ContactForm />
           </aside>
         </div>
       </section>

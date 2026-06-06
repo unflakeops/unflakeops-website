@@ -8,56 +8,48 @@ export default function Logo({ size = 32 }: LogoProps) {
       style={{
         display: "inline-flex",
         alignItems: "center",
-        gap: Math.round(size * 0.3),
+        gap: Math.round(size * 0.34),
         textDecoration: "none",
       }}
     >
-      {/* Brand mark: reliability sparkline tile */}
+      {/* Brand mark: a damped step response settling to a steady state
+          (control-systems signal = reliability). Dark tile / green trace. */}
       <svg
         xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 32 32"
+        viewBox="0 0 40 40"
         width={size}
         height={size}
         aria-hidden="true"
         focusable="false"
       >
-        <defs>
-          <filter id="logo-glow" x="-50%" y="-50%" width="200%" height="200%">
-            <feGaussianBlur stdDeviation="1.5" result="blur" />
-            <feMerge>
-              <feMergeNode in="blur" />
-              <feMergeNode in="SourceGraphic" />
-            </feMerge>
-          </filter>
-        </defs>
-        {/* Rounded-square tile */}
+        {/* Tile */}
         <rect
-          width="32"
-          height="32"
-          rx="6"
-          fill="#06080c"
-          stroke="rgba(148,168,196,0.26)"
+          width="40"
+          height="40"
+          rx="9"
+          fill="#0b0f15"
+          stroke="rgba(148,168,196,0.18)"
+        />
+        {/* Oscilloscope baseline */}
+        <line
+          x1="9"
+          y1="20"
+          x2="31"
+          y2="20"
+          stroke="rgba(148,168,196,0.16)"
           strokeWidth="1"
         />
-        {/* Sparkline: rises then flattens to steady plateau (flaky to stable) */}
-        <polyline
-          points="4,24 8,20 12,15 16,11 20,10 24,10 28,10"
+        {/* Damped trace: overshoots once, settles flat */}
+        <path
+          d="M7 28 C 11 28, 12 11, 17 11 C 21 11, 21 22, 25 22 C 28 22, 28 18, 33 18"
           fill="none"
           stroke="#34e2ad"
-          strokeWidth="2"
+          strokeWidth="2.8"
           strokeLinecap="round"
           strokeLinejoin="round"
         />
-        {/* Soft glow halo */}
-        <circle cx="28" cy="10" r="4" fill="#5cf6c4" opacity="0.25" />
-        {/* Terminal node dot at plateau end */}
-        <circle
-          cx="28"
-          cy="10"
-          r="2.5"
-          fill="#5cf6c4"
-          filter="url(#logo-glow)"
-        />
+        {/* Settled node */}
+        <circle cx="33" cy="18" r="2.6" fill="#5cf6c4" />
       </svg>
 
       {/* Wordmark */}
@@ -65,10 +57,10 @@ export default function Logo({ size = 32 }: LogoProps) {
         style={{
           fontFamily: "var(--font-sans, 'Hanken Grotesk', sans-serif)",
           fontWeight: 700,
-          fontSize: Math.round(size * 0.5625),
+          fontSize: Math.round(size * 0.6),
           lineHeight: 1,
           color: "var(--ink, #f4f7fb)",
-          letterSpacing: "-0.01em",
+          letterSpacing: "-0.022em",
           userSelect: "none",
         }}
       >
