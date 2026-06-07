@@ -198,18 +198,36 @@ export default function HomePage() {
       lenisRaf = requestAnimationFrame(lraf);
     }
 
-    // Focus-blur headline: the sharp layer's spotlight follows the pointer
+    // Focus-blur headline: the sharp spotlight rests on the emphasis word
+    // ("trust") and glides to the pointer on hover, easing back when it leaves.
     const focus = document.querySelector<HTMLElement>(".sf-focus");
-    let fmx = 50;
-    let fmy = 44;
-    let ftx = 50;
-    let fty = 44;
+    const hlWord = document.querySelector<HTMLElement>(".sf-h1--sharp .hl");
+    const heroEl = document.querySelector<HTMLElement>(".sf-hero");
+    const home = { x: 38, y: 50 };
+    const computeHome = () => {
+      if (!focus || !hlWord) return;
+      const fr = focus.getBoundingClientRect();
+      const hr = hlWord.getBoundingClientRect();
+      if (fr.width && fr.height) {
+        home.x = ((hr.left + hr.width / 2 - fr.left) / fr.width) * 100;
+        home.y = ((hr.top + hr.height / 2 - fr.top) / fr.height) * 100;
+      }
+    };
+    let ftx = home.x;
+    let fty = home.y;
+    let fmx = home.x;
+    let fmy = home.y;
     let focusRaf = 0;
+    let homeTimer = 0;
     const onFocusMove = (e: PointerEvent) => {
       if (!focus) return;
       const r = focus.getBoundingClientRect();
       ftx = ((e.clientX - r.left) / r.width) * 100;
       fty = ((e.clientY - r.top) / r.height) * 100;
+    };
+    const onHeroLeave = () => {
+      ftx = home.x;
+      fty = home.y;
     };
     const focusLoop = () => {
       fmx += (ftx - fmx) * 0.16;
@@ -219,7 +237,15 @@ export default function HomePage() {
       focusRaf = requestAnimationFrame(focusLoop);
     };
     if (focus && !reduced) {
+      // recompute "trust" position once the reveal settles, and on resize
+      homeTimer = window.setTimeout(() => {
+        computeHome();
+        ftx = home.x;
+        fty = home.y;
+      }, 1500);
+      window.addEventListener("resize", computeHome);
       window.addEventListener("pointermove", onFocusMove, { passive: true });
+      heroEl?.addEventListener("pointerleave", onHeroLeave);
       focusRaf = requestAnimationFrame(focusLoop);
     }
 
@@ -229,6 +255,9 @@ export default function HomePage() {
       cancelAnimationFrame(lenisRaf);
       lenis?.destroy();
       window.removeEventListener("pointermove", onFocusMove);
+      window.removeEventListener("resize", computeHome);
+      heroEl?.removeEventListener("pointerleave", onHeroLeave);
+      clearTimeout(homeTimer);
       cancelAnimationFrame(focusRaf);
     };
   }, []);

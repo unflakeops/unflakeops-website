@@ -3470,8 +3470,8 @@ select:focus-visible {
   position: absolute;
   inset: 0;
   z-index: 1;
-  filter: blur(6px);
-  opacity: 0.92;
+  filter: blur(4.5px);
+  opacity: 0.9;
 }
 .sf-h1--sharp {
   position: relative;
@@ -3480,14 +3480,14 @@ select:focus-visible {
 @media (prefers-reduced-motion: no-preference) {
   .sf-h1--sharp {
     -webkit-mask-image: radial-gradient(
-      circle 240px at var(--mx, 50%) var(--my, 44%),
-      #000 30%,
-      transparent 78%
+      circle 260px at var(--mx, 38%) var(--my, 50%),
+      #000 36%,
+      transparent 82%
     );
     mask-image: radial-gradient(
-      circle 240px at var(--mx, 50%) var(--my, 44%),
-      #000 30%,
-      transparent 78%
+      circle 260px at var(--mx, 38%) var(--my, 50%),
+      #000 36%,
+      transparent 82%
     );
   }
 }
