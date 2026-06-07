@@ -198,15 +198,58 @@ export default function HomePage() {
       lenisRaf = requestAnimationFrame(lraf);
     }
 
+    // Focus-blur headline: the sharp layer's spotlight follows the pointer
+    const focus = document.querySelector<HTMLElement>(".sf-focus");
+    let fmx = 50;
+    let fmy = 44;
+    let ftx = 50;
+    let fty = 44;
+    let focusRaf = 0;
+    const onFocusMove = (e: PointerEvent) => {
+      if (!focus) return;
+      const r = focus.getBoundingClientRect();
+      ftx = ((e.clientX - r.left) / r.width) * 100;
+      fty = ((e.clientY - r.top) / r.height) * 100;
+    };
+    const focusLoop = () => {
+      fmx += (ftx - fmx) * 0.16;
+      fmy += (fty - fmy) * 0.16;
+      focus?.style.setProperty("--mx", `${fmx.toFixed(2)}%`);
+      focus?.style.setProperty("--my", `${fmy.toFixed(2)}%`);
+      focusRaf = requestAnimationFrame(focusLoop);
+    };
+    if (focus && !reduced) {
+      window.addEventListener("pointermove", onFocusMove, { passive: true });
+      focusRaf = requestAnimationFrame(focusLoop);
+    }
+
     return () => {
       io?.disconnect();
       rafs.forEach((id) => cancelAnimationFrame(id));
       cancelAnimationFrame(lenisRaf);
       lenis?.destroy();
+      window.removeEventListener("pointermove", onFocusMove);
+      cancelAnimationFrame(focusRaf);
     };
   }, []);
 
   const spark = sparkPath(RELIABILITY_SERIES, 132, 44);
+
+  const headline = (
+    <>
+      <span className="sf-line-wrap">
+        <span className="sf-line">Make AI decisions</span>
+      </span>
+      <span className="sf-line-wrap">
+        <span className="sf-line">
+          you can <span className="hl">trust</span>
+        </span>
+      </span>
+      <span className="sf-line-wrap">
+        <span className="sf-line">in production.</span>
+      </span>
+    </>
+  );
 
   return (
     <main className="landing-page ux-light">
@@ -247,19 +290,12 @@ export default function HomePage() {
 
         <div className="sf-hero__inner">
           <div className="sf-copy">
-            <h1 className="sf-h1">
-              <span className="sf-line-wrap">
-                <span className="sf-line">Make AI decisions</span>
-              </span>
-              <span className="sf-line-wrap">
-                <span className="sf-line">
-                  you can <span className="hl">trust</span>
-                </span>
-              </span>
-              <span className="sf-line-wrap">
-                <span className="sf-line">in production.</span>
-              </span>
-            </h1>
+            <div className="sf-focus">
+              <h1 className="sf-h1 sf-h1--blur" aria-hidden="true">
+                {headline}
+              </h1>
+              <h1 className="sf-h1 sf-h1--sharp">{headline}</h1>
+            </div>
             <p className="sf-sub">
               RAG reliability, hallucination control, and data maturity, engineered
               and measured under real production load, not in a demo.

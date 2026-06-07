@@ -3461,6 +3461,36 @@ select:focus-visible {
   border-radius: 8px;
   z-index: -1;
 }
+
+/* focus-blur headline — sharp spotlight follows the cursor (sui-style) */
+.sf-focus {
+  position: relative;
+}
+.sf-h1--blur {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  filter: blur(6px);
+  opacity: 0.92;
+}
+.sf-h1--sharp {
+  position: relative;
+  z-index: 2;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .sf-h1--sharp {
+    -webkit-mask-image: radial-gradient(
+      circle 240px at var(--mx, 50%) var(--my, 44%),
+      #000 30%,
+      transparent 78%
+    );
+    mask-image: radial-gradient(
+      circle 240px at var(--mx, 50%) var(--my, 44%),
+      #000 30%,
+      transparent 78%
+    );
+  }
+}
 .sf-sub {
   margin-top: 26px;
   font-size: 19px;

@@ -19,6 +19,8 @@ uniform vec2 uRes;
 uniform float uTime;
 uniform vec2 uMouse;   // normalized, bottom-left origin; (-1,-1) when inactive
 uniform float uMouseOn;
+uniform float uScroll; // 0..1 progress leaving the hero
+uniform float uVel;    // 0..1 smoothed scroll velocity
 
 float hash(vec2 p){
   p = fract(p * vec2(123.34, 456.21));
@@ -42,7 +44,8 @@ void main(){
   vec2 uv = gl_FragCoord.xy / uRes.xy;
   vec2 p = uv;
   p.x *= uRes.x / uRes.y;            // aspect-correct
-  float t = uTime * 0.045;
+  p.y -= uScroll * 0.30;             // parallax drift as you scroll away
+  float t = uTime * (0.045 + uVel * 0.11);  // scroll speed quickens the flow
 
   // mouse warp — gentle pull of the flow toward the cursor
   vec2 m = uMouse; m.x *= uRes.x / uRes.y;
@@ -55,7 +58,7 @@ void main(){
     fbm(p * 1.6 + 2.0 * q + vec2(1.7, 9.2) + 0.15 * t + pull),
     fbm(p * 1.6 + 2.0 * q + vec2(8.3, 2.8) - 0.12 * t)
   );
-  float f = fbm(p * 1.6 + 2.0 * r);
+  float f = fbm(p * (1.6 + uVel * 0.5) + 2.0 * r);  // velocity adds turbulence
 
   // luminous filaments (the "signal" ridges)
   float fil = smoothstep(0.52, 0.78, f);
@@ -67,7 +70,7 @@ void main(){
 
   vec3 col = mix(bg, violet, smoothstep(0.18, 0.70, f));
   col = mix(col, cyan, fil * 0.55);
-  col += cyan * glow * 0.35;                 // bloom-ish highlight
+  col += cyan * glow * (0.35 + uVel * 0.45); // bloom flares with scroll speed
 
   // cursor halo
   col += mix(cyan, vec3(0.6, 0.55, 1.0), 0.4) * uMouseOn * 0.22 * exp(-md * 4.5);
@@ -78,6 +81,8 @@ void main(){
   // vignette
   float vig = smoothstep(1.25, 0.25, length(uv - 0.5));
   col *= 0.72 + 0.28 * vig;
+
+  col *= 1.0 - uScroll * 0.42;               // dim as the hero scrolls away
 
   gl_FragColor = vec4(col, 1.0);
 }
@@ -128,10 +133,25 @@ export default function ShaderField() {
     const uTime = gl.getUniformLocation(prog, "uTime");
     const uMouse = gl.getUniformLocation(prog, "uMouse");
     const uMouseOn = gl.getUniformLocation(prog, "uMouseOn");
+    const uScroll = gl.getUniformLocation(prog, "uScroll");
+    const uVel = gl.getUniformLocation(prog, "uVel");
 
     let w = 0;
     let h = 0;
     const mouse = { x: -1, y: -1, on: 0 };
+    let scrollTarget = 0;
+    let scrollN = 0;
+    let velTarget = 0;
+    let velSmooth = 0;
+    let lastY = window.scrollY;
+    let visible = true;
+
+    function onScroll() {
+      const y = window.scrollY;
+      scrollTarget = Math.min(1, y / (window.innerHeight * 1.2));
+      velTarget = Math.min(1, Math.abs(y - lastY) / 60);
+      lastY = y;
+    }
 
     function resize() {
       const parent = canvas.parentElement;
@@ -163,9 +183,18 @@ export default function ShaderField() {
       typeof performance !== "undefined" ? performance.now() : 0;
     let raf = 0;
     function frame(now: number) {
+      if (!visible) {
+        raf = 0;
+        return;
+      }
+      scrollN += (scrollTarget - scrollN) * 0.1;
+      velTarget *= 0.9; // decay so it eases back to 0 when scrolling stops
+      velSmooth += (velTarget - velSmooth) * 0.15;
       gl.uniform1f(uTime, (now - start) / 1000);
       gl.uniform2f(uMouse, mouse.x, mouse.y);
       gl.uniform1f(uMouseOn, mouse.on);
+      gl.uniform1f(uScroll, scrollN);
+      gl.uniform1f(uVel, velSmooth);
       gl.drawArrays(gl.TRIANGLES, 0, 3);
       raf = requestAnimationFrame(frame);
     }
@@ -174,11 +203,24 @@ export default function ShaderField() {
     window.addEventListener("resize", resize);
     window.addEventListener("pointermove", onMove, { passive: true });
     window.addEventListener("pointerleave", onLeave);
+    window.addEventListener("scroll", onScroll, { passive: true });
+
+    // pause rendering when the hero is off-screen
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        visible = entry.isIntersecting;
+        if (visible && !reduced && !raf) raf = requestAnimationFrame(frame);
+      },
+      { threshold: 0 }
+    );
+    io.observe(canvas);
 
     if (reduced) {
       gl.uniform1f(uTime, 6.0);
       gl.uniform2f(uMouse, -1, -1);
       gl.uniform1f(uMouseOn, 0);
+      gl.uniform1f(uScroll, 0);
+      gl.uniform1f(uVel, 0);
       gl.drawArrays(gl.TRIANGLES, 0, 3);
     } else {
       raf = requestAnimationFrame(frame);
@@ -189,6 +231,8 @@ export default function ShaderField() {
       window.removeEventListener("resize", resize);
       window.removeEventListener("pointermove", onMove);
       window.removeEventListener("pointerleave", onLeave);
+      window.removeEventListener("scroll", onScroll);
+      io.disconnect();
     };
   }, []);
 
