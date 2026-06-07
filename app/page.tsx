@@ -590,8 +590,9 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* CONTACT — cobalt drench bookend */}
+      {/* CONTACT — liquid-light bookend */}
       <section id="book" className="ux-contact">
+        <ShaderField calm />
         <div className="ux-wrap ux-contact__grid">
           <div className="ux-reveal">
             <h2 className="ux-contact__h">

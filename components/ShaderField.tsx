@@ -21,6 +21,7 @@ uniform vec2 uMouse;   // normalized, bottom-left origin; (-1,-1) when inactive
 uniform float uMouseOn;
 uniform float uScroll; // 0..1 progress leaving the hero
 uniform float uVel;    // 0..1 smoothed scroll velocity
+uniform float uCalm;   // 1 = subdued bookend variant
 
 float hash(vec2 p){
   p = fract(p * vec2(123.34, 456.21));
@@ -70,7 +71,7 @@ void main(){
 
   vec3 col = mix(bg, violet, smoothstep(0.18, 0.70, f));
   col = mix(col, cyan, fil * 0.55);
-  col += cyan * glow * (0.35 + uVel * 0.45); // bloom flares with scroll speed
+  col += cyan * glow * (0.35 + uVel * 0.45) * (1.0 - uCalm * 0.4); // bloom flares with scroll speed
 
   // cursor halo
   col += mix(cyan, vec3(0.6, 0.55, 1.0), 0.4) * uMouseOn * 0.22 * exp(-md * 4.5);
@@ -83,12 +84,13 @@ void main(){
   col *= 0.72 + 0.28 * vig;
 
   col *= 1.0 - uScroll * 0.42;               // dim as the hero scrolls away
+  col = mix(col, col * 0.66, uCalm);         // subdued bookend variant
 
   gl_FragColor = vec4(col, 1.0);
 }
 `;
 
-export default function ShaderField() {
+export default function ShaderField({ calm = false }: { calm?: boolean }) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
   useEffect(() => {
@@ -135,6 +137,8 @@ export default function ShaderField() {
     const uMouseOn = gl.getUniformLocation(prog, "uMouseOn");
     const uScroll = gl.getUniformLocation(prog, "uScroll");
     const uVel = gl.getUniformLocation(prog, "uVel");
+    const uCalm = gl.getUniformLocation(prog, "uCalm");
+    gl.uniform1f(uCalm, calm ? 1 : 0);
 
     let w = 0;
     let h = 0;
@@ -203,7 +207,7 @@ export default function ShaderField() {
     window.addEventListener("resize", resize);
     window.addEventListener("pointermove", onMove, { passive: true });
     window.addEventListener("pointerleave", onLeave);
-    window.addEventListener("scroll", onScroll, { passive: true });
+    if (!calm) window.addEventListener("scroll", onScroll, { passive: true });
 
     // pause rendering when the hero is off-screen
     const io = new IntersectionObserver(

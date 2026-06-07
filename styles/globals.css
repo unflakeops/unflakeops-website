@@ -3080,9 +3080,31 @@ select:focus-visible {
 
 /* contact — cobalt drench bookend */
 .ux-light .ux-contact {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
   background: var(--ux-fill);
   color: #eef1ff;
   padding: clamp(64px, 8vw, 112px) 0;
+}
+.ux-light .ux-contact > canvas {
+  z-index: 0;
+}
+.ux-light .ux-contact::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: linear-gradient(
+    180deg,
+    rgba(13, 11, 28, 0.5),
+    rgba(13, 11, 28, 0.74)
+  );
+}
+.ux-light .ux-contact > .ux-wrap {
+  position: relative;
+  z-index: 2;
 }
 .ux-contact__grid {
   display: grid;
