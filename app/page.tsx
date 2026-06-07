@@ -2,6 +2,8 @@
 
 import { useEffect, useRef, type CSSProperties } from "react";
 import Lenis from "lenis";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import ContactForm from "../components/ContactForm";
 import ShaderField from "../components/ShaderField";
 import Cursor from "../components/Cursor";
@@ -139,28 +141,6 @@ export default function HomePage() {
   useEffect(() => {
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-    // Scroll reveal. The hidden start-state is scoped to `.ux-js`, which only
-    // exists once this runs — so no-JS / crawler renders stay fully visible.
-    document.documentElement.classList.add("ux-js");
-    const reveals = Array.from(document.querySelectorAll<HTMLElement>(".ux-reveal"));
-    let io: IntersectionObserver | undefined;
-    if (reduced || typeof IntersectionObserver === "undefined") {
-      reveals.forEach((el) => el.classList.add("in"));
-    } else {
-      io = new IntersectionObserver(
-        (entries, obs) => {
-          entries.forEach((e) => {
-            if (e.isIntersecting) {
-              e.target.classList.add("in");
-              obs.unobserve(e.target);
-            }
-          });
-        },
-        { rootMargin: "0px 0px -8% 0px", threshold: 0.12 }
-      );
-      reveals.forEach((el) => io!.observe(el));
-    }
-
     // Count-up for console metrics. Markup already shows the final value, so
     // crawlers and no-JS renders are correct; JS only animates from 0 up.
     const rafs: number[] = [];
@@ -196,6 +176,44 @@ export default function HomePage() {
         lenisRaf = requestAnimationFrame(lraf);
       };
       lenisRaf = requestAnimationFrame(lraf);
+    }
+
+    // Section scroll choreography — staggered reveals + heading parallax.
+    // gsap owns the hidden→visible state, so no-JS / crawler renders stay
+    // fully visible (the start state is only applied once gsap runs).
+    let gctx: gsap.Context | undefined;
+    if (!reduced) {
+      gsap.registerPlugin(ScrollTrigger);
+      if (lenis) lenis.on("scroll", ScrollTrigger.update);
+      gctx = gsap.context(() => {
+        gsap.set(".ux-reveal", { opacity: 0, y: 30 });
+        ScrollTrigger.batch(".ux-reveal", {
+          start: "top 86%",
+          once: true,
+          onEnter: (els) =>
+            gsap.to(els, {
+              opacity: 1,
+              y: 0,
+              duration: 0.85,
+              ease: "power3.out",
+              stagger: 0.09,
+              overwrite: true,
+            }),
+        });
+        gsap.utils.toArray<HTMLElement>(".ux-h2").forEach((el) => {
+          gsap.to(el, {
+            yPercent: -10,
+            ease: "none",
+            scrollTrigger: {
+              trigger: el,
+              start: "top bottom",
+              end: "bottom top",
+              scrub: 0.6,
+            },
+          });
+        });
+      });
+      ScrollTrigger.refresh();
     }
 
     // Focus-blur headline: the sharp spotlight rests on the emphasis word
@@ -250,7 +268,7 @@ export default function HomePage() {
     }
 
     return () => {
-      io?.disconnect();
+      gctx?.revert();
       rafs.forEach((id) => cancelAnimationFrame(id));
       cancelAnimationFrame(lenisRaf);
       lenis?.destroy();
