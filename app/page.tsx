@@ -202,7 +202,6 @@ export default function HomePage() {
     // ("trust") and glides to the pointer on hover, easing back when it leaves.
     const focus = document.querySelector<HTMLElement>(".sf-focus");
     const hlWord = document.querySelector<HTMLElement>(".sf-h1--sharp .hl");
-    const heroEl = document.querySelector<HTMLElement>(".sf-hero");
     const home = { x: 38, y: 50 };
     const computeHome = () => {
       if (!focus || !hlWord) return;
@@ -244,8 +243,9 @@ export default function HomePage() {
         fty = home.y;
       }, 1500);
       window.addEventListener("resize", computeHome);
-      window.addEventListener("pointermove", onFocusMove, { passive: true });
-      heroEl?.addEventListener("pointerleave", onHeroLeave);
+      // follow only while over the headline; snap back to "trust" on leave
+      focus.addEventListener("pointermove", onFocusMove, { passive: true });
+      focus.addEventListener("pointerleave", onHeroLeave);
       focusRaf = requestAnimationFrame(focusLoop);
     }
 
@@ -254,9 +254,9 @@ export default function HomePage() {
       rafs.forEach((id) => cancelAnimationFrame(id));
       cancelAnimationFrame(lenisRaf);
       lenis?.destroy();
-      window.removeEventListener("pointermove", onFocusMove);
+      focus?.removeEventListener("pointermove", onFocusMove);
       window.removeEventListener("resize", computeHome);
-      heroEl?.removeEventListener("pointerleave", onHeroLeave);
+      focus?.removeEventListener("pointerleave", onHeroLeave);
       clearTimeout(homeTimer);
       cancelAnimationFrame(focusRaf);
     };

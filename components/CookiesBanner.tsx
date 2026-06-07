@@ -7,62 +7,49 @@ export default function CookiesBanner() {
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
-    // Check if user has already made a choice
     const cookieConsent = localStorage.getItem("cookieConsent");
     if (!cookieConsent) {
       setShowBanner(true);
-      // Small delay for smooth animation
-      setTimeout(() => setIsVisible(true), 100);
+      setTimeout(() => setIsVisible(true), 200);
     }
   }, []);
 
-  const acceptCookies = () => {
-    localStorage.setItem("cookieConsent", "accepted");
-    setShowBanner(false);
+  const decide = (choice: "accepted" | "rejected") => {
+    localStorage.setItem("cookieConsent", choice);
     setIsVisible(false);
-  };
-
-  const rejectCookies = () => {
-    localStorage.setItem("cookieConsent", "rejected");
-    setShowBanner(false);
-    setIsVisible(false);
+    setTimeout(() => setShowBanner(false), 400);
   };
 
   if (!showBanner) return null;
 
   return (
-    <>
-      {/* Cookies banner */}
-      <div
-        className={`cookies-banner ${
-          isVisible ? "cookies-banner--visible" : ""
-        }`}
-      >
-        <div className="cookies-banner__content">
-          <div className="cookies-banner__text">
-            <h3 className="cookies-banner__title">We use cookies</h3>
-            <p className="cookies-banner__description">
-              We use minimal cookies to improve your experience and analyze our
-              website performance. We don't use advertising cookies or track you
-              across other sites.
-            </p>
-          </div>
-          <div className="cookies-banner__actions">
-            <button
-              onClick={rejectCookies}
-              className="cookies-banner__button cookies-banner__button--secondary"
-            >
-              Reject
-            </button>
-            <button
-              onClick={acceptCookies}
-              className="cookies-banner__button cookies-banner__button--primary"
-            >
-              Accept
-            </button>
-          </div>
-        </div>
+    <div
+      className={`ck${isVisible ? " ck--in" : ""}`}
+      role="dialog"
+      aria-label="Cookie consent"
+    >
+      <div className="ck__head">
+        <span className="ck__dot" aria-hidden="true" />
+        <p className="ck__title">Cookies</p>
       </div>
-    </>
+      <p className="ck__text">
+        We use minimal cookies to improve your experience and measure
+        performance. No advertising, no cross-site tracking.
+      </p>
+      <div className="ck__actions">
+        <button
+          onClick={() => decide("rejected")}
+          className="ck__btn ck__btn--ghost"
+        >
+          Reject
+        </button>
+        <button
+          onClick={() => decide("accepted")}
+          className="ck__btn ck__btn--primary"
+        >
+          Accept
+        </button>
+      </div>
+    </div>
   );
 }
