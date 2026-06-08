@@ -3343,14 +3343,71 @@ select:focus-visible {
 }
 
 .sf-nav {
-  position: relative;
-  z-index: 3;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
+  background: transparent;
+  border-bottom: 1px solid transparent;
+  transition:
+    background 0.4s ease,
+    border-color 0.4s ease,
+    box-shadow 0.4s ease,
+    backdrop-filter 0.4s ease;
+}
+.sf-nav__inner {
   display: flex;
   align-items: center;
   justify-content: space-between;
   max-width: 1200px;
   margin: 0 auto;
   padding: 22px 40px;
+  transition: padding 0.4s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+/* frosted + condensed once past the hero band */
+.sf-nav.is-scrolled {
+  background: rgba(247, 248, 252, 0.72);
+  border-bottom-color: rgba(20, 16, 45, 0.08);
+  box-shadow: 0 10px 34px -22px rgba(20, 16, 45, 0.4);
+  -webkit-backdrop-filter: blur(18px) saturate(1.4);
+  backdrop-filter: blur(18px) saturate(1.4);
+}
+.sf-nav.is-scrolled .sf-nav__inner {
+  padding-top: 13px;
+  padding-bottom: 13px;
+}
+/* flip the hero-tuned light treatment to brand ink over the frost */
+.sf-nav.is-scrolled .sf-lock {
+  color: #161034;
+}
+.sf-nav.is-scrolled .sf-lock i {
+  color: #5142d4;
+}
+.sf-nav.is-scrolled .sf-mark__trace {
+  stroke: #5142d4;
+}
+.sf-nav.is-scrolled .sf-mark__dot {
+  fill: #5142d4;
+}
+.sf-nav.is-scrolled .sf-navlinks {
+  color: #5a5575;
+}
+.sf-nav.is-scrolled .sf-navlinks a:hover {
+  color: #161034;
+}
+.sf-nav.is-scrolled .sf-book {
+  background: #5142d4;
+  color: #f4f3ff !important;
+}
+.sf-nav.is-scrolled .sf-book:hover {
+  background: #4334bf !important;
+}
+@media (prefers-reduced-motion: reduce) {
+  .sf-nav,
+  .sf-nav__inner {
+    transition: none;
+  }
 }
 .sf-lock {
   display: inline-flex;
@@ -3412,7 +3469,7 @@ select:focus-visible {
   z-index: 2;
   max-width: 1200px;
   margin: 0 auto;
-  padding: 38px 40px clamp(72px, 9vw, 116px);
+  padding: clamp(104px, 12vw, 150px) 40px clamp(72px, 9vw, 116px);
   display: grid;
   grid-template-columns: 1.08fr 0.92fr;
   gap: clamp(40px, 5vw, 72px);

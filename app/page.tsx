@@ -178,6 +178,19 @@ export default function HomePage() {
       lenisRaf = requestAnimationFrame(lraf);
     }
 
+    // Scroll-aware nav: transparent over the dark hero, frosts + condenses
+    // once you leave the hero band. Works with or without Lenis.
+    const nav = document.querySelector<HTMLElement>("[data-nav]");
+    const onScroll = (y: number) => {
+      nav?.classList.toggle("is-scrolled", y > 48);
+    };
+    const onWinScroll = () => onScroll(window.scrollY);
+    if (nav) {
+      if (lenis) lenis.on("scroll", (e: { scroll: number }) => onScroll(e.scroll));
+      else window.addEventListener("scroll", onWinScroll, { passive: true });
+      onScroll(window.scrollY);
+    }
+
     // Section scroll choreography — staggered reveals + heading parallax.
     // gsap owns the hidden→visible state, so no-JS / crawler renders stay
     // fully visible (the start state is only applied once gsap runs).
@@ -272,6 +285,7 @@ export default function HomePage() {
       rafs.forEach((id) => cancelAnimationFrame(id));
       cancelAnimationFrame(lenisRaf);
       lenis?.destroy();
+      window.removeEventListener("scroll", onWinScroll);
       focus?.removeEventListener("pointermove", onFocusMove);
       window.removeEventListener("resize", computeHome);
       focus?.removeEventListener("pointerleave", onHeroLeave);
@@ -301,11 +315,8 @@ export default function HomePage() {
   return (
     <main className="landing-page ux-light">
       <Cursor />
-      <section className="sf-hero" aria-label="UnflakeOps overview">
-        <ShaderField />
-        <div className="sf-orb sf-orb--a" aria-hidden="true" />
-        <div className="sf-orb sf-orb--b" aria-hidden="true" />
-        <header className="sf-nav">
+      <header className="sf-nav" data-nav>
+        <div className="sf-nav__inner">
           <a className="sf-lock" href="/">
             <svg width="30" height="30" viewBox="0 0 40 40" aria-hidden="true" focusable="false">
               <path
@@ -318,7 +329,7 @@ export default function HomePage() {
                 strokeLinejoin="round"
                 pathLength={1}
               />
-              <circle cx="35" cy="18" r="2.7" fill="#9e92ff" />
+              <circle className="sf-mark__dot" cx="35" cy="18" r="2.7" fill="#9e92ff" />
             </svg>
             <span>
               Unflake<i>Ops</i>
@@ -333,7 +344,12 @@ export default function HomePage() {
               Book a call
             </a>
           </nav>
-        </header>
+        </div>
+      </header>
+      <section className="sf-hero" aria-label="UnflakeOps overview">
+        <ShaderField />
+        <div className="sf-orb sf-orb--a" aria-hidden="true" />
+        <div className="sf-orb sf-orb--b" aria-hidden="true" />
 
         <div className="sf-hero__inner">
           <div className="sf-copy">
