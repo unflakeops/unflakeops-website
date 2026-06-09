@@ -2813,6 +2813,64 @@ select:focus-visible {
   margin: 0 auto;
   padding: 0 40px;
 }
+
+/* scroll-frosted section dividers — a zero-height seam between sections
+   carrying a centered hairline that wipes open plus a softly frosted violet
+   node. Default state is fully drawn; GSAP applies the collapsed start state
+   only when motion is allowed, so no-JS / reduced-motion renders show it. */
+.ux-divider {
+  position: relative;
+  z-index: 1;
+  height: 0;
+}
+.ux-divider__line {
+  position: absolute;
+  top: -0.5px;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  width: min(1080px, calc(100% - 80px));
+  height: 1px;
+  transform-origin: center;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(81, 66, 212, 0.05) 14%,
+    rgba(81, 66, 212, 0.34) 50%,
+    rgba(81, 66, 212, 0.05) 86%,
+    transparent
+  );
+}
+.ux-divider__glow {
+  position: absolute;
+  top: -15px;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  width: 200px;
+  height: 30px;
+  border-radius: 999px;
+  background: radial-gradient(
+    58% 100% at 50% 50%,
+    rgba(81, 66, 212, 0.18),
+    transparent 72%
+  );
+  filter: blur(7px);
+}
+.ux-divider__node {
+  position: absolute;
+  top: -3px;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #5142d4;
+  box-shadow:
+    0 0 0 4px rgba(81, 66, 212, 0.09),
+    0 0 16px 3px rgba(81, 66, 212, 0.5);
+}
 .ux-sechead {
   margin-bottom: clamp(38px, 5vw, 66px);
   max-width: 940px;

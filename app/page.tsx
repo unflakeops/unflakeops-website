@@ -138,6 +138,16 @@ const OFFERS = [
   },
 ];
 
+function Divider() {
+  return (
+    <div className="ux-divider" aria-hidden="true">
+      <span className="ux-divider__glow" />
+      <span className="ux-divider__line" />
+      <span className="ux-divider__node" />
+    </div>
+  );
+}
+
 export default function HomePage() {
   useEffect(() => {
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -151,17 +161,26 @@ export default function HomePage() {
     if (!reduced) {
       const animateCount = (el: HTMLElement) => {
         const target = parseFloat(el.dataset.count ?? "0");
+        // optional start value: data-from="100" counts down (default counts up from 0)
+        const from = el.dataset.from != null ? parseFloat(el.dataset.from) : 0;
         const suffix = el.dataset.suffix ?? "";
         const decimals = (el.dataset.count ?? "").split(".")[1]?.length ?? 0;
-        // reserve the final rendered width (textContent is still the final value)
+        const fmt = (v: number) => v.toFixed(decimals) + suffix;
+        // reserve the wider of the start/end strings so the copy never reflows
         el.style.display = "inline-block";
-        el.style.minWidth = `${Math.ceil(el.getBoundingClientRect().width)}px`;
+        const measure = (txt: string) => {
+          el.textContent = txt;
+          return el.getBoundingClientRect().width;
+        };
+        const w = Math.max(measure(fmt(from)), measure(fmt(target)));
+        el.style.minWidth = `${Math.ceil(w)}px`;
+        el.textContent = fmt(from);
         const duration = 1500;
         const start = performance.now();
         const tick = (now: number) => {
           const p = Math.min(1, (now - start) / duration);
           const eased = 1 - Math.pow(1 - p, 4);
-          el.textContent = (target * eased).toFixed(decimals) + suffix;
+          el.textContent = fmt(from + (target - from) * eased);
           if (p < 1) rafs.push(requestAnimationFrame(tick));
         };
         rafs.push(requestAnimationFrame(tick));
@@ -243,6 +262,30 @@ export default function HomePage() {
               end: "bottom top",
               scrub: 0.6,
             },
+          });
+        });
+        // Section dividers draw at each seam: the hairline wipes open, then
+        // the frosted node + glow bloom in. Decorative, so the start state is
+        // only applied here (no-JS / reduced motion leave them fully drawn).
+        gsap.utils.toArray<HTMLElement>(".ux-divider").forEach((d) => {
+          const line = d.querySelector(".ux-divider__line");
+          const node = d.querySelector(".ux-divider__node");
+          const glow = d.querySelector(".ux-divider__glow");
+          gsap.set(line, { scaleX: 0 });
+          gsap.set([node, glow], { scale: 0, opacity: 0 });
+          ScrollTrigger.create({
+            trigger: d,
+            start: "top 90%",
+            once: true,
+            onEnter: () =>
+              gsap
+                .timeline()
+                .to(line, { scaleX: 1, duration: 0.9, ease: "power3.out" })
+                .to(
+                  [glow, node],
+                  { scale: 1, opacity: 1, duration: 0.6, ease: "power2.out", stagger: 0.07 },
+                  "-=0.5"
+                ),
           });
         });
       });
@@ -397,7 +440,7 @@ export default function HomePage() {
                 <b data-count="98.7" data-suffix="%">98.7%</b> grounded answers
               </span>
               <span>
-                <b>0</b> non-deterministic outputs
+                <b data-count="0" data-from="100">0</b> non-deterministic outputs
               </span>
               <span>
                 <b data-count="30" data-suffix="d">30d</b> to baseline
@@ -516,6 +559,8 @@ export default function HomePage() {
         </div>
       </section>
 
+      <Divider />
+
       {/* CAPABILITIES — instrument spec sheet */}
       <section id="capabilities" className="ux-sec ux-sec--tint">
         <div className="ux-wrap">
@@ -537,6 +582,8 @@ export default function HomePage() {
         </div>
       </section>
 
+      <Divider />
+
       {/* APPROACH — stepped sequence (numbers earned) */}
       <section id="approach" className="ux-sec">
         <div className="ux-wrap">
@@ -554,6 +601,8 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      <Divider />
 
       {/* TEAM — two disciplines */}
       <section id="team" className="ux-sec ux-sec--tint">
@@ -587,6 +636,8 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      <Divider />
 
       {/* OFFERS — pricing, featured drenched */}
       <section id="offers" className="ux-sec">
