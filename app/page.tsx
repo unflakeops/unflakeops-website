@@ -96,7 +96,7 @@ function sparkPath(series: number[], w: number, h: number) {
     .map(([x, y], i) => `${i === 0 ? "M" : "L"}${x.toFixed(1)},${y.toFixed(1)}`)
     .join(" ");
   const area = `${line} L${w},${h} L0,${h} Z`;
-  return { line, area };
+  return { line, area, end: pts[pts.length - 1] };
 }
 
 const OFFERS = [
@@ -489,6 +489,18 @@ export default function HomePage() {
                   strokeLinecap="round"
                   strokeLinejoin="round"
                   pathLength={1}
+                />
+                <circle
+                  className="console-spark__ping"
+                  cx={spark.end[0]}
+                  cy={spark.end[1]}
+                  r="2.6"
+                />
+                <circle
+                  className="console-spark__dot"
+                  cx={spark.end[0]}
+                  cy={spark.end[1]}
+                  r="2.6"
                 />
               </svg>
             </div>
