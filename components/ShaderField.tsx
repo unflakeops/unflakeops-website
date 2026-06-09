@@ -171,6 +171,9 @@ export default function ShaderField({ calm = false }: { calm?: boolean }) {
       canvas.style.height = `${h}px`;
       gl.viewport(0, 0, canvas.width, canvas.height);
       gl.uniform2f(uRes, canvas.width, canvas.height);
+      // reduced motion runs no frame loop, so repaint the static frame here
+      // (otherwise the resized framebuffer stretches the last draw)
+      if (reduced) gl.drawArrays(gl.TRIANGLES, 0, 3);
     }
 
     function onMove(e: PointerEvent) {

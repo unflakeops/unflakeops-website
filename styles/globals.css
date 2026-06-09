@@ -2230,6 +2230,14 @@ select:focus-visible {
 
 @keyframes spin-check { to { transform: rotate(360deg); } }
 
+/* reduced motion: still the live dot and the running spinner */
+@media (prefers-reduced-motion: reduce) {
+  .console-live,
+  .console-check--run .console-check__icon {
+    animation: none;
+  }
+}
+
 .console-check__label {
   color: var(--ink-soft);
   transition: color 0.3s ease, text-shadow 0.3s ease;
@@ -3990,6 +3998,12 @@ html.lenis body {
   border: 1px solid rgba(124, 108, 240, 0.22);
   box-shadow: 0 40px 90px -30px rgba(0, 0, 0, 0.7);
   animation: ckm-in 0.42s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+@media (prefers-reduced-motion: reduce) {
+  .ckm__backdrop,
+  .ckm__panel {
+    animation: none;
+  }
 }
 @keyframes ckm-fade {
   from {
