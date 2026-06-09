@@ -142,15 +142,20 @@ export default function HomePage() {
   useEffect(() => {
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-    // Count-up for console metrics. Markup already shows the final value, so
-    // crawlers and no-JS renders are correct; JS only animates from 0 up.
+    // Count-up stats. Markup already shows the final value, so crawlers and
+    // no-JS renders are correct; JS only animates from 0 up, and only once the
+    // stat scrolls into view. The final value is locked as a min-width first so
+    // the surrounding copy doesn't reflow while the digits grow.
     const rafs: number[] = [];
+    let countObserver: IntersectionObserver | undefined;
     if (!reduced) {
-      const nums = Array.from(document.querySelectorAll<HTMLElement>("[data-count]"));
-      nums.forEach((el) => {
+      const animateCount = (el: HTMLElement) => {
         const target = parseFloat(el.dataset.count ?? "0");
         const suffix = el.dataset.suffix ?? "";
         const decimals = (el.dataset.count ?? "").split(".")[1]?.length ?? 0;
+        // reserve the final rendered width (textContent is still the final value)
+        el.style.display = "inline-block";
+        el.style.minWidth = `${Math.ceil(el.getBoundingClientRect().width)}px`;
         const duration = 1500;
         const start = performance.now();
         const tick = (now: number) => {
@@ -160,7 +165,21 @@ export default function HomePage() {
           if (p < 1) rafs.push(requestAnimationFrame(tick));
         };
         rafs.push(requestAnimationFrame(tick));
-      });
+      };
+      countObserver = new IntersectionObserver(
+        (entries, obs) => {
+          for (const entry of entries) {
+            if (entry.isIntersecting) {
+              animateCount(entry.target as HTMLElement);
+              obs.unobserve(entry.target);
+            }
+          }
+        },
+        { threshold: 0.6 }
+      );
+      document
+        .querySelectorAll<HTMLElement>("[data-count]")
+        .forEach((el) => countObserver!.observe(el));
     }
 
     // Hero reveal is CSS-driven (.sf-line / ux-rise animations with
@@ -283,6 +302,7 @@ export default function HomePage() {
 
     return () => {
       gctx?.revert();
+      countObserver?.disconnect();
       rafs.forEach((id) => cancelAnimationFrame(id));
       cancelAnimationFrame(lenisRaf);
       lenis?.destroy();
@@ -374,13 +394,13 @@ export default function HomePage() {
             </div>
             <div className="sf-proof">
               <span>
-                <b>98.7%</b> grounded answers
+                <b data-count="98.7" data-suffix="%">98.7%</b> grounded answers
               </span>
               <span>
                 <b>0</b> non-deterministic outputs
               </span>
               <span>
-                <b>30d</b> to baseline
+                <b data-count="30" data-suffix="d">30d</b> to baseline
               </span>
             </div>
           </div>

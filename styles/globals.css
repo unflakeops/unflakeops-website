@@ -3615,6 +3615,7 @@ select:focus-visible {
 .sf-proof b {
   color: #f4f7fb;
   font-weight: 700;
+  font-variant-numeric: tabular-nums;
 }
 
 /* hero entrance — CSS-driven, start state applies on first paint (no flash) */
