@@ -44,8 +44,10 @@ export default function Cursor() {
         const dx = e.clientX - cx;
         const dy = e.clientY - cy;
         const radius = Math.max(r.width, r.height) * 0.75 + 36;
+        // optional per-element pull strength: data-magnetic="0.22"
+        const pull = parseFloat(el.dataset.magnetic || "") || 0.28;
         if (Math.hypot(dx, dy) < radius) {
-          el.style.transform = `translate(${dx * 0.28}px, ${dy * 0.28}px)`;
+          el.style.transform = `translate(${dx * pull}px, ${dy * pull}px)`;
         } else if (el.style.transform) {
           el.style.transform = "";
         }

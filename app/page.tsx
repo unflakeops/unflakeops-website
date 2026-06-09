@@ -336,10 +336,10 @@ export default function HomePage() {
             </span>
           </a>
           <nav className="sf-navlinks" aria-label="Primary navigation">
-            <a href="#services">Services</a>
-            <a href="#approach">Approach</a>
-            <a href="#team">Team</a>
-            <a href="#offers">Pricing</a>
+            <a href="#services" data-magnetic="0.22">Services</a>
+            <a href="#approach" data-magnetic="0.22">Approach</a>
+            <a href="#team" data-magnetic="0.22">Team</a>
+            <a href="#offers" data-magnetic="0.22">Pricing</a>
             <a className="sf-book" href={BOOKING_URL} data-magnetic>
               Book a call
             </a>
