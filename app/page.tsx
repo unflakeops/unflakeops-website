@@ -7,6 +7,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import ContactForm from "../components/ContactForm";
 import ShaderField from "../components/ShaderField";
 import Cursor from "../components/Cursor";
+import ScrambleText from "../components/ScrambleText";
 
 const BOOKING_URL = process.env.NEXT_PUBLIC_BOOKING_URL ?? "/call";
 const EMAIL = process.env.NEXT_PUBLIC_CONTACT_EMAIL ?? "hello@unflakeops.com";
@@ -430,10 +431,14 @@ export default function HomePage() {
             </div>
 
             <ul className="console-checks">
-              {CONSOLE_CHECKS.map((c) => (
+              {CONSOLE_CHECKS.map((c, i) => (
                 <li key={c.label} className={`console-check console-check--${c.state}`}>
                   <span className="console-check__icon" aria-hidden="true" />
-                  <span className="console-check__label">{c.label}</span>
+                  <ScrambleText
+                    className="console-check__label"
+                    text={c.label}
+                    delay={550 + i * 120}
+                  />
                   <span className="console-check__state">
                     {c.state === "pass" ? "passing" : "running"}
                   </span>

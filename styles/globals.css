@@ -2205,7 +2205,15 @@ select:focus-visible {
 
 @keyframes spin-check { to { transform: rotate(360deg); } }
 
-.console-check__label { color: var(--ink-soft); }
+.console-check__label {
+  color: var(--ink-soft);
+  transition: color 0.3s ease, text-shadow 0.3s ease;
+}
+/* while the label decodes, tint the churn in the console accent + a soft glow */
+.console-check__label.is-decoding {
+  color: var(--green);
+  text-shadow: 0 0 12px rgba(124, 108, 240, 0.5);
+}
 
 .console-check__state {
   font-family: var(--font-mono);
