@@ -5,6 +5,7 @@ export const runtime = "edge";
 export const size = { width: 180, height: 180 };
 export const contentType = "image/png";
 
+// Violet tile + white damped-trace, matching the favicon (app/icon.svg)
 export default function AppleIcon() {
   return new ImageResponse(
     (
@@ -12,30 +13,28 @@ export default function AppleIcon() {
         style={{
           width: 180,
           height: 180,
-          background: "#06080c",
-          borderRadius: 34,
+          background: "#5142d4",
+          borderRadius: 40,
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          border: "1px solid rgba(148,168,196,0.26)",
         }}
       >
         <svg
-          width="120"
-          height="120"
-          viewBox="0 0 32 32"
+          width="132"
+          height="132"
+          viewBox="0 0 40 40"
           xmlns="http://www.w3.org/2000/svg"
         >
-          <polyline
-            points="4,24 8,20 12,15 16,11 20,10 24,10 28,10"
+          <path
+            d="M5 30 C 10 30, 11 9, 17 9 C 22 9, 22 23, 26 23 C 30 23, 30 18, 35 18"
             fill="none"
-            stroke="#34e2ad"
-            stroke-width="2"
+            stroke="#ffffff"
+            stroke-width="3.4"
             stroke-linecap="round"
             stroke-linejoin="round"
           />
-          <circle cx="28" cy="10" r="4" fill="#5cf6c4" opacity="0.25" />
-          <circle cx="28" cy="10" r="2.5" fill="#5cf6c4" />
+          <circle cx="35" cy="18" r="2.9" fill="#ffffff" />
         </svg>
       </div>
     ),
