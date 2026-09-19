@@ -1,16 +1,10 @@
 {
-  "name": "UnflakeOps - AI Reliability, RAG Evaluation & Data Maturity",
+  "name": "UnflakeOps - Power Platform Automation for UK Charities",
   "short_name": "UnflakeOps",
-  "description": "AI reliability and data maturity services for RAG systems, hallucination control, deterministic LLM outputs, LLM-ready data, and data pipelines.",
+  "description": "Workflow investigation and Microsoft Power Platform automation for UK charities.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#06080c",
-  "theme_color": "#34e2ad",
-  "icons": [
-    {
-      "src": "/icon.svg",
-      "sizes": "any",
-      "type": "image/svg+xml"
-    }
-  ]
+  "background_color": "#fbf8f2",
+  "theme_color": "#6b3df4",
+  "icons": [{ "src": "/unflakeops-symbol.png", "sizes": "1024x1024", "type": "image/png" }]
 }

@@ -1,725 +1,251 @@
-"use client";
-
-import { useEffect, useRef, type CSSProperties } from "react";
-import Lenis from "lenis";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+import Link from "next/link";
 import ContactForm from "../components/ContactForm";
-import ShaderField from "../components/ShaderField";
-import Cursor from "../components/Cursor";
-import ScrambleText from "../components/ScrambleText";
+import Logo from "../components/Logo";
+import styles from "./home.module.css";
 
 const BOOKING_URL = process.env.NEXT_PUBLIC_BOOKING_URL ?? "/call";
-const EMAIL = process.env.NEXT_PUBLIC_CONTACT_EMAIL ?? "hello@unflakeops.com";
 
-const SERVICE_TRACKS = [
-  {
-    kicker: "Track A",
-    title: "LLM Reliability, RAG, and Deterministic Output",
-    description:
-      "Design and harden AI workflows so answers stay grounded, repeatable, and useful in production operations.",
-    bullets: [
-      "RAG quality audits and retrieval evaluation",
-      "Hallucination controls and refusal strategy",
-      "Structured outputs and deterministic response checks",
-      "Regression test packs for AI workflow changes",
-    ],
-  },
-  {
-    kicker: "Track B",
-    title: "Data Maturity and AI-Ready Data Pipelines",
-    description:
-      "Assess if your data is fit for AI decisions, then implement the data foundations required for reliable outcomes.",
-    bullets: [
-      "Data maturity assessment and readiness scorecards",
-      "Lineage, quality, freshness, and ownership checks",
-      "Pipeline design for transformation and validation",
-      "Monitoring and controls for ongoing data reliability",
-    ],
-  },
+const REPORT_TYPES = [
+  "Funder reporting",
+  "Impact reporting",
+  "Trustee and board reporting",
+  "Recurring operational administration",
 ];
 
-const CAPABILITIES = [
-  "RAG architecture and retrieval tuning",
-  "Evaluation datasets and scoring frameworks",
-  "Hallucination detection and mitigation",
-  "Deterministic output schema design",
-  "Data maturity assessment and roadmap",
-  "Data quality, lineage, and governance baselines",
-  "AI pipeline instrumentation and observability",
-  "Production handover with runbooks and controls",
-];
-
-const APPROACH = [
+const STEPS = [
   {
-    step: "01",
-    title: "Prioritise Decisions",
-    body: "Define the workflows where AI output quality directly impacts risk, speed, and revenue.",
+    number: "01",
+    title: "Walk through the last report",
+    body: "Show us how it was actually produced, including the systems, spreadsheets and people involved.",
   },
   {
-    step: "02",
-    title: "Assess Ground Truth",
-    body: "Audit retrieval and source data quality to expose where poor evidence drives weak outputs.",
+    number: "02",
+    title: "Find the manual work",
+    body: "We identify exports, repeated data entry, reconciliation, chasing and avoidable hand-offs.",
   },
   {
-    step: "03",
-    title: "Engineer Reliability",
-    body: "Implement evaluation harnesses, controls, and deterministic contracts for stable behavior.",
+    number: "03",
+    title: "Automate the useful parts",
+    body: "We build a controlled solution around the tools you already use, without forcing a wholesale replacement.",
   },
   {
-    step: "04",
-    title: "Operationalise",
-    body: "Ship with ownership, alerting, and documented operating standards for sustained performance.",
+    number: "04",
+    title: "Verify and hand over",
+    body: "We test the workflow, document it clearly and leave your team able to operate it.",
   },
 ];
-
-const CONSOLE_CHECKS = [
-  { label: "RAG retrieval grounding", state: "pass" },
-  { label: "Hallucination guardrails", state: "pass" },
-  { label: "Deterministic output schema", state: "pass" },
-  { label: "Regression eval suite", state: "run" },
-];
-
-// 12 release points, reliability trending up
-const RELIABILITY_SERIES = [62, 58, 67, 71, 69, 78, 83, 81, 88, 92, 95, 98.7];
-
-function sparkPath(series: number[], w: number, h: number) {
-  const min = Math.min(...series);
-  const max = Math.max(...series);
-  const span = max - min || 1;
-  const pts = series.map((v, i) => {
-    const x = (i / (series.length - 1)) * w;
-    const y = h - ((v - min) / span) * h;
-    return [x, y] as const;
-  });
-  const line = pts
-    .map(([x, y], i) => `${i === 0 ? "M" : "L"}${x.toFixed(1)},${y.toFixed(1)}`)
-    .join(" ");
-  const area = `${line} L${w},${h} L0,${h} Z`;
-  return { line, area, end: pts[pts.length - 1] };
-}
-
-const OFFERS = [
-  {
-    label: "Discovery",
-    title: "Reliability & Data Audit",
-    desc: "A fixed-scope review of one AI workflow. We map where output quality breaks and where your data undermines it, then hand back a prioritised roadmap.",
-    items: [
-      "RAG and retrieval quality assessment",
-      "Data readiness scorecard",
-      "Prioritised reliability roadmap",
-    ],
-    meta: "1–2 weeks · Fixed scope",
-    featured: false,
-  },
-  {
-    label: "Build",
-    title: "Reliability Sprint",
-    desc: "We implement the controls: evaluation harnesses, deterministic output contracts, and the data quality checks your models depend on.",
-    items: [
-      "Eval harness and regression packs",
-      "Hallucination and schema guardrails",
-      "Pipeline validation and monitoring",
-    ],
-    meta: "4–8 weeks · Per workflow",
-    featured: true,
-  },
-  {
-    label: "Operate",
-    title: "Embedded Reliability Practice",
-    desc: "Ongoing ownership. We keep reliability and data quality high as your AI systems and data change in production.",
-    items: [
-      "Continuous evaluation and alerting",
-      "Data governance and lineage upkeep",
-      "Production operating standards",
-    ],
-    meta: "Monthly retainer",
-    featured: false,
-  },
-];
-
-function Divider() {
-  return (
-    <div className="ux-divider" aria-hidden="true">
-      <span className="ux-divider__glow" />
-      <span className="ux-divider__line" />
-      <span className="ux-divider__node" />
-    </div>
-  );
-}
 
 export default function HomePage() {
-  useEffect(() => {
-    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-    // Count-up stats. Markup already shows the final value, so crawlers and
-    // no-JS renders are correct; JS only animates from 0 up, and only once the
-    // stat scrolls into view. The final value is locked as a min-width first so
-    // the surrounding copy doesn't reflow while the digits grow.
-    const rafs: number[] = [];
-    let countObserver: IntersectionObserver | undefined;
-    if (!reduced) {
-      const animateCount = (el: HTMLElement) => {
-        const target = parseFloat(el.dataset.count ?? "0");
-        // optional start value: data-from="100" counts down (default counts up from 0)
-        const from = el.dataset.from != null ? parseFloat(el.dataset.from) : 0;
-        const suffix = el.dataset.suffix ?? "";
-        const decimals = (el.dataset.count ?? "").split(".")[1]?.length ?? 0;
-        const fmt = (v: number) => v.toFixed(decimals) + suffix;
-        // reserve the wider of the start/end strings so the copy never reflows
-        el.style.display = "inline-block";
-        const measure = (txt: string) => {
-          el.textContent = txt;
-          return el.getBoundingClientRect().width;
-        };
-        const w = Math.max(measure(fmt(from)), measure(fmt(target)));
-        el.style.minWidth = `${Math.ceil(w)}px`;
-        el.textContent = fmt(from);
-        const duration = 1500;
-        const start = performance.now();
-        const tick = (now: number) => {
-          const p = Math.min(1, (now - start) / duration);
-          const eased = 1 - Math.pow(1 - p, 4);
-          el.textContent = fmt(from + (target - from) * eased);
-          if (p < 1) rafs.push(requestAnimationFrame(tick));
-        };
-        rafs.push(requestAnimationFrame(tick));
-      };
-      countObserver = new IntersectionObserver(
-        (entries, obs) => {
-          for (const entry of entries) {
-            if (entry.isIntersecting) {
-              animateCount(entry.target as HTMLElement);
-              obs.unobserve(entry.target);
-            }
-          }
-        },
-        { threshold: 0.6 }
-      );
-      document
-        .querySelectorAll<HTMLElement>("[data-count]")
-        .forEach((el) => countObserver!.observe(el));
-    }
-
-    // Hero reveal is CSS-driven (.sf-line / ux-rise animations with
-    // animation-fill-mode: backwards) so the start state applies on first
-    // paint — no flash of visible-then-hidden, and never left blank.
-
-    // Lenis smooth scroll
-    let lenis: Lenis | undefined;
-    let lenisRaf = 0;
-    if (!reduced) {
-      lenis = new Lenis({ duration: 1.1, smoothWheel: true });
-      const lraf = (time: number) => {
-        lenis!.raf(time);
-        lenisRaf = requestAnimationFrame(lraf);
-      };
-      lenisRaf = requestAnimationFrame(lraf);
-    }
-
-    // Scroll-aware nav: transparent over the dark hero, frosts + condenses
-    // once you leave the hero band. Works with or without Lenis.
-    const nav = document.querySelector<HTMLElement>("[data-nav]");
-    const onScroll = (y: number) => {
-      nav?.classList.toggle("is-scrolled", y > 48);
-    };
-    const onWinScroll = () => onScroll(window.scrollY);
-    if (nav) {
-      if (lenis) lenis.on("scroll", (e: { scroll: number }) => onScroll(e.scroll));
-      else window.addEventListener("scroll", onWinScroll, { passive: true });
-      onScroll(window.scrollY);
-    }
-
-    // Section scroll choreography — staggered reveals + heading parallax.
-    // gsap owns the hidden→visible state, so no-JS / crawler renders stay
-    // fully visible (the start state is only applied once gsap runs).
-    let gctx: gsap.Context | undefined;
-    if (!reduced) {
-      gsap.registerPlugin(ScrollTrigger);
-      if (lenis) lenis.on("scroll", ScrollTrigger.update);
-      gctx = gsap.context(() => {
-        gsap.set(".ux-reveal", { opacity: 0, y: 30 });
-        ScrollTrigger.batch(".ux-reveal", {
-          start: "top 86%",
-          once: true,
-          onEnter: (els) =>
-            gsap.to(els, {
-              opacity: 1,
-              y: 0,
-              duration: 0.85,
-              ease: "power3.out",
-              stagger: 0.09,
-              overwrite: true,
-            }),
-        });
-        gsap.utils.toArray<HTMLElement>(".ux-h2").forEach((el) => {
-          gsap.to(el, {
-            yPercent: -10,
-            ease: "none",
-            scrollTrigger: {
-              trigger: el,
-              start: "top bottom",
-              end: "bottom top",
-              scrub: 0.6,
-            },
-          });
-        });
-        // Section dividers draw at each seam: the hairline wipes open, then
-        // the frosted node + glow bloom in. Decorative, so the start state is
-        // only applied here (no-JS / reduced motion leave them fully drawn).
-        gsap.utils.toArray<HTMLElement>(".ux-divider").forEach((d) => {
-          const line = d.querySelector(".ux-divider__line");
-          const node = d.querySelector(".ux-divider__node");
-          const glow = d.querySelector(".ux-divider__glow");
-          gsap.set(line, { scaleX: 0 });
-          gsap.set([node, glow], { scale: 0, opacity: 0 });
-          ScrollTrigger.create({
-            trigger: d,
-            start: "top 90%",
-            once: true,
-            onEnter: () =>
-              gsap
-                .timeline()
-                .to(line, { scaleX: 1, duration: 0.9, ease: "power3.out" })
-                .to(
-                  [glow, node],
-                  { scale: 1, opacity: 1, duration: 0.6, ease: "power2.out", stagger: 0.07 },
-                  "-=0.5"
-                ),
-          });
-        });
-      });
-      ScrollTrigger.refresh();
-    }
-
-    // Focus-blur headline: the sharp spotlight rests on the emphasis word
-    // ("trust") and glides to the pointer on hover, easing back when it leaves.
-    const focus = document.querySelector<HTMLElement>(".sf-focus");
-    const hlWord = document.querySelector<HTMLElement>(".sf-h1--sharp .hl");
-    const home = { x: 38, y: 50 };
-    const computeHome = () => {
-      if (!focus || !hlWord) return;
-      const fr = focus.getBoundingClientRect();
-      const hr = hlWord.getBoundingClientRect();
-      if (fr.width && fr.height) {
-        home.x = ((hr.left + hr.width / 2 - fr.left) / fr.width) * 100;
-        home.y = ((hr.top + hr.height / 2 - fr.top) / fr.height) * 100;
-      }
-    };
-    let ftx = home.x;
-    let fty = home.y;
-    let fmx = home.x;
-    let fmy = home.y;
-    let focusRaf = 0;
-    let homeTimer = 0;
-    const onFocusMove = (e: PointerEvent) => {
-      if (!focus) return;
-      const r = focus.getBoundingClientRect();
-      ftx = ((e.clientX - r.left) / r.width) * 100;
-      fty = ((e.clientY - r.top) / r.height) * 100;
-    };
-    const onHeroLeave = () => {
-      ftx = home.x;
-      fty = home.y;
-    };
-    const focusLoop = () => {
-      fmx += (ftx - fmx) * 0.16;
-      fmy += (fty - fmy) * 0.16;
-      focus?.style.setProperty("--mx", `${fmx.toFixed(2)}%`);
-      focus?.style.setProperty("--my", `${fmy.toFixed(2)}%`);
-      focusRaf = requestAnimationFrame(focusLoop);
-    };
-    if (focus && !reduced) {
-      // recompute "trust" position once the reveal settles, and on resize
-      homeTimer = window.setTimeout(() => {
-        computeHome();
-        ftx = home.x;
-        fty = home.y;
-      }, 1500);
-      window.addEventListener("resize", computeHome);
-      // follow only while over the headline; snap back to "trust" on leave
-      focus.addEventListener("pointermove", onFocusMove, { passive: true });
-      focus.addEventListener("pointerleave", onHeroLeave);
-      focusRaf = requestAnimationFrame(focusLoop);
-    }
-
-    return () => {
-      gctx?.revert();
-      countObserver?.disconnect();
-      rafs.forEach((id) => cancelAnimationFrame(id));
-      cancelAnimationFrame(lenisRaf);
-      lenis?.destroy();
-      window.removeEventListener("scroll", onWinScroll);
-      focus?.removeEventListener("pointermove", onFocusMove);
-      window.removeEventListener("resize", computeHome);
-      focus?.removeEventListener("pointerleave", onHeroLeave);
-      clearTimeout(homeTimer);
-      cancelAnimationFrame(focusRaf);
-    };
-  }, []);
-
-  const spark = sparkPath(RELIABILITY_SERIES, 132, 44);
-
-  const headline = (
-    <>
-      <span className="sf-line-wrap">
-        <span className="sf-line">Make AI decisions</span>
-      </span>
-      <span className="sf-line-wrap">
-        <span className="sf-line">
-          you can <span className="hl">trust</span>
-        </span>
-      </span>
-      <span className="sf-line-wrap">
-        <span className="sf-line">in production.</span>
-      </span>
-    </>
-  );
-
   return (
-    <main className="landing-page ux-light">
-      <Cursor />
-      <header className="sf-nav" data-nav>
-        <div className="sf-nav__inner">
-          <a className="sf-lock" href="/">
-            <svg width="30" height="30" viewBox="0 0 40 40" aria-hidden="true" focusable="false">
-              <path
-                className="sf-mark__trace"
-                d="M5 30 C 10 30, 11 9, 17 9 C 22 9, 22 23, 26 23 C 30 23, 30 18, 35 18"
-                fill="none"
-                stroke="#7c6cf0"
-                strokeWidth="3.2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                pathLength={1}
-              />
-              <circle className="sf-mark__dot" cx="35" cy="18" r="2.7" fill="#9e92ff" />
-            </svg>
-            <span>
-              Unflake<i>Ops</i>
-            </span>
-          </a>
-          <nav className="sf-navlinks" aria-label="Primary navigation">
-            <a href="#services" data-magnetic="0.22">Services</a>
-            <a href="#approach" data-magnetic="0.22">Approach</a>
-            <a href="#team" data-magnetic="0.22">Team</a>
-            <a href="#offers" data-magnetic="0.22">Pricing</a>
-            <a className="sf-book" href={BOOKING_URL} data-magnetic>
-              Book a call
-            </a>
+    <main className={styles.page}>
+      <header className={styles.header}>
+        <div className={styles.shell}>
+          <Link href="/" className={styles.brand} aria-label="UnflakeOps home">
+            <Logo size={42} />
+          </Link>
+          <nav className={styles.nav} aria-label="Primary navigation">
+            <a href="#problem">The problem</a>
+            <a href="#pilot">The pilot</a>
+            <a href="#how">How it works</a>
+            <a href="#about">About</a>
           </nav>
+          <a className={styles.headerCta} href="#conversation">
+            Talk through a workflow
+          </a>
         </div>
       </header>
-      <section className="sf-hero" aria-label="UnflakeOps overview">
-        <ShaderField />
-        <div className="sf-orb sf-orb--a" aria-hidden="true" />
-        <div className="sf-orb sf-orb--b" aria-hidden="true" />
 
-        <div className="sf-hero__inner">
-          <div className="sf-copy">
-            <div className="sf-focus">
-              <h1 className="sf-h1 sf-h1--blur" aria-hidden="true">
-                {headline}
-              </h1>
-              <h1 className="sf-h1 sf-h1--sharp">{headline}</h1>
-            </div>
-            <p className="sf-sub">
-              RAG reliability, hallucination control, and data maturity, engineered
-              and measured under real production load, not in a demo.
+      <section className={styles.hero}>
+        <div className={`${styles.shell} ${styles.heroGrid}`}>
+          <div className={styles.heroCopy}>
+            <p className={styles.eyebrow}>Microsoft Power Platform automation for UK charities</p>
+            <h1>Spend less time assembling reports. Give more time to your mission.</h1>
+            <p className={styles.heroLead}>
+              UnflakeOps helps UK charities investigate and automate recurring
+              funder, impact and trustee reporting—starting with one workflow
+              and working with the systems you already use.
             </p>
-            <div className="sf-cta">
-              <a className="sf-btn" href={BOOKING_URL} data-magnetic>
-                Book a discovery call
+            <div className={styles.actions}>
+              <a className={styles.primaryButton} href="#conversation">
+                Tell us about your last report
               </a>
-              <a className="sf-btn2" href="#approach">
-                See the eval method →
+              <a className={styles.secondaryButton} href="#pilot">
+                See how the pilot works
               </a>
             </div>
-            <div className="sf-proof">
-              <span>
-                <b data-count="98.7" data-suffix="%">98.7%</b> grounded answers
-              </span>
-              <span>
-                <b data-count="0" data-from="100">0</b> non-deterministic outputs
-              </span>
-              <span>
-                <b data-count="30" data-suffix="d">30d</b> to baseline
-              </span>
-            </div>
-          </div>
-
-          <aside className="reliability-console" aria-label="Live reliability eval console">
-            <div className="console-top">
-              <div className="console-id">
-                <span className="console-live" />
-                <span>eval&nbsp;·&nbsp;live</span>
-              </div>
-              <span className="console-run">workflow #1284</span>
-            </div>
-
-            <div className="console-metric">
-              <div className="console-metric__figure">
-                <span className="console-metric__label">Grounded answer rate</span>
-                <strong data-count="98.7" data-suffix="%">
-                  98.7%
-                </strong>
-                <span className="console-metric__delta">▲ 2.3 pts vs last release</span>
-              </div>
-              <svg
-                className="console-spark"
-                viewBox="0 0 132 44"
-                width="132"
-                height="44"
-                role="img"
-                aria-label="Reliability trending up across releases"
-              >
-                <defs>
-                  <linearGradient id="sparkFill" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="rgba(124,108,240,0.35)" />
-                    <stop offset="100%" stopColor="rgba(124,108,240,0)" />
-                  </linearGradient>
-                </defs>
-                <path className="console-spark__area" d={spark.area} fill="url(#sparkFill)" />
-                <path
-                  className="console-spark__line"
-                  d={spark.line}
-                  fill="none"
-                  stroke="var(--green)"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  pathLength={1}
-                />
-                <circle
-                  className="console-spark__ping"
-                  cx={spark.end[0]}
-                  cy={spark.end[1]}
-                  r="2.6"
-                />
-                <circle
-                  className="console-spark__dot"
-                  cx={spark.end[0]}
-                  cy={spark.end[1]}
-                  r="2.6"
-                />
-              </svg>
-            </div>
-
-            <ul className="console-checks">
-              {CONSOLE_CHECKS.map((c, i) => (
-                <li key={c.label} className={`console-check console-check--${c.state}`}>
-                  <span className="console-check__icon" aria-hidden="true" />
-                  <ScrambleText
-                    className="console-check__label"
-                    text={c.label}
-                    delay={550 + i * 120}
-                  />
-                  <span className="console-check__state">
-                    {c.state === "pass" ? "passing" : "running"}
-                  </span>
-                </li>
-              ))}
-            </ul>
-
-            <div className="console-foot">
-              <span className="console-foot__label">Reliability by release</span>
-              <div className="console-bars" aria-hidden="true">
-                {RELIABILITY_SERIES.map((v, i) => (
-                  <span
-                    key={i}
-                    className="console-bar"
-                    style={{ "--h": `${Math.round(v)}%`, "--i": i } as CSSProperties}
-                  />
-                ))}
-              </div>
-            </div>
-          </aside>
-        </div>
-      </section>
-
-      {/* SERVICES — two editorial tracks, not cards */}
-      <section id="services" className="ux-sec">
-        <div className="ux-wrap">
-          <div className="ux-sechead ux-reveal">
-            <h2 className="ux-h2">
-              Two specialist tracks, one delivery team.
-            </h2>
-            <p className="ux-lead">
-              One engagement spans the whole path, from retrieval quality to the
-              data contracts your models depend on.
+            <p className={styles.heroNote}>
+              One recurring workflow · Fixed scope · Clear handover
             </p>
           </div>
-          <div className="ux-tracks">
-            {SERVICE_TRACKS.map((track) => (
-              <div className="ux-track ux-reveal" key={track.title}>
-                <span className="ux-tag">{track.kicker}</span>
-                <div className="ux-track__body">
-                  <h3 className="ux-h3">{track.title}</h3>
-                  <p className="ux-muted-p">{track.description}</p>
-                </div>
-                <ul className="ux-ticklist">
-                  {track.bullets.map((item) => (
-                    <li key={item}>
-                      <span className="ux-tick" aria-hidden="true" />
-                      {item}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
 
-      <Divider />
-
-      {/* CAPABILITIES — instrument spec sheet */}
-      <section id="capabilities" className="ux-sec ux-sec--tint">
-        <div className="ux-wrap">
-          <div className="ux-sechead ux-reveal">
-            <h2 className="ux-h2">
-              Full coverage, retrieval to data contract.
-            </h2>
-          </div>
-          <ol className="ux-spec ux-reveal">
-            {CAPABILITIES.map((item, i) => (
-              <li key={item}>
-                <span className="ux-spec__n">
-                  {String(i + 1).padStart(2, "0")}
-                </span>
-                <span>{item}</span>
-              </li>
-            ))}
-          </ol>
-        </div>
-      </section>
-
-      <Divider />
-
-      {/* APPROACH — stepped sequence (numbers earned) */}
-      <section id="approach" className="ux-sec">
-        <div className="ux-wrap">
-          <div className="ux-sechead ux-reveal">
-            <h2 className="ux-h2">How we execute, audit to adoption.</h2>
-          </div>
-          <div className="ux-steps">
-            {APPROACH.map((step) => (
-              <div className="ux-step ux-reveal" key={step.step}>
-                <span className="ux-step__n">{step.step}</span>
-                <h3 className="ux-step__t">{step.title}</h3>
-                <p className="ux-step__b">{step.body}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <Divider />
-
-      {/* TEAM — two disciplines */}
-      <section id="team" className="ux-sec ux-sec--tint">
-        <div className="ux-wrap">
-          <div className="ux-sechead ux-reveal">
-            <h2 className="ux-h2">One front, two disciplines.</h2>
-          </div>
-          <div className="ux-disc">
-            <div className="ux-disc__col ux-reveal">
-              <svg className="ux-disc__mark" width="34" height="34" viewBox="0 0 40 40" aria-hidden="true">
-                <path d="M5 30 C 10 30, 11 9, 17 9 C 22 9, 22 23, 26 23 C 30 23, 30 18, 35 18" fill="none" stroke="#5142d4" strokeWidth="3.2" strokeLinecap="round" strokeLinejoin="round" />
-                <circle cx="35" cy="18" r="2.7" fill="#5142d4" />
-              </svg>
-              <h3 className="ux-h3">Reliability engineering</h3>
-              <p className="ux-muted-p">
-                LLM reliability, RAG evaluation, output controls, and QA-driven
-                production hardening.
-              </p>
+          <div className={styles.workflowCard} aria-label="A typical manual reporting workflow">
+            <div className={styles.cardTopline}>
+              <span>YOUR LAST REPORT</span>
+              <span>Where did the time go?</span>
             </div>
-            <div className="ux-disc__col ux-reveal">
-              <svg className="ux-disc__mark" width="34" height="34" viewBox="0 0 40 40" aria-hidden="true">
-                <path d="M5 30 C 10 30, 11 9, 17 9 C 22 9, 22 23, 26 23 C 30 23, 30 18, 35 18" fill="none" stroke="#5142d4" strokeWidth="3.2" strokeLinecap="round" strokeLinejoin="round" />
-                <circle cx="35" cy="18" r="2.7" fill="#5142d4" />
-              </svg>
-              <h3 className="ux-h3">Data engineering</h3>
-              <p className="ux-muted-p">
-                Data maturity, pipeline design, quality governance, and AI-ready
-                data architecture.
-              </p>
+            <div className={styles.workflow}>
+              <div className={styles.workflowStep}><span>01</span><strong>Different systems</strong></div>
+              <div className={styles.arrow}>↓</div>
+              <div className={styles.workflowStep}><span>02</span><strong>Spreadsheets</strong></div>
+              <div className={styles.arrow}>↓</div>
+              <div className={styles.workflowStep}><span>03</span><strong>Chasing teams</strong></div>
+              <div className={styles.arrow}>↓</div>
+              <div className={`${styles.workflowStep} ${styles.workflowStepFinal}`}><span>04</span><strong>Final report</strong></div>
             </div>
-          </div>
-        </div>
-      </section>
-
-      <Divider />
-
-      {/* OFFERS — pricing, featured drenched */}
-      <section id="offers" className="ux-sec">
-        <div className="ux-wrap">
-          <div className="ux-sechead ux-reveal">
-            <h2 className="ux-h2">
-              Engagements that fit where your AI stands.
-            </h2>
-            <p className="ux-lead">
-              Start with a scoped audit, move into a build sprint, or embed us for
-              the long run. Every engagement ends with documented ownership on your
-              side.
+            <p className={styles.cardCaption}>
+              When systems do not connect, people become the integration layer.
             </p>
           </div>
-          <div className="ux-plans">
-            {OFFERS.map((offer) => (
-              <article
-                className={`ux-plan ux-reveal${offer.featured ? " ux-plan--feat" : ""}`}
-                key={offer.title}
-              >
-                {offer.featured && <span className="ux-plan__badge">Most common</span>}
-                <span className="ux-plan__label">{offer.label}</span>
-                <h3 className="ux-plan__t">{offer.title}</h3>
-                <p className="ux-plan__d">{offer.desc}</p>
-                <ul className="ux-ticklist">
-                  {offer.items.map((item) => (
-                    <li key={item}>
-                      <span className="ux-tick" aria-hidden="true" />
-                      {item}
-                    </li>
-                  ))}
-                </ul>
-                <div className="ux-plan__foot">
-                  <span className="ux-plan__meta">{offer.meta}</span>
-                  <a className="ux-plan__cta" href={BOOKING_URL}>
-                    Discuss this →
-                  </a>
-                </div>
+        </div>
+      </section>
+
+      <section id="problem" className={styles.problemSection}>
+        <div className={`${styles.shell} ${styles.twoCol}`}>
+          <div>
+            <p className={styles.sectionLabel}>THE PROBLEM</p>
+            <h2>Your reporting process should not depend on copying, reconciling and chasing.</h2>
+          </div>
+          <div className={styles.problemCopy}>
+            <p>
+              Many charities have capable people and workable systems, but a
+              recurring report still requires someone to pull information from
+              several places and turn it into one trustworthy answer.
+            </p>
+            <p>
+              We start with the real process, not a technology pitch. If a small
+              Power Automate, Power BI or Power Apps solution can remove useful
+              manual work, we show you where and how.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section id="pilot" className={styles.pilotSection}>
+        <div className={styles.shell}>
+          <div className={styles.sectionHeading}>
+            <p className={styles.sectionLabel}>A FIXED-SCOPE START</p>
+            <h2>Begin with one recurring report.</h2>
+            <p>
+              A focused pilot gives both sides something concrete to assess
+              before anyone commits to a larger transformation programme.
+            </p>
+          </div>
+          <div className={styles.pilotGrid}>
+            <article className={styles.pilotCard}>
+              <span className={styles.cardKicker}>WHAT WE EXAMINE</span>
+              <h3>The workflow as it works today</h3>
+              <ul>
+                <li>Where information comes from</li>
+                <li>What gets exported or copied</li>
+                <li>Where figures are reconciled</li>
+                <li>Who has to chase or approve updates</li>
+              </ul>
+            </article>
+            <article className={styles.pilotCard}>
+              <span className={styles.cardKicker}>WHAT YOU RECEIVE</span>
+              <h3>A useful change with ownership</h3>
+              <ul>
+                <li>A map of the current process</li>
+                <li>Prioritised automation opportunities</li>
+                <li>One agreed Power Platform implementation</li>
+                <li>Testing, documentation and handover</li>
+              </ul>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section id="how" className={styles.howSection}>
+        <div className={styles.shell}>
+          <div className={styles.sectionHeading}>
+            <p className={styles.sectionLabel}>HOW IT WORKS</p>
+            <h2>Understand first. Automate second.</h2>
+          </div>
+          <div className={styles.steps}>
+            {STEPS.map((step) => (
+              <article key={step.number} className={styles.step}>
+                <span>{step.number}</span>
+                <h3>{step.title}</h3>
+                <p>{step.body}</p>
               </article>
             ))}
           </div>
         </div>
       </section>
 
-      {/* CONTACT — liquid-light bookend */}
-      <section id="book" className="ux-contact">
-        <ShaderField calm />
-        <div className="ux-wrap ux-contact__grid">
-          <div className="ux-reveal">
-            <h2 className="ux-contact__h">
-              Bring us one workflow. We will show you what blocks reliable AI.
-            </h2>
-            <p className="ux-contact__p">
-              A focused discovery exposes the reliability and data gaps, then hands
-              back a clear implementation path with ownership and delivery options.
-            </p>
-            <div className="ux-contact__cta">
-              <a className="ux-contact__btn" href={BOOKING_URL}>
-                Book a discovery call
-              </a>
-              <a className="ux-contact__mail" href={`mailto:${EMAIL}`}>
-                {EMAIL}
-              </a>
-            </div>
+      <section className={styles.useCasesSection}>
+        <div className={`${styles.shell} ${styles.useCasesGrid}`}>
+          <div>
+            <p className={styles.sectionLabel}>ONE WORKFLOW AT A TIME</p>
+            <h2>Where could we start?</h2>
           </div>
-          <aside className="ux-contact__card ux-reveal">
-            <ContactForm />
-          </aside>
+          <ul className={styles.useCases}>
+            {REPORT_TYPES.map((item, index) => (
+              <li key={item}><span>0{index + 1}</span>{item}</li>
+            ))}
+          </ul>
         </div>
       </section>
+
+      <section id="about" className={styles.aboutSection}>
+        <div className={`${styles.shell} ${styles.aboutGrid}`}>
+          <div className={styles.experienceFigure}>
+            <strong>17</strong>
+            <span>years building and testing systems where reliability matters</span>
+          </div>
+          <div>
+            <p className={styles.sectionLabel}>SENIOR-LED DELIVERY</p>
+            <h2>Built with reliability in mind.</h2>
+            <p>
+              Founder Muhammad Qureshi has spent 17 years building and testing
+              systems where reliability matters, with experience including HMRC,
+              MAG Airports, Wayfair and Equal Experts.
+            </p>
+            <p>
+              That experience shapes how UnflakeOps approaches automation:
+              understand the process, measure the problem, make a controlled
+              change and verify the result.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section id="conversation" className={styles.contactSection}>
+        <div className={`${styles.shell} ${styles.contactGrid}`}>
+          <div>
+            <p className={styles.sectionLabel}>A RESEARCH CONVERSATION</p>
+            <h2>How was your last report produced?</h2>
+            <p>
+              We are speaking with UK charity leaders to understand how
+              reporting and administrative work happens in practice. Bring us
+              one recurring workflow and tell us where the effort went.
+            </p>
+            <a className={styles.bookingLink} href={BOOKING_URL}>
+              Prefer to choose a time? Book a conversation →
+            </a>
+          </div>
+          <div className={styles.formCard}>
+            <ContactForm />
+          </div>
+        </div>
+      </section>
+
+      <footer className={styles.footer}>
+        <div className={styles.shell}>
+          <div className={styles.footerTop}>
+            <Logo size={38} />
+            <p>Microsoft Power Platform automation for UK charities.</p>
+          </div>
+          <div className={styles.footerBottom}>
+            <span>© {new Date().getFullYear()} UnflakeOps</span>
+            <nav aria-label="Legal">
+              <Link href="/privacy">Privacy</Link>
+              <Link href="/terms">Terms</Link>
+              <a href="mailto:hello@unflakeops.com">hello@unflakeops.com</a>
+            </nav>
+          </div>
+        </div>
+      </footer>
     </main>
   );
 }
