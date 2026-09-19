@@ -1,174 +1,19 @@
 import Header from "../../components/Header";
 
-export default function Page() {
-  return (
-    <main className="main-container">
-      <Header />
+export const metadata = { title: "Terms of Service | UnflakeOps" };
 
-      {/* Header */}
-      <header className="hero-section">
-        <div className="hero-content">
-          <div>
-            <div className="brand-row">
-              <span className="brand-name">Terms of Service</span>
-            </div>
-            <h1 className="hero-title">Terms of Service</h1>
-            <p className="hero-subtitle">
-              Last updated: {new Date().toLocaleDateString()}
-            </p>
-          </div>
-        </div>
-      </header>
+const sections = [
+  ["1. Services", "UnflakeOps provides workflow investigation, process improvement and automation services, including solutions built with Microsoft Power Platform. The exact scope, deliverables, timetable and fees for each engagement are agreed in a written proposal or statement of work."],
+  ["2. Client responsibilities", "You will provide timely access to the people, systems and information reasonably required for the agreed work. You remain responsible for business decisions, source-data accuracy, user access and approval of changes before they enter production."],
+  ["3. Access and data", "We use the minimum access needed for the engagement and agree access arrangements before work begins. Where we process personal data on your behalf, the parties will put an appropriate data-processing agreement in place."],
+  ["4. Deliverables and intellectual property", "Unless a statement of work says otherwise, you own the bespoke deliverables created and paid for during the engagement. UnflakeOps retains ownership of its pre-existing tools, methods and reusable know-how, while granting you the rights needed to use the delivered solution."],
+  ["5. Fees and payment", "Fees, VAT treatment, expenses and payment dates are set out in the relevant proposal or statement of work. Unless otherwise agreed, invoices are payable within 30 days."],
+  ["6. Confidentiality", "Each party will protect the other's confidential information, use it only for the engagement and disclose it only to people who need it and are subject to appropriate confidentiality duties."],
+  ["7. Warranties and liability", "We will provide the services with reasonable care and skill. Any specific success criteria or remedies must be written into the applicable statement of work. Liability is subject to the limitations agreed for that engagement and cannot exclude liability that the law does not permit us to exclude."],
+  ["8. Termination", "Either party may terminate an engagement as stated in its proposal or statement of work. On termination, you will pay for work completed and authorised costs incurred up to the termination date."],
+  ["9. Governing law", "These terms are governed by English law, and the courts of England and Wales have exclusive jurisdiction unless the parties agree otherwise in writing."],
+];
 
-      {/* Terms content */}
-      <section className="card section">
-        <h2
-          className="card-title"
-          style={{ fontSize: "20px", fontWeight: "600" }}
-        >
-          1. Services
-        </h2>
-        <p className="text-secondary" style={{ marginTop: "12px" }}>
-          UnflakeOps provides CI/CD optimization services including flaky test
-          reduction, pipeline analysis, and engineering coaching. Our services
-          are delivered through read-only access to your CI systems and pull
-          request-based changes.
-        </p>
-      </section>
-
-      <section className="card section">
-        <h2
-          className="card-title"
-          style={{ fontSize: "20px", fontWeight: "600" }}
-        >
-          2. Access and Permissions
-        </h2>
-        <ul className="plan-list" style={{ color: "#cbd5e1" }}>
-          <li>We require least-privilege access to your CI systems</li>
-          <li>All changes are delivered via pull requests for your review</li>
-          <li>
-            You maintain full ownership of all scripts, dashboards, and
-            configurations
-          </li>
-          <li>We operate under read-only permissions by default</li>
-        </ul>
-      </section>
-
-      <section className="card section">
-        <h2
-          className="card-title"
-          style={{ fontSize: "20px", fontWeight: "600" }}
-        >
-          3. Guarantee and Performance
-        </h2>
-        <p className="text-secondary" style={{ marginTop: "12px" }}>
-          Our guarantee is detailed in our{" "}
-          <a href="/guarantee" style={{ textDecoration: "underline" }}>
-            guarantee page
-          </a>
-          . We commit to reducing flaky failure rates by 50%+ within 30 days, or
-          we continue our Core service at no additional fee for up to 60 days.
-        </p>
-      </section>
-
-      <section className="card section">
-        <h2
-          className="card-title"
-          style={{ fontSize: "20px", fontWeight: "600" }}
-        >
-          4. Pricing and Payment
-        </h2>
-        <ul className="plan-list" style={{ color: "#cbd5e1" }}>
-          <li>All prices are exclusive of VAT</li>
-          <li>UK clients: +20% VAT</li>
-          <li>EU VAT-registered clients: reverse charge (no UK VAT)</li>
-          <li>Non-EU clients: no UK VAT</li>
-          <li>Payment terms: Net 30 days</li>
-        </ul>
-      </section>
-
-      <section className="card section">
-        <h2
-          className="card-title"
-          style={{ fontSize: "20px", fontWeight: "600" }}
-        >
-          5. Data Protection
-        </h2>
-        <p className="text-secondary" style={{ marginTop: "12px" }}>
-          We comply with GDPR and UK-GDPR. Data Processing Agreements (DPA),
-          International Data Transfer Agreements (IDTA), and Standard
-          Contractual Clauses (SCCs) are available on request. We use minimum
-          necessary data access and implement appropriate security measures.
-        </p>
-      </section>
-
-      <section className="card section">
-        <h2
-          className="card-title"
-          style={{ fontSize: "20px", fontWeight: "600" }}
-        >
-          6. Intellectual Property
-        </h2>
-        <p className="text-secondary" style={{ marginTop: "12px" }}>
-          You retain full ownership of all deliverables including scripts,
-          dashboards, configurations, and documentation. We grant you a
-          perpetual, non-exclusive license to use any tools or methodologies we
-          develop during the engagement.
-        </p>
-      </section>
-
-      <section className="card section">
-        <h2
-          className="card-title"
-          style={{ fontSize: "20px", fontWeight: "600" }}
-        >
-          7. Limitation of Liability
-        </h2>
-        <p className="text-secondary" style={{ marginTop: "12px" }}>
-          Our liability is limited to the total fees paid for the services. We
-          are not liable for indirect, consequential, or punitive damages. This
-          limitation does not apply to death, personal injury, or fraud.
-        </p>
-      </section>
-
-      <section className="card section">
-        <h2
-          className="card-title"
-          style={{ fontSize: "20px", fontWeight: "600" }}
-        >
-          8. Termination
-        </h2>
-        <p className="text-secondary" style={{ marginTop: "12px" }}>
-          Either party may terminate with 30 days written notice. Upon
-          termination, we will provide all deliverables and documentation. You
-          retain all rights to materials created during the engagement.
-        </p>
-      </section>
-
-      <section className="card section">
-        <h2
-          className="card-title"
-          style={{ fontSize: "20px", fontWeight: "600" }}
-        >
-          9. Governing Law
-        </h2>
-        <p className="text-secondary" style={{ marginTop: "12px" }}>
-          These terms are governed by English law. Any disputes will be subject
-          to the exclusive jurisdiction of the English courts.
-        </p>
-      </section>
-
-      <footer className="main-footer">
-        <p>
-          For questions about these terms, please contact us at{" "}
-          <a
-            href="mailto:legal@unflakeops.com"
-            style={{ textDecoration: "underline" }}
-          >
-            legal@unflakeops.com
-          </a>
-        </p>
-      </footer>
-    </main>
-  );
+export default function TermsPage() {
+  return <main className="main-container"><Header /><header className="hero-section"><div className="hero-content"><div><div className="brand-row"><span className="brand-name">Legal</span></div><h1 className="hero-title">Terms of Service</h1><p className="hero-subtitle">Last updated: 19 September 2026</p></div></div></header>{sections.map(([title, body]) => <section className="card section" key={title}><h2 className="card-title" style={{ fontSize: 20, fontWeight: 600 }}>{title}</h2><p className="text-secondary" style={{ marginTop: 12 }}>{body}</p></section>)}<footer className="main-footer"><p>These general terms are supplemented by the proposal or statement of work for each engagement. Questions: <a href="mailto:legal@unflakeops.com" style={{ textDecoration: "underline" }}>legal@unflakeops.com</a></p></footer></main>;
 }
