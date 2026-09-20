@@ -1,6 +1,6 @@
 # UnflakeOps — Marketing Site
 
-Marketing and lead-capture site for **UnflakeOps**: AI reliability, RAG evaluation, and data maturity services for teams building production AI systems.
+Marketing and lead-capture site for **UnflakeOps**: focused Microsoft Power Platform automation for recurring reporting workflows in UK charities.
 
 Live: [unflakeops.com](https://unflakeops.com) (Vercel, currently serving the old design).
 Redesign preview: branch `preview-numetix-style-services` — reachable via Woodpecker/penfold at `preview-preview-numetix-style-services.unflakeops.com`.
@@ -17,9 +17,7 @@ Redesign preview: branch `preview-numetix-style-services` — reachable via Wood
 | Fonts | `next/font/google` — Hanken Grotesk (sans) + JetBrains Mono (mono) |
 | Styling | Single `styles/globals.css` with CSS custom properties as design tokens |
 | Email | Resend |
-| CRM | HubSpot Private App (contact upsert) |
-| Analytics | PostHog (server-side capture + client-side) |
-| Alerts | Telegram Bot API |
+| CRM | Zoho CRM webform (lead capture) |
 
 ---
 
@@ -52,7 +50,7 @@ app/
 ├── twitter-image.tsx           # Twitter card image — code-generated via Next.js metadata
 └── api/
     ├── contact/
-    │   └── route.ts            # Contact form handler: HubSpot upsert + Resend + Telegram
+    │   └── route.ts            # Validated Zoho CRM lead capture with spam controls
     ├── lead/
     │   └── route.ts            # Legacy calculator lead route (not wired to current page)
     └── route.ts                # Legacy ROI calculator result route (not wired to current page)
@@ -108,9 +106,6 @@ Copy `.env.example` to `.env.local` and fill in real values. Variables marked **
 | `EMAIL_BCC_LEADS` | No | Internal address for lead copies | Disabled if unset |
 | `TELEGRAM_BOT_TOKEN` | No | Telegram bot token for lead alerts | Disabled if unset |
 | `TELEGRAM_CHAT_ID` | No | Telegram chat/channel ID | Disabled if unset |
-| `POSTHOG_KEY` | No | Server-side PostHog write key | Capture skipped if unset |
-| `HUBSPOT_PRIVATE_APP_TOKEN` | No | HubSpot Private App token (CRM Contacts) | Sync skipped if unset |
-| `HUBSPOT_PORTAL_ID` | No | HubSpot Portal ID (reference/links) | — |
 | `NEXT_PUBLIC_SITE_URL` | No | Canonical site URL | `https://unflakeops.com` |
 | `NEXT_PUBLIC_POSTHOG_HOST` | No | PostHog ingestion host | `https://eu.posthog.com` |
 | `NEXT_PUBLIC_REGION_BADGE` | No | Header badge label | — |
@@ -127,12 +122,10 @@ Copy `.env.example` to `.env.local` and fill in real values. Variables marked **
 
 1. A visitor on the homepage clicks the booking CTA — the `NEXT_PUBLIC_BOOKING_URL` (defaulting to `/call`) redirects them to Google Calendar.
 2. Alternatively, the **contact form** (`components/ContactForm.tsx`) posts to `POST /api/contact`:
-   - Validates input and checks a honeypot field.
-   - Upserts a contact in HubSpot via the Private App API (if `HUBSPOT_PRIVATE_APP_TOKEN` is set).
-   - Sends an internal lead notification email via Resend (if `RESEND_API_KEY` is set).
-   - Sends an optional Telegram alert (if `TELEGRAM_BOT_TOKEN` + `TELEGRAM_CHAT_ID` are set).
-   - Triggers an optional server-side PostHog event (if `POSTHOG_KEY` is set).
-3. On success, the visitor is redirected to `/thanks`.
+   - Validates the request on the client and server.
+   - Applies origin checks, a honeypot, a minimum-completion-time check and a short-window rate limit.
+   - Creates a Lead in Zoho CRM and returns success only after Zoho accepts it.
+3. Success is shown inline. The visitor can then start another enquiry if needed.
 
 ### Legacy routes (not wired to current pages)
 

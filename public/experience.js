@@ -38,5 +38,25 @@
   if(assembly){if('IntersectionObserver' in window){const observer=new IntersectionObserver(entries=>{if(entries[0].isIntersecting&&!assemblyPlayed){playAssembly();observer.disconnect();}},{threshold:.2});observer.observe(assembly);}else playAssembly();}
   if(replay)replay.addEventListener('click',playAssembly);
   document.querySelector('#year').textContent=new Date().getFullYear();
-  document.querySelector('#contact-form').addEventListener('submit',event=>{event.preventDefault();const data=new FormData(event.currentTarget),organisation=data.get('organisation')||'UK charity',subject=`Reporting workflow conversation — ${organisation}`,body=[`Organisation: ${organisation}`,`Email: ${data.get('email')}`,'','Recurring report or process:',data.get('workflow')].join('\n');location.href=`mailto:hello@unflakeops.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;});
+  const contactForm=document.querySelector('#contact-form'),contactStatus=document.querySelector('#contact-status'),contactStarted=Date.now();
+  const contactFields={name:document.querySelector('#contact-name'),email:document.querySelector('#contact-email'),company:document.querySelector('#contact-organisation'),message:document.querySelector('#contact-workflow')};
+  function contactError(name,message){const errorName=name==='company'?'organisation':name==='message'?'workflow':name,field=contactFields[name],error=document.querySelector(`#contact-${errorName}-error`);field.setAttribute('aria-invalid',String(Boolean(message)));error.textContent=message||'';}
+  Object.entries(contactFields).forEach(([name,field])=>field.addEventListener('input',()=>contactError(name,'')));
+  contactForm.addEventListener('submit',async event=>{
+    event.preventDefault();
+    const button=contactForm.querySelector('button[type=submit]'),buttonLabel=button.querySelector('span'),data=new FormData(contactForm),payload={name:String(data.get('name')||'').trim(),email:String(data.get('email')||'').trim(),company:String(data.get('organisation')||'').trim(),message:String(data.get('workflow')||'').trim(),website:String(data.get('website')||''),startedAt:contactStarted};
+    const errors={};
+    if(!payload.name)errors.name='Enter your name.';
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(payload.email))errors.email='Enter a valid work email address.';
+    if(!payload.company)errors.company='Enter your charity or organisation.';
+    if(!payload.message)errors.message='Tell us which recurring report or process takes the most time.';
+    Object.keys(contactFields).forEach(name=>contactError(name,errors[name]||''));
+    if(Object.keys(errors).length){contactStatus.textContent='Check the highlighted fields.';contactStatus.className='form-status is-error';contactFields[Object.keys(errors)[0]].focus();return;}
+    button.disabled=true;button.setAttribute('aria-busy','true');buttonLabel.textContent='Saving securely…';contactStatus.textContent='';contactStatus.className='form-status';
+    try{
+      const response=await fetch('/api/contact',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)}),result=await response.json();
+      if(!response.ok||!result.ok){if(result.fieldErrors)Object.entries(result.fieldErrors).forEach(([name,message])=>contactError(name,message));throw new Error(result.error||'We could not save your enquiry. Please try again.');}
+      contactForm.reset();contactStatus.textContent="Thank you. Your enquiry is safely in our CRM and we'll reply within one business day.";contactStatus.className='form-status is-success';buttonLabel.textContent='Enquiry sent';
+    }catch(error){contactStatus.textContent=error.message||'Network error. Check your connection and try again.';contactStatus.className='form-status is-error';button.disabled=false;button.removeAttribute('aria-busy');buttonLabel.textContent='Send enquiry';}
+  });
 })();
