@@ -117,9 +117,19 @@
 .formCard :global(.cf-field) { display: grid; gap: 8px; }
 .formCard :global(.cf-label) { color: var(--ink); font-size: 13px; font-weight: 750; }
 .formCard :global(.cf-input) { width: 100%; border: 1px solid var(--line); border-radius: 12px; background: #fbfaf8; color: var(--ink); padding: 13px 14px; font: inherit; }
+.formCard :global(.cf-input:focus-visible) { outline: 3px solid rgba(107,61,244,.24); outline-offset: 2px; border-color: var(--violet); }
+.formCard :global(.cf-input[aria-invalid="true"]) { border-color: #a62b3d; background: #fff8f8; }
 .formCard :global(.cf-textarea) { min-height: 130px; resize: vertical; }
 .formCard :global(.contact-button) { border: 0; border-radius: 999px; background: var(--violet); color: white; padding: 14px 20px; font: 750 15px var(--font-sans), sans-serif; cursor: pointer; }
+.formCard :global(.contact-button:focus-visible) { outline: 3px solid rgba(107,61,244,.3); outline-offset: 3px; }
+.formCard :global(.contact-button:disabled) { cursor: wait; opacity: .72; }
 .formCard :global(.cf-feedback) { margin: 0; font-size: 14px; }
+.formCard :global(.cf-feedback-error), .formCard :global(.cf-field-error) { color: #8d2033; }
+.formCard :global(.cf-feedback-success) { color: #215d43; }
+.formCard :global(.cf-field-error) { margin: 0; font-size: 12px; font-weight: 650; }
+.formCard :global(.cf-safety), .formCard :global(.cf-privacy) { margin: 0; color: var(--muted); font-size: 12px; line-height: 1.55; }
+.formCard :global(.cf-privacy a) { color: var(--violet); text-decoration: underline; text-underline-offset: 2px; }
+.formCard :global(.cf-honeypot) { position: absolute !important; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 
 .footer { padding: 44px 0 28px; background: #171526; color: white; }
 .footerTop, .footerBottom { display: flex; align-items: center; justify-content: space-between; gap: 30px; }

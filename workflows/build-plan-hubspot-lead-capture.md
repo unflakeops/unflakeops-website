@@ -3,7 +3,7 @@
 **Feature name:** `hubspot-lead-capture`
 **Discovery level:** 2 (HubSpot CRM API behaviour — create vs upsert)
 **Spin Jit Su stream:** C (independent — see "Parallel safety")
-**Status:** READY (code ships behind an env flag; goes live when the token is set)
+**Status:** SUPERSEDED — UnflakeOps selected Zoho CRM. See `workflows/zoho-crm-capture.md` for the implemented route and current release state. This file is retained only as historical planning context.
 
 ---
 

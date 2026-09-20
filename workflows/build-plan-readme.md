@@ -3,7 +3,7 @@
 **Feature name:** `readme`
 **Discovery level:** 1
 **Spin Jit Su stream:** A (independent — see "Parallel safety")
-**Status:** READY
+**Status:** SUPERSEDED — retained as historical planning context. Current CRM and release instructions are in `workflows/zoho-crm-capture.md` and the root `README.md`.
 
 ---
 

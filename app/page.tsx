@@ -241,7 +241,7 @@ export default function HomePage() {
             <nav aria-label="Legal">
               <Link href="/privacy">Privacy</Link>
               <Link href="/terms">Terms</Link>
-              <a href="mailto:hello@unflakeops.com">hello@unflakeops.com</a>
+              <Link href="/#conversation">Enquire</Link>
             </nav>
           </div>
         </div>
