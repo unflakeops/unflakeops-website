@@ -38,7 +38,7 @@
   if(assembly){if('IntersectionObserver' in window){const observer=new IntersectionObserver(entries=>{if(entries[0].isIntersecting&&!assemblyPlayed){playAssembly();observer.disconnect();}},{threshold:.2});observer.observe(assembly);}else playAssembly();}
   if(replay)replay.addEventListener('click',playAssembly);
   document.querySelector('#year').textContent=new Date().getFullYear();
-  const contactForm=document.querySelector('#contact-form'),contactStatus=document.querySelector('#contact-status'),contactStarted=Date.now();
+  const contactForm=document.querySelector('#contact-form'),contactStatus=document.querySelector('#contact-status');let contactStarted=Date.now();
   const contactFields={name:document.querySelector('#contact-name'),email:document.querySelector('#contact-email'),company:document.querySelector('#contact-organisation'),message:document.querySelector('#contact-workflow')};
   function contactError(name,message){const errorName=name==='company'?'organisation':name==='message'?'workflow':name,field=contactFields[name],error=document.querySelector(`#contact-${errorName}-error`);field.setAttribute('aria-invalid',String(Boolean(message)));error.textContent=message||'';}
   Object.entries(contactFields).forEach(([name,field])=>field.addEventListener('input',()=>contactError(name,'')));
@@ -56,7 +56,7 @@
     try{
       const response=await fetch('/api/contact',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)}),result=await response.json();
       if(!response.ok||!result.ok){if(result.fieldErrors)Object.entries(result.fieldErrors).forEach(([name,message])=>contactError(name,message));throw new Error(result.error||'We could not save your enquiry. Please try again.');}
-      contactForm.reset();contactStatus.textContent="Thank you. Your enquiry is safely in our CRM and we'll reply within one business day.";contactStatus.className='form-status is-success';buttonLabel.textContent='Enquiry sent';
+      contactForm.reset();contactStarted=Date.now();contactStatus.textContent="Thank you. We've received your enquiry and will reply within one business day.";contactStatus.className='form-status is-success';button.disabled=false;button.removeAttribute('aria-busy');buttonLabel.textContent='Send another enquiry';
     }catch(error){contactStatus.textContent=error.message||'Network error. Check your connection and try again.';contactStatus.className='form-status is-error';button.disabled=false;button.removeAttribute('aria-busy');buttonLabel.textContent='Send enquiry';}
   });
 })();

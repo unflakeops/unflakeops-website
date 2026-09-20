@@ -51,10 +51,12 @@ export async function POST(req: Request): Promise<Response> {
   if (contentLength > MAX_BODY_BYTES) return NextResponse.json({ ok: false, error: "That message is too large." }, { status: 413 });
   if (!req.headers.get("content-type")?.toLowerCase().startsWith("application/json")) return NextResponse.json({ ok: false, error: "Unsupported request format." }, { status: 415 });
   if (!sameSiteRequest(req)) return NextResponse.json({ ok: false, error: "Request origin could not be verified." }, { status: 403 });
-  if (isRateLimited(clientKey(req))) return NextResponse.json({ ok: false, error: "Too many attempts. Please wait 15 minutes and try again." }, { status: 429 });
-
   let parsed: ContactBody;
-  try { parsed = (await req.json()) as ContactBody; }
+  try {
+    const raw = await req.text();
+    if (new TextEncoder().encode(raw).byteLength > MAX_BODY_BYTES) return NextResponse.json({ ok: false, error: "That message is too large." }, { status: 413 });
+    parsed = JSON.parse(raw) as ContactBody;
+  }
   catch { return NextResponse.json({ ok: false, error: "Invalid request body." }, { status: 400 }); }
 
   if (typeof parsed.website === "string" && parsed.website.trim() !== "") return NextResponse.json({ ok: true });
@@ -71,6 +73,7 @@ export async function POST(req: Request): Promise<Response> {
   if (!email || !isValidEmail(email)) fieldErrors.email = "Enter a valid work email address.";
   if (!message) fieldErrors.message = "Tell us which recurring report or process takes the most time.";
   if (Object.keys(fieldErrors).length > 0) return NextResponse.json({ ok: false, error: "Check the highlighted fields.", fieldErrors }, { status: 400 });
+  if (isRateLimited(clientKey(req))) return NextResponse.json({ ok: false, error: "Too many attempts. Please wait 15 minutes and try again." }, { status: 429 });
 
   const parts = name.split(/\s+/);
   const firstName = parts.length > 1 ? parts.slice(0, -1).join(" ") : "";
@@ -93,7 +96,9 @@ export async function POST(req: Request): Promise<Response> {
   const timeout = setTimeout(() => controller.abort(), 8_000);
   try {
     const zoho = await fetch(ZOHO_FORM_URL, { method: "POST", headers: { "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8" }, body: form.toString(), redirect: "manual", signal: controller.signal, cache: "no-store" });
-    if (zoho.status < 200 || zoho.status >= 400) {
+    const location = zoho.headers.get("location") || "";
+    const accepted = zoho.status >= 300 && zoho.status < 400 && location.startsWith("https://unflakeops.com/thanks");
+    if (!accepted) {
       console.error("[contact] Zoho rejected the enquiry", { status: zoho.status });
       return NextResponse.json({ ok: false, error: "We could not save your enquiry. Please try again." }, { status: 502 });
     }

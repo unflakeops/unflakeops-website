@@ -3,7 +3,7 @@ import Header from "../../components/Header";
 export const metadata = { title: "Privacy Policy | UnflakeOps" };
 
 const sections = [
-  ["Information we collect", "When you contact us, we may collect your name, work email, organisation, role and the information you choose to provide about a reporting or administrative workflow. During a contracted engagement, we may also process system, workflow and service data required for the agreed work."],
+  ["Information we collect", "When you contact us, we may collect your name, work email, organisation and the information you choose to provide about a reporting or administrative workflow. During a contracted engagement, we may also process system, workflow and service data required for the agreed work."],
   ["How we use information", "We use information to respond to enquiries, arrange conversations, scope and deliver services, maintain client relationships, improve our services, secure our systems and meet legal obligations."],
   ["Legal bases", "Depending on the context, we process personal data to take steps at your request before entering a contract, perform a contract, comply with legal obligations, and pursue legitimate interests such as responding to business enquiries and operating our services."],
   ["Service providers and sharing", "We do not sell personal information. Website enquiries are recorded in Zoho CRM so that we can respond and manage the relationship. We may also use service providers for hosting, scheduling and essential communications, subject to appropriate contractual and security safeguards. Where a provider processes information outside the UK, we use the safeguards required by UK data-protection law. We may also disclose information where required by law."],

@@ -15,14 +15,15 @@ Connect the public charity-reporting enquiry form to UnflakeOps' Zoho CRM so eac
 - Zoho module: Leads
 - Webform: `Website — Charity Reporting Enquiry`
 - Redirect: `https://unflakeops.com/thanks`
-- Fields: Company, First Name, Last Name, Email, Description, Lead Source
+- Fields used by the website: Company, First Name, Last Name, Email, Description
+- Lead Source: present in Zoho's form builder but left unset because the account has no accurate Website option
 - Owner notification: enabled
 - Sample Zoho records: still present; deletion awaits Muhammad's confirmation
 
 ## Implementation
 
-- `/api/contact` validates same-origin JSON submissions, input length, email syntax, a honeypot, minimum completion time, and a small per-IP request limit.
-- The server sends valid data to Zoho's generated Web-to-Lead endpoint and reports success only after Zoho accepts it.
+- `/api/contact` validates same-origin JSON submissions, actual encoded body size, email syntax, a honeypot, minimum completion time, and a small per-instance request limit.
+- The server sends valid data to Zoho's generated Web-to-Lead endpoint and reports success only when Zoho redirects to the configured UnflakeOps thank-you URL.
 - The public form asks for name, work email, organisation, and the recurring report that consumes the most time.
 - The form warns users not to include beneficiary or special-category personal data.
 - Privacy and terms pages describe the current enquiry route and avoid publishing an email address.
