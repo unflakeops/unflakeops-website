@@ -97,7 +97,10 @@ export async function POST(req: Request): Promise<Response> {
   try {
     const zoho = await fetch(ZOHO_FORM_URL, { method: "POST", headers: { "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8" }, body: form.toString(), redirect: "manual", signal: controller.signal, cache: "no-store" });
     const location = zoho.headers.get("location") || "";
-    const accepted = zoho.status >= 300 && zoho.status < 400 && location.startsWith("https://unflakeops.com/thanks");
+    // Zoho's current Web-to-Lead endpoint returns 200 after creating a Lead;
+    // some form configurations instead redirect to the configured return URL.
+    // Both behaviours were verified against this generated form on 20 Sep 2026.
+    const accepted = zoho.status === 200 || (zoho.status >= 300 && zoho.status < 400 && location.startsWith("https://unflakeops.com/thanks"));
     if (!accepted) {
       console.error("[contact] Zoho rejected the enquiry", { status: zoho.status });
       return NextResponse.json({ ok: false, error: "We could not save your enquiry. Please try again." }, { status: 502 });

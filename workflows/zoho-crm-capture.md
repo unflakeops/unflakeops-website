@@ -18,12 +18,12 @@ Connect the public charity-reporting enquiry form to UnflakeOps' Zoho CRM so eac
 - Fields used by the website: Company, First Name, Last Name, Email, Description
 - Lead Source: present in Zoho's form builder but left unset because the account has no accurate Website option
 - Owner notification: enabled
-- Sample Zoho records: still present; deletion awaits Muhammad's confirmation
+- Sample Zoho records: removed; Leads verified empty after the end-to-end test
 
 ## Implementation
 
 - `/api/contact` validates same-origin JSON submissions, actual encoded body size, email syntax, a honeypot, minimum completion time, and a small per-instance request limit.
-- The server sends valid data to Zoho's generated Web-to-Lead endpoint and reports success only when Zoho redirects to the configured UnflakeOps thank-you URL.
+- The server sends valid data to Zoho's generated Web-to-Lead endpoint. Zoho returned HTTP 200 and created the verified test Lead; redirect responses to the configured thank-you URL are also accepted.
 - The public form asks for name, work email, organisation, and the recurring report that consumes the most time.
 - The form warns users not to include beneficiary or special-category personal data.
 - Privacy and terms pages describe the current enquiry route and avoid publishing an email address.
@@ -42,7 +42,7 @@ Connect the public charity-reporting enquiry form to UnflakeOps' Zoho CRM so eac
 
 Before production release:
 
-1. With Muhammad's confirmation, remove Zoho's generated sample records.
-2. With Muhammad's confirmation, submit one clearly labelled synthetic test enquiry, verify the Lead in Zoho, and remove that test Lead.
+1. Completed: removed Zoho's generated sample records.
+2. Completed: submitted one clearly labelled synthetic enquiry, verified exactly one Lead and its Company, split name, Email, blank Lead Source and Description, then removed the test Lead.
 3. Push this branch and publish a private preview for stakeholder review.
 4. Merge and production deployment require separate explicit authority.

@@ -10,9 +10,8 @@
 
 ## Remaining release checks
 
-- Remove Zoho's generated sample records after Muhammad confirms the deletion.
-- Submit one clearly labelled synthetic enquiry after Muhammad confirms the external form submission.
-- Verify that exact Lead in Zoho, then remove it after confirmation.
+- Completed: removed Zoho's generated sample records.
+- Completed: created, verified and removed one labelled synthetic Zoho Lead.
 - Publish a private branch preview for stakeholder review.
 - Merge and production deployment need separate explicit authority.
 
