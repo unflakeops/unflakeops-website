@@ -1,0 +1,18 @@
+/* Imagery exploration: the approved editorial design is preserved on its branch. */
+.opening{min-height:0;display:block;padding-top:48px;padding-bottom:52px}
+.opening>.folio{font-size:12px;letter-spacing:.12em}
+.opening-story{display:grid;grid-template-columns:1.2fr 1fr;align-items:center;gap:3vw;margin:44px 0 48px}
+.opening-story h1{font-size:clamp(80px,10.6vw,166px);line-height:.86;letter-spacing:-.083em;max-width:8ch;margin:0;z-index:2}
+.opening-art{margin:0;min-width:0;position:relative;align-self:stretch;display:flex;flex-direction:column;justify-content:center}
+.opening-art img{display:block;width:100%;height:auto;aspect-ratio:1.03;object-fit:cover;object-position:100% center;background:#171025}
+.opening-art figcaption{font-size:13px;line-height:1.5;margin-top:14px;color:#66616b;letter-spacing:-.01em}
+.opening-bottom{grid-template-columns:minmax(0,740px) auto;gap:5vw;align-items:center;padding-top:30px;border-top:1px solid var(--line)}
+.opening .lede{font-size:clamp(18px,1.55vw,23px);max-width:670px}
+.opening .round-link{width:145px;height:145px;font-size:13px}
+.working-image{margin:45px 0 0;max-width:650px}
+.working-image img{display:block;width:100%;height:auto;aspect-ratio:1.35;object-fit:cover;background:#241d29}
+.working-image figcaption{font-size:14px;line-height:1.5;border-top:1px solid #10111633;margin-top:16px;padding-top:14px;max-width:380px}
+.working-image figcaption span{display:block;font-size:12px;color:#674a3c;margin-top:8px}
+@media(min-width:1500px){.opening-story{gap:7vw}.opening-art img{aspect-ratio:1.12}}
+@media(max-width:900px){.opening-story{grid-template-columns:1.12fr 1fr;gap:20px}.opening-story h1{font-size:clamp(64px,10.4vw,96px)}.opening-art img{aspect-ratio:.8}.opening-bottom{grid-template-columns:1fr auto}.working-image{max-width:none}.working-image img{aspect-ratio:1.8}.walkthrough-intro{max-width:none}}
+@media(max-width:620px){.opening{padding:40px 18px 48px}.opening>.folio{font-size:11px}.opening-story{grid-template-columns:1fr;gap:32px;margin:34px 0}.opening-story h1{font-size:clamp(66px,20vw,108px);max-width:9ch;line-height:.88;margin:0}.opening-art img{aspect-ratio:1.2}.opening-art figcaption{font-size:12px}.opening-bottom{grid-template-columns:1fr;gap:26px;padding-top:24px}.opening .round-link{width:128px;height:128px}.working-image{margin-top:32px}.working-image img{aspect-ratio:1.2}.working-image figcaption{font-size:13px}}
