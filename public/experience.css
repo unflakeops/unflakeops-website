@@ -133,3 +133,6 @@ body{background:var(--paper)}
 
 /* Website enquiry capture */
 .contact input[aria-invalid="true"],.contact textarea[aria-invalid="true"]{border-color:#ff958d}.field-error{min-height:1.3em;color:#ffaaa3;font-size:12px}.form-trap{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}.form-safety,.form-privacy,.form-status{grid-column:1/-1;margin:0;font-size:12px;line-height:1.65;color:#b9a9c7}.form-privacy a{color:#fff;text-underline-offset:3px}.form-status{min-height:1.4em;font-weight:600}.form-status.is-error{color:#ffaaa3}.form-status.is-success{color:#adf1c9}.contact button:disabled{cursor:wait;opacity:.72}.contact :focus-visible{outline:3px solid #d8c3f1;outline-offset:4px}
+
+/* Reduced motion must override the later responsive sticky-story rules. */
+@media(prefers-reduced-motion:reduce){.scroll-story{height:auto}.story-pin{position:relative;top:auto;height:auto}.scroll-cue,.skip-story{display:none}}
