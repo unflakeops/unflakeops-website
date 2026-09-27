@@ -1,6 +1,6 @@
 # Release QA — 27 September 2026
 
-Release candidate under test: `d42dcc5`.
+Rebased release candidate under test: `86fd28a`.
 
 - Total checks: 26
 - Passed: 26
