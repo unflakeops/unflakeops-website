@@ -1,6 +1,6 @@
 # Release QA — 27 September 2026
 
-Commit under test: `28db16a` plus documentation-only follow-up.
+Release candidate under test: `d42dcc5`.
 
 - Total checks: 26
 - Passed: 26
