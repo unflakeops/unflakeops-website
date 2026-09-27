@@ -49,8 +49,12 @@ export default function CookiesBanner() {
 
   useEffect(() => {
     if (!localStorage.getItem("cookieConsent")) {
-      setShow(true);
-      setTimeout(() => setVisible(true), 200);
+      const showTimer = window.setTimeout(() => setShow(true), 0);
+      const visibleTimer = window.setTimeout(() => setVisible(true), 200);
+      return () => {
+        window.clearTimeout(showTimer);
+        window.clearTimeout(visibleTimer);
+      };
     }
   }, []);
 
